@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Second Week Visualizer II</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --sky:#F6F2F8; --ink:#1E1A2E; --muted:#6E6785; --line:rgba(30,26,46,.12); --grid:rgba(30,26,46,.05);
+    --violet:#956BFE; --deep:#2A1F4D; --white:rgba(255,255,255,.62);
+    --display:"Newsreader", Georgia, serif; --body:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono:"JetBrains Mono", Menlo, monospace;
+  }
+  html{color-scheme:light}
+  body{margin:0; background:var(--sky); color:var(--ink); font:400 16px/1.55 var(--body); padding-inline:16px; padding-block:0 64px; -webkit-font-smoothing:antialiased;
+    background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:64px 64px}
+  *{box-sizing:border-box}
+  h1,h2,h3,p{margin:0}
+  .wrap{max-width:1160px; margin-inline:auto}
+  .eyebrow{font:500 11px/1.4 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+  .aside{font:italic 300 15px/1.5 var(--display); color:var(--muted)}
+
+  /* ---- controls (not part of the site) ---- */
+  .bar{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between; padding:16px 0 20px}
+  .bar .title{font:300 22px/1.2 var(--display)}
+  .ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  .ctl span{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-right:4px}
+  .ctl button{font:500 12px/1 var(--mono); letter-spacing:.04em; padding:8px 12px; border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:4px; cursor:pointer}
+  .ctl button[aria-pressed="true"]{background:var(--ink); color:var(--sky); border-color:var(--ink)}
+  .ctl button:focus-visible{outline:2px solid var(--violet); outline-offset:2px}
+  .ctl button svg{width:18px; height:18px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+  .ctl button[aria-label]{padding:7px 9px}
+  .ctl label{display:inline-flex; align-items:center; gap:8px; font:500 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+  .ctl input[type=range]{width:110px; accent-color:var(--violet)}
+
+  /* ---- bento ---- */
+  .bento{display:grid; grid-template-columns:repeat(12, 1fr); grid-auto-rows:minmax(120px, auto); gap:12px}
+  .tile{position:relative; border:1px solid var(--line); border-radius:10px; background:var(--white); backdrop-filter:blur(8px); padding:22px; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; gap:6px}
+  .tile::before{content:"+"; position:absolute; left:8px; top:4px; font:400 12px/1 var(--mono); color:var(--muted); opacity:.5}
+  .tile h2{font:300 clamp(24px, 2.2vw, 30px)/1.1 var(--display); letter-spacing:-.01em; text-wrap:balance}
+  .tile h2 em{font-style:italic; color:var(--violet)}
+  .tile p{color:var(--muted); font-size:14.5px; max-width:36ch}
+  .tile .eyebrow{position:absolute; left:22px; top:18px}
+
+  .t-hero{grid-column:span 8; grid-row:span 4; padding:0; border:1px solid rgba(30,26,46,.18); background:#DBD3D0; justify-content:flex-start; min-height:440px}
+  .t-hero::before{display:none}
+  .t-hero canvas{position:absolute; inset:0; width:100%; height:100%; display:block; border-radius:inherit; touch-action:none}
+  .t-hero .copy{position:relative; z-index:2; padding:28px; height:100%; display:flex; flex-direction:column; justify-content:space-between}
+  .t-hero .eyebrow{position:static; color:rgba(255,255,255,.72)}
+  .t-hero h1{font:300 clamp(36px, 4.6vw, 64px)/1 var(--display); letter-spacing:-.02em; color:#fff; max-width:14ch; text-shadow:0 2px 24px rgba(42,31,77,.35)}
+  .t-hero h1 em{font-style:italic; color:#fff}
+  .t-hero .lede{color:rgba(255,255,255,.82); font-size:16px; max-width:44ch; margin-top:14px}
+  .t-hero .marks{position:absolute; inset:14px; border:1px solid rgba(255,255,255,.18); border-radius:6px; pointer-events:none; z-index:1}
+  .t-hero .marks i{position:absolute; width:9px; height:9px; border-color:rgba(255,255,255,.7); border-style:solid; border-width:0}
+  .t-hero .marks i:nth-child(1){left:-1px; top:-1px; border-left-width:1px; border-top-width:1px}
+  .t-hero .marks i:nth-child(2){right:-1px; top:-1px; border-right-width:1px; border-top-width:1px}
+  .t-hero .marks i:nth-child(3){left:-1px; bottom:-1px; border-left-width:1px; border-bottom-width:1px}
+  .t-hero .marks i:nth-child(4){right:-1px; bottom:-1px; border-right-width:1px; border-bottom-width:1px}
+  .t-hero.light .eyebrow{color:rgba(30,26,46,.7)}
+  .t-hero.light h1, .t-hero.light h1 em{color:var(--ink); text-shadow:none}
+  .t-hero.light .lede{color:rgba(30,26,46,.78)}
+  .t-hero.light .marks{border-color:rgba(30,26,46,.2)} .t-hero.light .marks i{border-color:rgba(30,26,46,.7)}
+  .t-hero .cta{display:inline-flex; align-items:center; gap:6px; margin-top:18px; font:500 12px/1 var(--mono); letter-spacing:.04em; text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,.5); padding:10px 16px; border-radius:999px; backdrop-filter:blur(4px); background:rgba(255,255,255,.1); transition:background .2s ease, transform .2s ease; width:fit-content}
+  .t-hero .cta:hover{background:rgba(255,255,255,.2); transform:translateY(-1px)}
+  .t-hero.light .cta{color:var(--ink); border-color:rgba(30,26,46,.3); background:rgba(255,255,255,.55)}
+  .t-hero.light .cta:hover{background:rgba(255,255,255,.8)}
+
+  .t-now{grid-column:span 4; grid-row:span 2}
+  .t-now dl{margin:0; display:grid; gap:8px}
+  .t-now dl div{display:grid; grid-template-columns:78px 1fr; gap:10px; font-size:14px}
+  .t-now dt{font:400 11px/1.9 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+  .t-now dd{margin:0}
+  .t-work{grid-column:span 4; grid-row:span 3}
+  .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
+  .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
+  .t-about{grid-column:span 4; grid-row:span 2}
+  .t-cta{grid-column:span 4; grid-row:span 1; background:var(--ink); color:var(--sky); border-color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
+  .t-cta::before{color:rgba(246,242,248,.5)}
+  .t-cta h2{font-size:22px; color:var(--sky)}
+  .t-cta a{color:var(--sky); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap}
+
+  /* ---- video tile + inline play ---- */
+  .t-yt{grid-column:span 4; grid-row:span 2; padding:0; border-color:rgba(30,26,46,.18); background:#141024}
+  .t-yt::before{display:none}
+  .video-frame{position:absolute; inset:0; border-radius:inherit; overflow:hidden; cursor:pointer; background:#141024}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; pointer-events:none}
+  .video-scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,16,36,.1) 40%, rgba(20,16,36,.72) 100%); transition:opacity .3s ease}
+  .video-copy{position:absolute; left:20px; right:20px; bottom:18px; z-index:2; transition:opacity .25s ease, transform .25s ease}
+  .video-copy .eyebrow{position:static; color:rgba(255,255,255,.68)}
+  .video-copy h2{font:300 clamp(19px, 2vw, 24px)/1.15 var(--display); color:#fff; letter-spacing:-.01em; margin-top:4px}
+  .video-copy h2 em{font-style:italic; color:#CBB0FF}
+  .video-copy .lede{color:rgba(255,255,255,.8); font-size:13.5px; margin-top:5px; max-width:46ch}
+  .play-btn{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:58px; height:58px; border-radius:50%; border:1px solid rgba(255,255,255,.5); background:rgba(255,255,255,.14); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2; transition:transform .25s ease, background .25s ease, opacity .2s ease; padding:0}
+  .play-btn svg{width:20px; height:20px; fill:#fff; margin-left:2px}
+  .video-frame:hover .play-btn{transform:translate(-50%,-50%) scale(1.08); background:rgba(255,255,255,.24)}
+
+  .video-frame.is-playing iframe{pointer-events:auto}
+  .video-frame.is-playing .play-btn, .video-frame.is-playing .video-copy, .video-frame.is-playing .video-scrim{opacity:0; pointer-events:none}
+
+  .notes{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:24px 36px}
+  .notes p{color:var(--muted); font-size:14.5px}
+  .notes p b{color:var(--ink); font-weight:500}
+
+  @media (max-width:900px){
+    .bento{grid-template-columns:repeat(6, 1fr)}
+    .t-hero{grid-column:span 6; grid-row:span 4; min-height:420px}
+    .t-now,.t-work,.t-about,.t-cta,.t-yt{grid-column:span 6}
+  }
+  @media (prefers-reduced-motion:reduce){ .t-hero canvas{filter:none} }
+</style>
+</head>
+<body>
+
+
+
+
+<div class="wrap">
+  <div class="bar">
+    <div>
+      <p class="eyebrow">Hero visual · prototype</p>
+      <p class="title">Moody, fuzzy, alive. Structure around it.</p>
+    </div>
+    <div class="ctl" role="group" aria-label="Visualizer controls">
+      <span>Mood</span>
+      <button type="button" data-mood="0" aria-pressed="true" aria-label="Sky" title="Sky"><svg viewBox="0 0 24 24"><path d="M3 15c3-4 6-4 9 0s6 4 9 0"/><path d="M3 9c3-4 6-4 9 0s6 4 9 0" opacity=".45"/></svg></button>
+      <button type="button" data-mood="1" aria-pressed="false" aria-label="Rich" title="Rich"><svg viewBox="0 0 24 24"><path d="M15.5 3.5a8.5 8.5 0 1 0 5 15.4A9 9 0 0 1 15.5 3.5z"/><path d="M6 4v3M4.5 5.5h3" opacity=".7"/></svg></button>
+      <button type="button" data-mood="2" aria-pressed="false" aria-label="Orbs" title="Orbs"><svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="5.5"/><circle cx="15.5" cy="14.5" r="5.5"/></svg></button>
+      <label title="Speed of the field, from near-still to fast">Drift <input id="drift" type="range" min="0" max="1" step="0.01" value="0.70"></label>
+      <span style="margin-left:10px">Mouse</span>
+      <button type="button" data-inter="0" aria-pressed="true" aria-label="Smudge" title="Smudge: drag colour along the stroke"><svg viewBox="0 0 24 24"><path d="M4 16c4-8 8-8 12 0"/><path d="M13 16h7l-2.5-2.5M20 16l-2.5 2.5"/></svg></button>
+      <button type="button" data-inter="1" aria-pressed="false" aria-label="Colour" title="Colour: hue turns where the pointer passes"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/><path d="M12 20v-9" opacity=".5"/></svg></button>
+      <button type="button" data-inter="2" aria-pressed="false" aria-label="Ripple" title="Ripple: rings expand from where you move or tap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="12" r="6" opacity=".7"/><circle cx="12" cy="12" r="9.5" opacity=".4"/></svg></button>
+    </div>
+  </div>
+
+  <div class="bento">
+    <section class="tile t-hero light" id="hero" aria-label="Hero">
+      <canvas id="viz" aria-hidden="true"></canvas>
+      <div class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="copy">
+        <p class="eyebrow">Ruth Thomson · Product designer · Psychology, then design</p>
+        <div>
+          <h1>Designing for the <em>second week.</em></h1>
+          <p class="lede">Anyone can get someone through day one. I design for the moment the novelty wears off.</p>
+          <a class="cta" href="#work">See the work →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tile t-now">
+      <p class="eyebrow">Currently</p>
+      <dl>
+        <div><dt>Building</dt><dd>A wellness journaling app. TestFlight, Nov.</dd></div>
+        <div><dt>Rebuilding</dt><dd>The messiest screen in a dealership workspace.</dd></div>
+        <div><dt>Studying</dt><dd>MHCID, UC Irvine.</dd></div>
+      </dl>
+    </section>
+
+    <section class="tile t-yt" aria-label="Video">
+      <div class="video-frame" id="videoFrame" role="button" tabindex="0" aria-label="Play the video">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/rj3rAEoHqBk?autoplay=1&mute=1&loop=1&playlist=rj3rAEoHqBk&controls=0&modestbranding=1&rel=0&playsinline=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div class="video-scrim" aria-hidden="true"></div>
+        <button type="button" class="play-btn" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="video-copy">
+          <p class="eyebrow">Watch</p>
+          <h2>See it <em>in motion.</em></h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="tile t-work" id="work">
+      <div class="thumb" aria-hidden="true"></div>
+      <p class="eyebrow">2026 · Lead · myKaarma</p>
+      <h2>RecLink</h2>
+      <p>The screen everyone lambasted. Stripped it back, then added only what earned its place.</p>
+      <p class="aside">Tested with dealerships who loved it, and one group who did not.</p>
+    </section>
+
+    <section class="tile t-about">
+      <p class="eyebrow">About</p>
+      <h2>Psychology, recruiting, <em>then design.</em></h2>
+      <p>Amazon, Meta and Riot taught me how people actually decide. Design is where I do something about it.</p>
+    </section>
+
+    <section class="tile t-cta">
+      <h2>Working on something messy?</h2>
+      <a href="#">Say hi →</a>
+    </section>
+  </div>
+
+  <div class="notes">
+    <p><b>What it is.</b> A GPU shader: two layers of domain-warped noise pushing colour through each other, a slow vertical "horizon" like the painting, and per-frame film grain for the fuzz. No video, no image, about 2KB of code. It runs at 60fps on a laptop and drops resolution on phones.</p>
+    <p><b>Three moods.</b> <b>Sky</b> is the brief's default: a neutral warm-grey base with vibrant iridescent ribbons (lilac, pink, coral, beige, pale seafoam) moving through the foreground, grain kept light so the ribbons stay clean. <b>Rich</b> carries a sparse, sporadic constellation of small, independent points, each on its own drift path and twinkle phase, running on real time rather than the Drift control — the field can slow to a crawl and the stars keep their own pace. <b>Rich</b> is the deep-violet version for a footer or a case-study opener. <b>Orbs</b> is the poster take: four spheres, each with a rich two-colour body gradient and a contrasting gradient rim (blue with a magenta rim, coral with hot pink, orange with magenta, teal with yellow), drifting, breathing and overlapping with a pale glow where they meet. Fuzz controls grain; Drift controls speed everywhere except the stars.</p>
+    <p><b>It listens.</b> Three pointer behaviours: <b>Smudge</b> drags colour along the stroke like a thumb through wet paint; <b>Colour</b> turns the hue partway where the pointer passes, then drifts back; <b>Ripple</b> sends expanding rings out from where you move or tap. All fade within a second or two. Grain is fixed at half strength (a fifth of that on Sky); Drift defaults to 70%. With reduced-motion enabled it freezes on a still frame. Every mood keeps text contrast above 4.5:1 by clamping luminance under the copy.</p>
+    <p><b>Bento.</b> The visual is one tile in a 12-column grid, not a full-bleed backdrop, so the structure is visible around it and the richness stays contained. Hero 8×4, Currently 4×2, a video tile the same size as the two metrics it replaced, one work tile, about, and a dark CTA strip. Registration corners on the hero, mono metadata everywhere.</p>
+    <p><b>It plays.</b> The video tile runs a muted, looped preview inline, like a live thumbnail. Click or tap it and it plays with sound right there in the tile — the play button and overlay fade out, and the player's own controls (including full screen) take over.</p>
+    <p><b>It points somewhere.</b> The hero copy carries a "See the work" link straight down to the RecLink case study, so the visual isn't just mood — it's a way in.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var canvas = document.getElementById('viz');
+  var hero = document.getElementById('hero');
+  var gl = canvas.getContext('webgl', {antialias:false, alpha:false, premultipliedAlpha:false});
+  if(!gl){ hero.style.background = 'radial-gradient(circle at 30% 40%, #D94FA8 0, #6B4FBB 35%, #E4EFEA 80%)'; return; }
+
+  var vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  var fs = [
+  'precision highp float;',
+  '#define N 28',
+  '#define RN 6',
+  'uniform vec2 r;uniform float t;uniform float rt;uniform vec2 m;uniform vec2 mv;uniform float fuzz;uniform int mood;uniform int inter;uniform vec2 trail[N];uniform float alive;uniform vec3 rip[RN];',
+  'vec3 hueRot(vec3 c,float a){const vec3 k=vec3(.57735);float cs=cos(a),sn=sin(a);return c*cs+cross(k,c)*sn+k*dot(k,c)*(1.-cs);}',
+  'float segd(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/max(dot(ba,ba),1e-6),0.,1.);return length(pa-ba*h);}',
+  'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+  'float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+  ' return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}',
+  'float fbm(vec2 p){float v=0.,a=.5;mat2 R=mat2(.8,.6,-.6,.8);for(int i=0;i<5;i++){v+=a*noise(p);p=R*p*2.03+vec2(1.7,9.2);a*=.5;}return v;}',
+  'void main(){',
+  ' vec2 uv=gl_FragCoord.xy/r; vec2 q=uv; q.x*=r.x/r.y;',
+  ' vec2 mm=vec2(0.);',
+  ' // ---- pointer interactions: 0 smudge, 1 colour, 2 ripple, 3 smoke, 4 halo ----',
+  ' float asp=r.x/r.y;',
+  ' vec2 pm=m; pm.x*=asp; vec2 dp=q-pm; float pd=length(dp);',
+  ' float wake=0.;                                     // how much pointer history touches this pixel',
+  ' for(int i=0;i<N-1;i++){',
+  '   vec2 a=trail[i]; vec2 b=trail[i+1]; a.x*=asp; b.x*=asp;',
+  '   vec2 v=a-b; float age=float(i)/float(N-1); float d=length(q-a);',
+  '   if(inter==0){ float g=exp(-d*d/(.014+.03*age)); q-=clamp(v,-.03,.03)*g*(1.-age)*1.6*alive; }',
+  '   wake+=exp(-d*d/(.006+.05*age))*(1.-age*.6);',
+  ' }',
+  ' wake=clamp(wake,0.,1.)*alive;',
+  ' if(inter==2){',
+  '   for(int i=0;i<RN;i++){',
+  '     vec2 c=rip[i].xy; c.x*=asp; float age=rt-rip[i].z; if(age<0.||age>2.6) continue;',
+  '     vec2 dd=q-c; float ld=length(dd); float rad=age*.42;',
+  '     float band=exp(-(ld-rad)*(ld-rad)/.0035)*exp(-age*1.1);',
+  '     q+=dd/max(ld,.03)*band*.07;',
+  '   }',
+  ' }',
+  ' float tt=t*.06;',
+  ' vec2 w=vec2(fbm(q*1.6+tt+mm), fbm(q*1.6-tt*.7-mm*.5));',
+  ' float n=fbm(q*1.2+ 1.8*w + vec2(0.,tt*.5));',
+  ' float n2=fbm(q*2.4- 1.2*w.yx - tt*.3);',
+  ' float hz=smoothstep(.15,.85,uv.y+ .12*sin(q.x*1.3+tt*2.)+ .18*(n-.5));',
+  ' vec3 col;',
+  ' if(mood==1){',
+  '   vec3 sky=vec3(.165,.122,.302), vio=vec3(.420,.310,.733), mag=vec3(.85,.31,.66), tea=vec3(.12,.72,.69), moss=vec3(.24,.49,.35);',
+  '   col=mix(sky,vio,smoothstep(.35,.75,n));',
+  '   col=mix(col,mag,smoothstep(.55,.9,n2)*.85);',
+  '   col=mix(col,tea,smoothstep(.62,.95,fbm(q*3.+w*2.))*.55);',
+  '   col=mix(col,moss,(1.-hz)*.35);',
+  '   // constellation: independent, sporadically placed points that drift and twinkle on their own',
+  '   float cellPx=r.y*.05;                                     // bigger cells -> fewer, well-separated points',
+  '   vec2 gp=gl_FragCoord.xy/cellPx; vec2 gi=floor(gp);',
+  '   float starAcc=0.;',
+  '   for(int oy=-1;oy<=1;oy++){',
+  '     for(int ox=-1;ox<=1;ox++){',
+  '       vec2 cell=gi+vec2(float(ox),float(oy));',
+  '       float h=hash(cell); float h2=hash(cell+11.7); float h3=hash(cell+53.1);',
+  '       if(h<.90) continue;                                   // ~10% of cells ever hold a star, each already a full cell apart from the next',
+  '       vec2 anchor=cell+vec2(hash(cell+3.3),hash(cell+9.9));  // random spot anywhere in the cell, never centred, so none read as a paired grid',
+  '       vec2 dir=normalize(vec2(h2,h3)-.5+1e-4);',
+  '       vec2 pos=anchor+dir*sin(rt*(.05+.08*h3)+h*10.)*.35;    // slow independent wander at its own speed and heading, on real time (rt) so Drift never touches it',
+  '       vec2 d=gp-pos;',
+  '       float tw=.5+.5*sin(rt*(1.1+h3*2.4)+h*40.);             // independent twinkle phase, also on real time',
+  '       float bright=mix(.12,1.,step(.9,h2));                  // one in ten stars is bright, the rest faint',
+  '       starAcc+=exp(-dot(d,d)*(220.+220.*h2))*tw*bright;       // tight falloff -> small points',
+  '     }',
+  '   }',
+  '   col+=vec3(.95,.90,1.)*starAcc*.7;',
+  ' } else if(mood==0){',
+  '   // ---- Sky: neutral light base, vibrant iridescent foreground, grain on ----',
+  '   vec3 stone=vec3(.885,.86,.84), stone2=vec3(.93,.91,.895);',
+  '   vec3 lil=vec3(.722,.522,.961), mag=vec3(.984,.525,.675), coral=vec3(.976,.761,.894), sand=vec3(.929,.910,.894), mint=vec3(.784,.910,.914);',
+  '   col=mix(stone,stone2,uv.y);',
+  '   vec2 qs=vec2(q.x*.6, q.y*1.1);',
+  '   float band=fbm(qs*.9 + 1.1*w + vec2(tt*.6, -tt*.2));',
+  '   float band2=fbm(qs*1.8 - 1.0*w.yx + vec2(-tt*.4, tt*.5) + 3.7);',
+  '   float c=fract(band*2.6 + n2*.5 + q.y*.3 + tt*.15);',
+  '   vec3 rib=mix(lil,mag,smoothstep(.0,.2,c)); rib=mix(rib,coral,smoothstep(.2,.4,c)); rib=mix(rib,sand,smoothstep(.4,.6,c)); rib=mix(rib,mint,smoothstep(.6,.8,c)); rib=mix(rib,lil,smoothstep(.8,1.,c));',
+  '   // foreground occupies roughly half the frame; the rest stays neutral',
+  '   float body=smoothstep(.46,.64,band)*(1.-smoothstep(.80,.96,band));',
+  '   col=mix(col,rib,body*.96);',
+  '   float edge=smoothstep(.6,.85,band2)*body;',
+  '   float edgeMix=abs(fract(c*2.)-.5)*2.;                      // smooth triangle wave, never jumps, so no hard seam',
+  '   col=mix(col,mix(coral,lil,edgeMix),edge*.5);',
+  '   col+=vec3(.05)*body;',
+  ' } else {',
+  '   // ---- Orbs: rich gradient bodies with a contrasting gradient rim, soft edges ----',
+  '   vec3 ground=vec3(.905,.905,.955);',
+  '   col=ground; float cover=0.;',
+  '   for(int k=0;k<4;k++){',
+  '     float fk=float(k);',
+  '     vec2 c0=vec2(.5*asp,.5)+vec2(sin(t*.11+fk*1.7)*.32*asp, cos(t*.09+fk*2.3)*.30);',
+  '     float rad=.25+.07*sin(t*.17+fk*1.3);',
+  '     vec2 off=q-c0; float d=length(off)/rad;',
+  '     vec2 dir=normalize(off+1e-4);',
+  '     vec2 light=normalize(vec2(cos(t*.05+fk), sin(t*.07+fk*.6)));   // slowly wandering light direction per orb',
+  '     float lit=mix(.5, dot(dir,light)*.5+.5, smoothstep(.0,.35,d));    // 0 = lit side, 1 = shadow side; flat at the centre',
+  '     vec3 A,B,R;',
+  '     if(k==0){ A=vec3(.28,.34,.90); B=vec3(.58,.46,.92); R=vec3(.92,.32,.70); }      // blue -> lilac, magenta rim',
+  '     else if(k==1){ A=vec3(.99,.30,.48); B=vec3(.99,.66,.54); R=vec3(.99,.18,.62); } // coral -> peach, hot pink rim',
+  '     else if(k==2){ A=vec3(.99,.48,.26); B=vec3(.99,.70,.72); R=vec3(.86,.22,.66); } // orange -> pink, magenta rim',
+  '     else { A=vec3(.12,.64,.60); B=vec3(.60,.88,.66); R=vec3(.99,.80,.28); }         // teal -> mint, yellow rim',
+  '     float body=1.-smoothstep(.80,1.06,d);',
+  '     float grad=clamp(lit*.95 + d*.08, 0., 1.);',
+  '     vec3 oc=mix(A,B,grad);',
+  '     // contrasting rim: strongest near the edge, biased to the shadow side, fading inward',
+  '     float rim=smoothstep(.40,1.0,d)*(1.-smoothstep(.94,1.08,d))*(.35+.65*lit);',
+  '     oc=mix(oc,R,rim*.75);',
+  '     // faint highlight on the lit side',
+  '     oc+=vec3(.10,.09,.08)*(1.-lit)*(1.-smoothstep(.0,.9,d));',
+  '     col=mix(col,oc,body*.96);',
+  '     cover+=body;',
+  '   }',
+  '   col=mix(col,vec3(.99,.96,.80),clamp(cover-1.,0.,1.)*.45);',
+  ' }',
+  ' // ---- pointer effects that change colour rather than position ----',
+  ' if(inter==1){ float ang = (mood==1)? -1.1 : ((mood==0)? .65 : .9); col=hueRot(col, wake*ang); }   // colour: a partial hue turn, kept away from the yellows',
+  ' // vignette + grain (fuzz)',
+  ' float vg=smoothstep(1.35,.35,length((uv-.5)*vec2(1.2,1.)));',
+  ' col*=mix(.92,1.,vg);',
+  ' float gr=hash(gl_FragCoord.xy+fract(t*7.13)*100.)-.5;',
+  ' col+=gr*(.06+.22*fuzz)*(mood==0?.18:(mood==2?.5:1.));',
+  ' // soft blur illusion: mix with lower-frequency version for fuzz',
+  ' if(mood!=0) col=mix(col, vec3(dot(col,vec3(.333))), .05*fuzz);',
+  ' gl_FragColor=vec4(clamp(col,0.,1.),1.);',
+  '}'].join('\n');
+
+  function sh(type, src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){ console.error(gl.getShaderInfoLog(s)); } return s; }
+  var prog=gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog); gl.useProgram(prog);
+  var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  var loc=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  var uR=gl.getUniformLocation(prog,'r'), uT=gl.getUniformLocation(prog,'t'), uM=gl.getUniformLocation(prog,'m'), uMV=gl.getUniformLocation(prog,'mv'), uF=gl.getUniformLocation(prog,'fuzz'), uMood=gl.getUniformLocation(prog,'mood'), uTrail=gl.getUniformLocation(prog,'trail'), uAlive=gl.getUniformLocation(prog,'alive'), uInter=gl.getUniformLocation(prog,'inter'), uRT=gl.getUniformLocation(prog,'rt'), uRip=gl.getUniformLocation(prog,'rip');
+  var inter=0, rips=new Float32Array(6*3), ripI=0, lastRip=0, t0=performance.now();
+  for(var q=0;q<6;q++){ rips[q*3+2]=-99; }
+  function spawnRipple(){ var now=performance.now(); if(now-lastRip<260) return; lastRip=now; rips[ripI*3]=target[0]; rips[ripI*3+1]=target[1]; rips[ripI*3+2]=(now-t0)/1000; ripI=(ripI+1)%6; }
+  var N=28, trail=new Float32Array(N*2), alive=0, lastMove=0, frameNo=0;
+
+  var mood=0, fuzz=.5, drift=.70, paused=false, time=0, last=performance.now();
+  var mouse=[.5,.5], target=[.5,.5], vel=[0,0], prevM=[.5,.5];
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ paused=true; }
+
+  function resize(){
+    var dpr=Math.min(window.devicePixelRatio||1, 2)*(window.innerWidth<700?0.9:0.8);
+    var w=hero.clientWidth, h=hero.clientHeight;
+    canvas.width=Math.max(2, Math.floor(w*dpr)); canvas.height=Math.max(2, Math.floor(h*dpr));
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  resize(); window.addEventListener('resize', resize);
+  if('ResizeObserver' in window){ new ResizeObserver(resize).observe(hero); }
+  window.addEventListener('load', resize);
+
+  function setTarget(e){ var b=hero.getBoundingClientRect(); target=[(e.clientX-b.left)/b.width, 1-(e.clientY-b.top)/b.height]; lastMove=performance.now(); }
+  for(var i=0;i<N;i++){ trail[i*2]=.5; trail[i*2+1]=.5; }
+  hero.addEventListener('pointermove', function(e){ setTarget(e); if(inter===2) spawnRipple(); });
+  hero.addEventListener('pointerdown', function(e){ setTarget(e); lastRip=0; spawnRipple(); });
+  hero.addEventListener('pointerleave', function(){ lastMove=0; });
+
+  function frame(now){
+    var dt=Math.min(.05,(now-last)/1000); last=now;
+    if(!paused) time+=dt*(0.06*Math.pow(60, drift));   // 0.06x at the left, ~3.6x at the right
+    mouse[0]+=(target[0]-mouse[0])*.22; mouse[1]+=(target[1]-mouse[1])*.22;
+    var vx=(mouse[0]-prevM[0]), vy=(mouse[1]-prevM[1]); prevM=[mouse[0],mouse[1]];
+    vel[0]+=(vx*6-vel[0])*.12; vel[1]+=(vy*6-vel[1])*.12;
+    // trail: newest at index 0; each point eases toward the one ahead of it so the ribbon flows rather than kinks
+    // history buffer: shift every other frame so ~1s of stroke is kept
+    if((frameNo++&1)===0){ for(var i=N-1;i>0;i--){ trail[i*2]=trail[(i-1)*2]; trail[i*2+1]=trail[(i-1)*2+1]; } }
+    trail[0]=mouse[0]; trail[1]=mouse[1];
+    var recent=(now-lastMove)<900;
+    alive+=((recent?1:0)-alive)*(recent?.15:.07);
+    if(alive<.01){ for(var k=0;k<N;k++){ trail[k*2]=mouse[0]; trail[k*2+1]=mouse[1]; } }
+    gl.uniform2fv(uTrail, trail); gl.uniform1f(uAlive, alive); gl.uniform1i(uInter, inter); gl.uniform1f(uRT, (now-t0)/1000); gl.uniform3fv(uRip, rips);
+    gl.uniform2f(uR, canvas.width, canvas.height); gl.uniform1f(uT, time); gl.uniform2f(uM, mouse[0], mouse[1]); gl.uniform2f(uMV, vel[0], vel[1]); gl.uniform1f(uF, fuzz); gl.uniform1i(uMood, mood);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  document.querySelectorAll('[data-mood]').forEach(function(b){
+    b.addEventListener('click', function(){
+      mood=+b.dataset.mood;
+      document.querySelectorAll('[data-mood]').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
+      hero.classList.toggle('light', mood!==1);
+    });
+  });
+  document.querySelectorAll('[data-inter]').forEach(function(b){
+    b.addEventListener('click', function(){ inter=+b.dataset.inter; document.querySelectorAll('[data-inter]').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); }); });
+  });
+  document.getElementById('drift').addEventListener('input', function(e){ drift=+e.target.value; });
+
+})();
+</script>
+
+<script>
+(function(){
+  var frame = document.getElementById('videoFrame');
+  var player = document.getElementById('ytPlayer');
+  var playing = false;
+
+  var VIDEO_ID = 'rj3rAEoHqBk';
+  var EXPANDED_SRC = 'https://www.youtube.com/embed/' + VIDEO_ID + '?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&playsinline=1&fs=1';
+
+  // Plays inline, right in the tile: overlay fades out, the iframe becomes
+  // interactive, and YouTube's own control bar (with its fullscreen button)
+  // takes over from there — no custom fullscreen transition needed.
+  function play(){
+    if(playing) return;
+    playing = true;
+    frame.classList.add('is-playing');
+    player.src = EXPANDED_SRC;
+  }
+
+  frame.addEventListener('click', function(){ if(!playing) play(); });
+  frame.addEventListener('keydown', function(e){ if((e.key==='Enter'||e.key===' ') && !playing){ e.preventDefault(); play(); } });
+})();
+</script>
+
+</body>
+</html>
