@@ -79,7 +79,7 @@
   .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
   .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
   .t-about{grid-column:5 / span 4; grid-row:5 / span 2}
-  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:var(--ink); color:var(--sky); border-color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
+  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:var(--dark); color:var(--sky); border-color:rgba(30,26,46,.18); flex-direction:row; align-items:center; justify-content:space-between}
   .t-cta::before{color:rgba(246,242,248,.5)}
   .t-cta h2{font-size:22px; color:var(--sky)}
   .t-cta a{color:var(--sky); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap}
@@ -405,7 +405,7 @@
   var MOOD_THEME = [
     { violet:'#956BFE', white:'rgba(255,255,255,.62)', dark:'#141024' },   // Sky — the default lilac, near-black cards
     { violet:'#6B4FBB', white:'rgba(224,214,255,.68)', dark:'#2A1F4D' },   // Rich — deeper, cooler violet glass and cards
-    { violet:'#FA5687', white:'rgba(226,230,245,.62)', dark:'#1F1016' }    // Orbs — coral highlight, blue-grey glass (matches the orbs' own backdrop), warm-dark cards
+    { violet:'#FA5687', white:'rgba(255,255,255,.62)', dark:'#1F1016' }    // Orbs — coral highlight, plain white glass, warm-dark cards
   ];
   function applyMoodTheme(m){
     var th = MOOD_THEME[m] || MOOD_THEME[0];
