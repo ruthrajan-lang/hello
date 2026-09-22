@@ -79,9 +79,9 @@
   .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
   .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
   .t-about{grid-column:5 / span 4; grid-row:5 / span 2}
-  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
-  .t-cta h2{font-size:22px; color:var(--ink); font-weight:400}
-  .t-cta a{color:var(--stone); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid var(--stone); background:rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap; transition:background-color .2s ease, color .2s ease}
+  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between; transition:background-color .5s ease, border-color .5s ease, color .5s ease}
+  .t-cta h2{font-size:22px; color:var(--ink); font-weight:400; transition:color .5s ease}
+  .t-cta a{color:var(--stone); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid var(--stone); background:rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap; transition:background-color .3s ease, color .3s ease, border-color .3s ease}
   .t-cta a:hover{background:var(--stone); color:#fff}
 
   /* ---- video tile + inline play ---- */
@@ -103,10 +103,25 @@
   .video-frame.is-playing .play-btn, .video-frame.is-playing .video-copy, .video-frame.is-playing .video-scrim{opacity:0; pointer-events:none}
 
   /* ---- tune-the-room tile: sky-toned like the rest of the light cards, holds the live controls ---- */
-  .t-tune{grid-column:9 / span 4; grid-row:1 / span 3; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink)}
-  .t-tune .eyebrow{color:var(--ink)}
-  .t-tune h2{color:var(--ink)}
+  .t-tune{grid-column:9 / span 4; grid-row:1 / span 3; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink); transition:background-color .5s ease, border-color .5s ease, color .5s ease}
+  .t-tune .eyebrow{color:var(--ink); transition:color .5s ease}
+  .t-tune h2{color:var(--ink); transition:color .5s ease}
   .t-tune h2 em{color:var(--violet)}
+
+  /* ---- night (Rich mood): tune-the-room and the cta tile go back to dark boxes, like before ---- */
+  .t-tune.night, .t-cta.night{background:var(--dark); border-color:rgba(30,26,46,.18)}
+  .t-tune.night::before, .t-cta.night::before{color:rgba(246,242,248,.5)}
+  .t-tune.night{color:#fff}
+  .t-tune.night .eyebrow{color:rgba(255,255,255,.68)}
+  .t-tune.night h2{color:#fff}
+  .t-tune.night .ctl-row > span, .t-tune.night .ctl-row > label{color:rgba(255,255,255,.55)}
+  .t-tune.night .ctl button{border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.08); color:#fff}
+  .t-tune.night .ctl button[aria-pressed="true"]{background:#fff; color:#141024; border-color:#fff}
+  .t-tune.night .ctl button:hover{border-color:rgba(255,255,255,.4)}
+  .t-cta.night{color:var(--sky)}
+  .t-cta.night h2{color:var(--sky)}
+  .t-cta.night a{color:var(--sky); border-color:rgba(246,242,248,.35); background:transparent}
+  .t-cta.night a:hover{background:rgba(246,242,248,.18); color:var(--sky)}
 
   @media (max-width:900px){
     .bento{grid-template-columns:repeat(6, 1fr)}
@@ -423,11 +438,16 @@
     root.style.setProperty('--hover-dur', dur + 's');
   }
 
+  var nightTiles = document.querySelectorAll('.t-tune, .t-cta');
   document.querySelectorAll('[data-mood]').forEach(function(b){
     b.addEventListener('click', function(){
       mood=+b.dataset.mood;
       document.querySelectorAll('[data-mood]').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
       hero.classList.toggle('light', mood!==1);
+      // Rich is the "night" mood — Tune the Room and the CTA go back to dark
+      // boxes there, like they used to everywhere; Sky and Orbs keep the
+      // lighter sky-toned cards.
+      nightTiles.forEach(function(el){ el.classList.toggle('night', mood===1); });
       applyMoodTheme(mood);
     });
   });
