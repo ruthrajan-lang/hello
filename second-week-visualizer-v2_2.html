@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --sky:#F6F2F8; --ink:#1E1A2E; --muted:#6E6785; --line:rgba(30,26,46,.12); --grid:rgba(30,26,46,.05);
+    --sky:#F6F2F8; --ink:#1E1A2E; --muted:#6E6785; --stone:#6E6964; --line:rgba(30,26,46,.12); --grid:rgba(30,26,46,.05);
     --violet:#956BFE; --deep:#2A1F4D; --white:rgba(255,255,255,.62); --dark:#141024; --hover-dur:.35s;
     --display:"Newsreader", Georgia, serif; --body:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono:"JetBrains Mono", Menlo, monospace;
   }
@@ -25,16 +25,16 @@
   .bar .title{font:300 22px/1.2 var(--display)}
 
   /* ---- "tune the room" controls, now live inside the bento as a card ---- */
-  .ctl{display:flex; flex-direction:column; gap:10px; margin-top:14px}
-  .ctl-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
-  .ctl-row span{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-right:2px}
-  .ctl button{font:500 12px/1 var(--mono); letter-spacing:.04em; padding:7px 9px; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.08); color:#fff; border-radius:4px; cursor:pointer; transition:background-color .2s ease, color .2s ease, border-color .2s ease}
-  .ctl button[aria-pressed="true"]{background:#fff; color:#141024; border-color:#fff}
-  .ctl button:hover{border-color:rgba(255,255,255,.4)}
+  .ctl{display:flex; flex-direction:column; gap:14px; margin-top:14px}
+  .ctl-row{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .ctl-row > span, .ctl-row > label{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--stone); flex:0 0 auto}
+  .ctl-group{display:flex; gap:4px; flex:1; max-width:260px}
+  .ctl button{flex:1; font:500 12px/1 var(--mono); letter-spacing:.04em; height:28px; padding:0; display:flex; align-items:center; justify-content:center; border:1px solid var(--stone); background:rgba(110,105,100,.08); color:var(--stone); border-radius:6px; cursor:pointer; transition:background-color .2s ease, color .2s ease, border-color .2s ease}
+  .ctl button[aria-pressed="true"]{background:var(--stone); color:#fff; border-color:var(--stone)}
+  .ctl button:hover{border-color:var(--ink)}
   .ctl button:focus-visible{outline:2px solid var(--violet); outline-offset:2px}
   .ctl button svg{width:16px; height:16px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
-  .ctl label{display:inline-flex; align-items:center; gap:8px; font:500 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.55)}
-  .ctl input[type=range]{width:110px; accent-color:var(--violet)}
+  .ctl input[type=range]{flex:1; max-width:260px; accent-color:var(--violet)}
 
   /* ---- bento ---- */
   .bento{display:grid; grid-template-columns:repeat(12, 1fr); grid-auto-rows:minmax(120px, auto); gap:12px}
@@ -79,10 +79,10 @@
   .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
   .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
   .t-about{grid-column:5 / span 4; grid-row:5 / span 2}
-  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:var(--dark); color:var(--sky); border-color:rgba(30,26,46,.18); flex-direction:row; align-items:center; justify-content:space-between}
-  .t-cta::before{color:rgba(246,242,248,.5)}
-  .t-cta h2{font-size:22px; color:var(--sky)}
-  .t-cta a{color:var(--sky); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap}
+  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
+  .t-cta h2{font-size:22px; color:var(--ink); font-weight:400}
+  .t-cta a{color:var(--stone); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid var(--stone); background:rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap; transition:background-color .2s ease, color .2s ease}
+  .t-cta a:hover{background:var(--stone); color:#fff}
 
   /* ---- video tile + inline play ---- */
   .t-yt{grid-column:9 / span 4; grid-row:6 / span 2; padding:0; border-color:rgba(30,26,46,.18); background:var(--dark)}
@@ -102,11 +102,10 @@
   .video-frame.is-playing iframe{pointer-events:auto}
   .video-frame.is-playing .play-btn, .video-frame.is-playing .video-copy, .video-frame.is-playing .video-scrim{opacity:0; pointer-events:none}
 
-  /* ---- tune-the-room tile: dark like the video tile, holds the live controls ---- */
-  .t-tune{grid-column:9 / span 4; grid-row:1 / span 3; background:var(--dark); border-color:rgba(30,26,46,.18); color:#fff}
-  .t-tune::before{display:none}
-  .t-tune .eyebrow{color:rgba(255,255,255,.68)}
-  .t-tune h2{color:#fff}
+  /* ---- tune-the-room tile: sky-toned like the rest of the light cards, holds the live controls ---- */
+  .t-tune{grid-column:9 / span 4; grid-row:1 / span 3; background:rgba(246,242,248,.7); border-color:var(--line); color:var(--ink)}
+  .t-tune .eyebrow{color:var(--ink)}
+  .t-tune h2{color:var(--ink)}
   .t-tune h2 em{color:var(--violet)}
 
   @media (max-width:900px){
@@ -151,22 +150,27 @@
 
     <section class="tile t-tune" aria-label="Room controls">
       <p class="eyebrow">Tune the room</p>
-      <h2>This page is <em>adjustable.</em></h2>
+      <h2><em>Play</em> with me</h2>
       <div class="ctl" role="group" aria-label="Visualizer controls">
         <div class="ctl-row">
-          <span>Mood</span>
-          <button type="button" data-mood="0" aria-pressed="true" aria-label="Sky" title="Sky"><svg viewBox="0 0 24 24"><path d="M3 15c3-4 6-4 9 0s6 4 9 0"/><path d="M3 9c3-4 6-4 9 0s6 4 9 0" opacity=".45"/></svg></button>
-          <button type="button" data-mood="1" aria-pressed="false" aria-label="Rich" title="Rich"><svg viewBox="0 0 24 24"><path d="M15.5 3.5a8.5 8.5 0 1 0 5 15.4A9 9 0 0 1 15.5 3.5z"/><path d="M6 4v3M4.5 5.5h3" opacity=".7"/></svg></button>
-          <button type="button" data-mood="2" aria-pressed="false" aria-label="Orbs" title="Orbs"><svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="5.5"/><circle cx="15.5" cy="14.5" r="5.5"/></svg></button>
+          <span id="moodLabel">Mood</span>
+          <div class="ctl-group" role="group" aria-labelledby="moodLabel">
+            <button type="button" data-mood="0" aria-pressed="true" aria-label="Sky" title="Sky"><svg viewBox="0 0 24 24"><path d="M3 15c3-4 6-4 9 0s6 4 9 0"/><path d="M3 9c3-4 6-4 9 0s6 4 9 0" opacity=".45"/></svg></button>
+            <button type="button" data-mood="1" aria-pressed="false" aria-label="Rich" title="Rich"><svg viewBox="0 0 24 24"><path d="M15.5 3.5a8.5 8.5 0 1 0 5 15.4A9 9 0 0 1 15.5 3.5z"/><path d="M6 4v3M4.5 5.5h3" opacity=".7"/></svg></button>
+            <button type="button" data-mood="2" aria-pressed="false" aria-label="Orbs" title="Orbs"><svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="5.5"/><circle cx="15.5" cy="14.5" r="5.5"/></svg></button>
+          </div>
         </div>
         <div class="ctl-row">
-          <label title="Speed of the field, from near-still to fast">Drift <input id="drift" type="range" min="0" max="1" step="0.01" value="0.70"></label>
+          <label for="drift" title="Speed of the field, from near-still to fast">Drift</label>
+          <input id="drift" type="range" min="0" max="1" step="0.01" value="0.70">
         </div>
         <div class="ctl-row">
-          <span>Mouse</span>
-          <button type="button" data-inter="0" aria-pressed="true" aria-label="Smudge" title="Smudge: drag colour along the stroke"><svg viewBox="0 0 24 24"><path d="M4 16c4-8 8-8 12 0"/><path d="M13 16h7l-2.5-2.5M20 16l-2.5 2.5"/></svg></button>
-          <button type="button" data-inter="1" aria-pressed="false" aria-label="Colour" title="Colour: hue turns where the pointer passes"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/><path d="M12 20v-9" opacity=".5"/></svg></button>
-          <button type="button" data-inter="2" aria-pressed="false" aria-label="Ripple" title="Ripple: rings expand from where you move or tap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="12" r="6" opacity=".7"/><circle cx="12" cy="12" r="9.5" opacity=".4"/></svg></button>
+          <span id="mouseLabel">Mouse</span>
+          <div class="ctl-group" role="group" aria-labelledby="mouseLabel">
+            <button type="button" data-inter="0" aria-pressed="true" aria-label="Smudge" title="Smudge: drag colour along the stroke"><svg viewBox="0 0 24 24"><path d="M4 16c4-8 8-8 12 0"/><path d="M13 16h7l-2.5-2.5M20 16l-2.5 2.5"/></svg></button>
+            <button type="button" data-inter="1" aria-pressed="false" aria-label="Colour" title="Colour: hue turns where the pointer passes"><svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/><path d="M12 20v-9" opacity=".5"/></svg></button>
+            <button type="button" data-inter="2" aria-pressed="false" aria-label="Ripple" title="Ripple: rings expand from where you move or tap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="12" r="6" opacity=".7"/><circle cx="12" cy="12" r="9.5" opacity=".4"/></svg></button>
+          </div>
         </div>
       </div>
     </section>
