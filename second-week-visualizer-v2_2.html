@@ -8,7 +8,7 @@
 <style>
   :root{
     --sky:#F6F2F8; --ink:#1E1A2E; --muted:#6E6785; --line:rgba(30,26,46,.12); --grid:rgba(30,26,46,.05);
-    --violet:#956BFE; --deep:#2A1F4D; --white:rgba(255,255,255,.62); --hover-dur:.35s;
+    --violet:#956BFE; --deep:#2A1F4D; --white:rgba(255,255,255,.62); --dark:#141024; --hover-dur:.35s;
     --display:"Newsreader", Georgia, serif; --body:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono:"JetBrains Mono", Menlo, monospace;
   }
   html{color-scheme:light}
@@ -47,7 +47,7 @@
   .tile p{color:var(--muted); font-size:14.5px; max-width:36ch}
   .tile .eyebrow{position:absolute; left:22px; top:18px}
 
-  .t-hero{grid-column:span 8; grid-row:span 4; padding:0; border:1px solid rgba(30,26,46,.18); background:#DBD3D0; justify-content:flex-start; min-height:440px}
+  .t-hero{grid-column:1 / span 8; grid-row:1 / span 4; padding:0; border:1px solid rgba(30,26,46,.18); background:#DBD3D0; justify-content:flex-start; min-height:440px}
   .t-hero::before{display:none}
   .t-hero canvas{position:absolute; inset:0; width:100%; height:100%; display:block; border-radius:inherit; touch-action:none}
   .t-hero .copy{position:relative; z-index:2; padding:28px; height:100%; display:flex; flex-direction:column; justify-content:space-between}
@@ -70,30 +70,30 @@
   .t-hero.light .cta{color:var(--ink); border-color:rgba(30,26,46,.3); background:rgba(255,255,255,.55)}
   .t-hero.light .cta:hover{background:rgba(255,255,255,.8)}
 
-  .t-now{grid-column:span 4; grid-row:span 2}
+  .t-now{grid-column:9 / span 4; grid-row:4 / span 2}
   .t-now dl{margin:0; display:grid; gap:8px}
   .t-now dl div{display:grid; grid-template-columns:78px 1fr; gap:10px; font-size:14px}
   .t-now dt{font:400 11px/1.9 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
   .t-now dd{margin:0}
-  .t-work{grid-column:span 4; grid-row:span 3}
+  .t-work{grid-column:1 / span 4; grid-row:5 / span 3}
   .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
   .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
-  .t-about{grid-column:span 4; grid-row:span 2}
-  .t-cta{grid-column:span 4; grid-row:span 1; background:var(--ink); color:var(--sky); border-color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
+  .t-about{grid-column:5 / span 4; grid-row:5 / span 2}
+  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:var(--ink); color:var(--sky); border-color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between}
   .t-cta::before{color:rgba(246,242,248,.5)}
   .t-cta h2{font-size:22px; color:var(--sky)}
   .t-cta a{color:var(--sky); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap}
 
   /* ---- video tile + inline play ---- */
-  .t-yt{grid-column:span 4; grid-row:span 2; padding:0; border-color:rgba(30,26,46,.18); background:#141024}
+  .t-yt{grid-column:9 / span 4; grid-row:6 / span 2; padding:0; border-color:rgba(30,26,46,.18); background:var(--dark)}
   .t-yt::before{display:none}
-  .video-frame{position:absolute; inset:0; border-radius:inherit; overflow:hidden; cursor:pointer; background:#141024}
+  .video-frame{position:absolute; inset:0; border-radius:inherit; overflow:hidden; cursor:pointer; background:var(--dark); transition:background-color .5s ease}
   .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; pointer-events:none}
   .video-scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,16,36,.1) 40%, rgba(20,16,36,.72) 100%); transition:opacity .3s ease}
   .video-copy{position:absolute; left:20px; right:20px; bottom:18px; z-index:2; transition:opacity .25s ease, transform .25s ease}
   .video-copy .eyebrow{position:static; color:rgba(255,255,255,.68)}
   .video-copy h2{font:300 clamp(19px, 2vw, 24px)/1.15 var(--display); color:#fff; letter-spacing:-.01em; margin-top:4px}
-  .video-copy h2 em{font-style:italic; color:#CBB0FF}
+  .video-copy h2 em{font-style:italic; color:var(--violet)}
   .video-copy .lede{color:rgba(255,255,255,.8); font-size:13.5px; margin-top:5px; max-width:46ch}
   .play-btn{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:58px; height:58px; border-radius:50%; border:1px solid rgba(255,255,255,.5); background:rgba(255,255,255,.14); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2; transition:transform .25s ease, background .25s ease, opacity .2s ease; padding:0}
   .play-btn svg{width:20px; height:20px; fill:#fff; margin-left:2px}
@@ -103,16 +103,21 @@
   .video-frame.is-playing .play-btn, .video-frame.is-playing .video-copy, .video-frame.is-playing .video-scrim{opacity:0; pointer-events:none}
 
   /* ---- tune-the-room tile: dark like the video tile, holds the live controls ---- */
-  .t-tune{grid-column:span 4; grid-row:span 3; background:#141024; border-color:rgba(30,26,46,.18); color:#fff}
+  .t-tune{grid-column:9 / span 4; grid-row:1 / span 3; background:var(--dark); border-color:rgba(30,26,46,.18); color:#fff}
   .t-tune::before{display:none}
   .t-tune .eyebrow{color:rgba(255,255,255,.68)}
   .t-tune h2{color:#fff}
-  .t-tune h2 em{color:#CBB0FF}
+  .t-tune h2 em{color:var(--violet)}
 
   @media (max-width:900px){
     .bento{grid-template-columns:repeat(6, 1fr)}
-    .t-hero{grid-column:span 6; grid-row:span 4; min-height:420px}
-    .t-now,.t-work,.t-about,.t-cta,.t-yt,.t-tune{grid-column:span 6}
+    .t-hero{grid-column:1 / span 6; grid-row:auto / span 4; min-height:420px}
+    .t-tune{grid-column:1 / span 6; grid-row:auto / span 3}
+    .t-now{grid-column:1 / span 6; grid-row:auto / span 2}
+    .t-work{grid-column:1 / span 6; grid-row:auto / span 3}
+    .t-about{grid-column:1 / span 6; grid-row:auto / span 2}
+    .t-yt{grid-column:1 / span 6; grid-row:auto / span 2}
+    .t-cta{grid-column:1 / span 6; grid-row:auto / span 1}
   }
   @media (prefers-reduced-motion:reduce){ .t-hero canvas{filter:none} }
 </style>
@@ -144,29 +149,6 @@
       </div>
     </section>
 
-    <section class="tile t-now">
-      <p class="eyebrow">Currently</p>
-      <dl>
-        <div><dt>Building</dt><dd>A wellness journaling app. TestFlight, Nov.</dd></div>
-        <div><dt>Rebuilding</dt><dd>The messiest screen in a dealership workspace.</dd></div>
-        <div><dt>Studying</dt><dd>MHCID, UC Irvine.</dd></div>
-      </dl>
-    </section>
-
-    <section class="tile t-yt" aria-label="Video">
-      <div class="video-frame" id="videoFrame" role="button" tabindex="0" aria-label="Play the video">
-        <iframe id="ytPlayer" src="https://www.youtube.com/embed/rj3rAEoHqBk?autoplay=1&mute=1&loop=1&playlist=rj3rAEoHqBk&controls=0&modestbranding=1&rel=0&playsinline=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <div class="video-scrim" aria-hidden="true"></div>
-        <button type="button" class="play-btn" tabindex="-1" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-        <div class="video-copy">
-          <p class="eyebrow">Watch</p>
-          <h2>See it <em>in motion.</em></h2>
-        </div>
-      </div>
-    </section>
-
     <section class="tile t-tune" aria-label="Room controls">
       <p class="eyebrow">Tune the room</p>
       <h2>This page is <em>adjustable.</em></h2>
@@ -189,6 +171,15 @@
       </div>
     </section>
 
+    <section class="tile t-now">
+      <p class="eyebrow">Currently</p>
+      <dl>
+        <div><dt>Building</dt><dd>A wellness journaling app. TestFlight, Nov.</dd></div>
+        <div><dt>Rebuilding</dt><dd>The messiest screen in a dealership workspace.</dd></div>
+        <div><dt>Studying</dt><dd>MHCID, UC Irvine.</dd></div>
+      </dl>
+    </section>
+
     <section class="tile t-work" id="work">
       <div class="thumb" aria-hidden="true"></div>
       <p class="eyebrow">2026 · Lead · myKaarma</p>
@@ -201,6 +192,20 @@
       <p class="eyebrow">About</p>
       <h2>Psychology, recruiting, <em>then design.</em></h2>
       <p>Amazon, Meta and Riot taught me how people actually decide. Design is where I do something about it.</p>
+    </section>
+
+    <section class="tile t-yt" aria-label="Video">
+      <div class="video-frame" id="videoFrame" role="button" tabindex="0" aria-label="Play the video">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/rj3rAEoHqBk?autoplay=1&mute=1&loop=1&playlist=rj3rAEoHqBk&controls=0&modestbranding=1&rel=0&playsinline=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div class="video-scrim" aria-hidden="true"></div>
+        <button type="button" class="play-btn" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="video-copy">
+          <p class="eyebrow">Watch</p>
+          <h2>See it <em>in motion.</em></h2>
+        </div>
+      </div>
     </section>
 
     <section class="tile t-cta">
@@ -398,14 +403,15 @@
   // white = the tint of every card's glass background.
   var root = document.documentElement;
   var MOOD_THEME = [
-    { violet:'#956BFE', white:'rgba(255,255,255,.62)' },   // Sky — the default lilac
-    { violet:'#6B4FBB', white:'rgba(224,214,255,.68)' },   // Rich — deeper, cooler violet glass
-    { violet:'#B8672E', white:'rgba(255,239,222,.66)' }    // Orbs — warm ember glass
+    { violet:'#956BFE', white:'rgba(255,255,255,.62)', dark:'#141024' },   // Sky — the default lilac, near-black cards
+    { violet:'#6B4FBB', white:'rgba(224,214,255,.68)', dark:'#2A1F4D' },   // Rich — deeper, cooler violet glass and cards
+    { violet:'#FA5687', white:'rgba(226,230,245,.62)', dark:'#1F1016' }    // Orbs — coral highlight, blue-grey glass (matches the orbs' own backdrop), warm-dark cards
   ];
   function applyMoodTheme(m){
     var th = MOOD_THEME[m] || MOOD_THEME[0];
     root.style.setProperty('--violet', th.violet);
     root.style.setProperty('--white', th.white);
+    root.style.setProperty('--dark', th.dark);
   }
   // ---- drift also sets the page's temperament: how eagerly cards react on hover ----
   function applyHoverEase(d){
