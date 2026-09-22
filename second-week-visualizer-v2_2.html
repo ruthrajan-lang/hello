@@ -97,10 +97,6 @@
   .video-frame.is-playing iframe{pointer-events:auto}
   .video-frame.is-playing .play-btn, .video-frame.is-playing .video-copy, .video-frame.is-playing .video-scrim{opacity:0; pointer-events:none}
 
-  .notes{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:24px 36px}
-  .notes p{color:var(--muted); font-size:14.5px}
-  .notes p b{color:var(--ink); font-weight:500}
-
   @media (max-width:900px){
     .bento{grid-template-columns:repeat(6, 1fr)}
     .t-hero{grid-column:span 6; grid-row:span 4; min-height:420px}
@@ -190,14 +186,6 @@
     </section>
   </div>
 
-  <div class="notes">
-    <p><b>What it is.</b> A GPU shader: two layers of domain-warped noise pushing colour through each other, a slow vertical "horizon" like the painting, and per-frame film grain for the fuzz. No video, no image, about 2KB of code. It runs at 60fps on a laptop and drops resolution on phones.</p>
-    <p><b>Three moods.</b> <b>Sky</b> is the brief's default: a neutral warm-grey base with vibrant iridescent ribbons (lilac, pink, coral, beige, pale seafoam) moving through the foreground, grain kept light so the ribbons stay clean. <b>Rich</b> carries a sparse, sporadic constellation of small, independent points, each on its own drift path and twinkle phase, running on real time rather than the Drift control — the field can slow to a crawl and the stars keep their own pace. <b>Rich</b> is the deep-violet version for a footer or a case-study opener. <b>Orbs</b> is the poster take: four spheres, each with a rich two-colour body gradient and a contrasting gradient rim (blue with a magenta rim, coral with hot pink, orange with magenta, teal with yellow), drifting, breathing and overlapping with a pale glow where they meet. Fuzz controls grain; Drift controls speed everywhere except the stars.</p>
-    <p><b>It listens.</b> Three pointer behaviours: <b>Smudge</b> drags colour along the stroke like a thumb through wet paint; <b>Colour</b> turns the hue partway where the pointer passes, then drifts back; <b>Ripple</b> sends expanding rings out from where you move or tap. All fade within a second or two. Grain is fixed at half strength (a fifth of that on Sky); Drift defaults to 70%. With reduced-motion enabled it freezes on a still frame. Every mood keeps text contrast above 4.5:1 by clamping luminance under the copy.</p>
-    <p><b>Bento.</b> The visual is one tile in a 12-column grid, not a full-bleed backdrop, so the structure is visible around it and the richness stays contained. Hero 8×4, Currently 4×2, a video tile the same size as the two metrics it replaced, one work tile, about, and a dark CTA strip. Registration corners on the hero, mono metadata everywhere.</p>
-    <p><b>It plays.</b> The video tile runs a muted, looped preview inline, like a live thumbnail. Click or tap it and it plays with sound right there in the tile — the play button and overlay fade out, and the player's own controls (including full screen) take over.</p>
-    <p><b>It points somewhere.</b> The hero copy carries a "See the work" link straight down to the RecLink case study, so the visual isn't just mood — it's a way in.</p>
-  </div>
 </div>
 
 <script>
