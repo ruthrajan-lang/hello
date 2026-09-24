@@ -8,7 +8,7 @@
 <style>
   :root{
     --sky:#F6F2F8; --ink:#1E1A2E; --muted:#6E6785; --stone:#6E6964; --line:rgba(30,26,46,.12); --grid:rgba(30,26,46,.05);
-    --violet:#956BFE; --deep:#2A1F4D; --white:rgba(255,255,255,.62); --dark:#141024;
+    --violet:#956BFE; --violet-soft:rgba(149,107,254,.12); --teal:#1FB8B0; --deep:#2A1F4D; --white:rgba(255,255,255,.62); --dark:#141024;
     --display:"Newsreader", Georgia, serif; --body:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono:"JetBrains Mono", Menlo, monospace;
   }
   html{color-scheme:light}
@@ -175,6 +175,53 @@
   .site-footer .links a{color:var(--sky); text-decoration:none; font:500 12.5px/1 var(--mono); letter-spacing:.03em; border-bottom:1px solid rgba(246,242,248,.35); padding-bottom:3px; transition:border-color .2s ease}
   .site-footer .links a:hover{border-color:var(--sky)}
 
+  /* ==== snapshots: bite-size case studies ==== */
+  .snap-section .sechead{display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:24px 48px; align-items:end; margin-bottom:36px}
+  .snap-section .sechead .eyebrow{margin-bottom:14px}
+  .snap-section .sechead .lede{color:var(--muted); font-size:16px; max-width:46ch; margin:0}
+  .snap-section .h2{font:300 clamp(28px, 3vw, 40px)/1.1 var(--display); letter-spacing:-.01em; text-wrap:balance; margin:0}
+  .snap-section .h2 em{font-style:italic; color:var(--violet)}
+
+  .snaps{display:grid; grid-template-columns:repeat(12,1fr); gap:12px}
+  .snap{grid-column:span 4; position:relative; border:1px solid var(--line); border-radius:10px; background:var(--white); backdrop-filter:blur(8px); padding:20px 20px 18px; display:flex; flex-direction:column; gap:12px;
+    transition:transform .35s cubic-bezier(.22,1,.36,1), border-color .35s ease, background-color .5s ease}
+  .snap:hover{transform:translateY(-3px); border-color:rgba(149,107,254,.5)}
+  .snap::before{content:"+"; position:absolute; left:7px; top:3px; font:400 12px/1 var(--mono); color:var(--violet); opacity:.5; transition:color .5s ease}
+  .snap .meta{display:flex; justify-content:space-between; gap:12px}
+  .snap .meta .rt{font:400 11px/1.4 var(--mono); color:var(--muted)}
+  .snap h3{font:400 22px/1.15 var(--display); letter-spacing:-.01em; color:var(--ink); margin:0}
+  .snap .vis{height:110px; border-radius:6px; border:1px solid var(--line); overflow:hidden; position:relative; background:#fff}
+  .snap .arc{display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13.5px; color:var(--muted); margin:0}
+  .snap .arc dt{font:500 10px/2 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--violet)}
+  .snap .arc dd{margin:0}
+  .snap .foot{display:flex; align-items:baseline; gap:12px; margin-top:auto; padding-top:8px; border-top:1px solid var(--line)}
+  .snap .num{font:300 26px/1 var(--display); color:var(--violet); letter-spacing:-.02em}
+  .snap .num small{font:400 11px/1.3 var(--mono); color:var(--muted); letter-spacing:.02em; margin-left:6px}
+  .snap .extra{margin:0}
+
+  /* tiny UI vignettes drawn in CSS */
+  .v-lines{padding:12px; display:grid; gap:7px}
+  .v-lines i{display:block; height:8px; border-radius:2px; background:#ECE7F2}
+  .v-lines i:nth-child(1){width:60%; background:#DCD3F0} .v-lines i:nth-child(3){width:80%} .v-lines i:nth-child(4){width:45%; background:var(--violet-soft)}
+  .v-pill{position:absolute; right:10px; top:10px; font:500 9px/1 var(--mono); padding:5px 7px; border-radius:999px; background:var(--violet); color:#fff; letter-spacing:.06em}
+  .v-phone{position:absolute; left:50%; top:12px; transform:translateX(-50%); width:64px; height:120px; border-radius:10px; border:2px solid var(--deep); background:linear-gradient(180deg,#F6F2F8,#E9E2F5)}
+  .v-phone::after{content:""; position:absolute; left:8px; right:8px; top:14px; height:26px; border-radius:4px; background:var(--violet); opacity:.85}
+  .v-toggle{position:absolute; left:14px; top:14px; width:34px; height:18px; border-radius:999px; background:var(--teal)}
+  .v-toggle::after{content:""; position:absolute; right:2px; top:2px; width:14px; height:14px; border-radius:50%; background:#fff}
+  .v-bars{position:absolute; inset:auto 14px 12px 14px; display:flex; gap:6px; align-items:flex-end; height:60px}
+  .v-bars i{flex:1; background:#E4DDF2; border-radius:2px 2px 0 0}
+  .v-bars i:nth-child(1){height:30%} .v-bars i:nth-child(2){height:55%} .v-bars i:nth-child(3){height:40%} .v-bars i:nth-child(4){height:85%; background:var(--violet)} .v-bars i:nth-child(5){height:65%}
+  .v-chat{padding:10px; display:grid; gap:6px}
+  .v-chat i{display:block; height:18px; border-radius:9px; background:#EEE9F6; width:70%}
+  .v-chat i:nth-child(2){margin-left:auto; width:55%; background:var(--violet-soft)}
+  .v-chat i:nth-child(3){width:62%}
+  .v-check{position:absolute; left:14px; top:14px; display:grid; gap:8px}
+  .v-check i{display:flex; align-items:center; gap:8px; font:400 10px/1 var(--mono); color:var(--muted)}
+  .v-check i::before{content:""; width:12px; height:12px; border-radius:3px; border:1.5px solid var(--line)}
+  .v-check i.on::before{background:var(--violet); border-color:var(--violet)}
+  .v-check i.on{color:var(--ink)}
+  .v-status{position:absolute; right:12px; bottom:12px; font:500 10px/1 var(--mono); padding:6px 8px; border-radius:4px; background:#E4EFEA; color:#2E6B4E; letter-spacing:.04em}
+
   @media (max-width:900px){
     .work-grid{grid-template-columns:1fr}
     .more-grid{grid-template-columns:repeat(2, 1fr)}
@@ -182,10 +229,13 @@
     .about-sec .photo{max-width:220px; margin-inline:auto; order:-1}
     .nav ul{gap:16px}
     .section{padding-top:64px}
+    .snap{grid-column:span 6}
+    .snap-section .sechead{grid-template-columns:1fr}
   }
   @media (max-width:560px){
     .more-grid{grid-template-columns:1fr}
     .nav li:nth-child(3){display:none}
+    .snap{grid-column:span 12}
   }
 </style>
 </head>
@@ -198,7 +248,7 @@
   <nav class="wrap nav-inner" aria-label="Primary">
     <span class="word">Ruth Thomson</span>
     <ul>
-      <li><a href="#featured-work">Work</a></li>
+      <li><a href="#snapshots">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#" target="_blank" rel="noopener">Résumé</a></li>
       <li><a href="mailto:ruth@example.com">Email</a></li>
@@ -216,7 +266,7 @@
         <div>
           <h1>Designing for the <em>second week.</em></h1>
           <p class="lede">Anyone can get someone through day one. I design for the moment the novelty wears off.</p>
-          <a class="cta" href="#featured-work">See the work →</a>
+          <a class="cta" href="#snapshots">See the work →</a>
         </div>
       </div>
     </section>
@@ -284,6 +334,94 @@
   </div>
 
 </div>
+
+<section class="section snap-section" id="snapshots">
+  <div class="wrap">
+    <div class="sechead">
+      <div>
+        <p class="eyebrow">Snapshots</p>
+        <h2 class="h2">Small problems, <em>solved properly.</em></h2>
+      </div>
+      <p class="lede">Bite-size case studies. Each one is a single decision, what it changed, and one thing I'd do differently. About a minute each.</p>
+    </div>
+
+    <div class="snaps">
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2026 · myKaarma · Feature</span><span class="rt">1 min</span></div>
+        <h3>Capturing why customers say no</h3>
+        <div class="vis"><div class="v-check"><i class="on">Too expensive right now</i><i>Will do it elsewhere</i><i>Doesn't seem urgent</i><i class="on">Other</i></div><span class="v-status">CAPTURED</span></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>Advisors marked recommendations declined and moved on. Nobody knew why.</dd>
+          <dt>Move</dt><dd>A one-tap reason picker at the exact moment of the decline, defaults tuned so it's faster to answer than to skip.</dd>
+        </dl>
+        <div class="foot"><span class="num">[81%]<small>capture rate · placeholder</small></span></div>
+        <p class="extra aside">I'd have shipped with three reasons instead of six. We learned which three within a fortnight anyway.</p>
+      </article>
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2026 · myKaarma · Indicator</span><span class="rt">1 min</span></div>
+        <h3>Telling a dealer what they don't have</h3>
+        <div class="vis"><div class="v-lines"><i></i><i></i><i></i><i></i></div><span class="v-pill">LIGHT</span></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>Two tiers of ServiceCart, one interface. People on the light tier kept hitting doors that didn't open.</dd>
+          <dt>Move</dt><dd>A quiet tier indicator plus honest empty states that name the feature and how to get it, instead of hiding it.</dd>
+        </dl>
+        <div class="foot"><span class="num">[−40%]<small>"where is X" tickets · placeholder</small></span></div>
+        <p class="extra aside">Naming is everything here. "Light" tested better than "Basic" by a mile; people don't like being told they're basic.</p>
+      </article>
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2026 · myKaarma · Mobile</span><span class="rt">1 min</span></div>
+        <h3>Check-in that knows what the car said</h3>
+        <div class="vis"><div class="v-phone"></div></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>Diagnostic pods reported status the advisor never saw during mobile check-in. Two systems, one customer, zero shared context.</dd>
+          <dt>Move</dt><dd>Pod status surfaced inline on the check-in screen, in the advisor's language, at the moment they're standing next to the car.</dd>
+        </dl>
+        <div class="foot"><span class="num">[n]<small>advisors interviewed · placeholder</small></span></div>
+        <p class="extra aside">Fewer status states. The pod reports nine; advisors care about three.</p>
+      </article>
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2024 · Vidsy · Mini project</span><span class="rt">1 min</span></div>
+        <h3>Turning vague feedback into edits</h3>
+        <div class="vis"><div class="v-chat"><i></i><i></i><i></i></div></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>Clients left notes like "make it pop." Editors guessed. Rounds multiplied.</dd>
+          <dt>Move</dt><dd>An AI assist that reads the note and offers three concrete, editable revisions the client picks from before it reaches an editor.</dd>
+        </dl>
+        <div class="foot"><span class="num">[−1.4]<small>revision rounds · placeholder</small></span></div>
+        <p class="extra aside">I'd let the client write their own third option from the start. People trust a list more when they've added to it.</p>
+      </article>
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2023 · Spec · Mobile</span><span class="rt">1 min</span></div>
+        <h3>A fitness onboarding that doesn't nag</h3>
+        <div class="vis"><div class="v-toggle"></div><div class="v-bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>The app asked for seven preferences before you could log a single workout.</dd>
+          <dt>Move</dt><dd>Log first, ask later. Preferences requested one at a time, each right after the moment it would have been useful.</dd>
+        </dl>
+        <div class="foot"><span class="num">1 → 7<small>screens before first log, before / after</small></span></div>
+        <p class="extra aside">Spec work, so no real users. I'd test whether "ask later" ever actually arrives, or whether people just never set anything.</p>
+      </article>
+
+      <article class="snap">
+        <div class="meta"><span class="eyebrow">2022 · 1st Central · Flow</span><span class="rt">1 min</span></div>
+        <h3>One question per screen, on purpose</h3>
+        <div class="vis"><div class="v-lines"><i></i><i></i><i></i><i></i></div><span class="v-status">STEP 4 / 9</span></div>
+        <dl class="arc">
+          <dt>Problem</dt><dd>A long insurance quote form people abandoned partway, mostly on mobile.</dd>
+          <dt>Move</dt><dd>Split the form into single questions with visible progress and honest defaults, so each screen felt finishable.</dd>
+        </dl>
+        <div class="foot"><span class="num">£35M<small>added revenue over five years</small></span></div>
+        <p class="extra aside">The progress bar did more than any copy change. People will finish almost anything if they can see the end.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
 
 <section class="section" id="featured-work">
   <div class="wrap">
@@ -573,13 +711,14 @@
   // white = the tint of every card's glass background.
   var root = document.documentElement;
   var MOOD_THEME = [
-    { violet:'#956BFE', white:'rgba(255,255,255,.62)', dark:'#141024' },   // Sky — the default lilac, near-black cards
-    { violet:'#6B4FBB', white:'rgba(224,214,255,.68)', dark:'#2A1F4D' },   // Rich — deeper, cooler violet glass and cards
-    { violet:'#FA5687', white:'rgba(255,255,255,.62)', dark:'#1F1016' }    // Orbs — coral highlight, plain white glass, warm-dark cards
+    { violet:'#956BFE', violetSoft:'rgba(149,107,254,.12)', white:'rgba(255,255,255,.62)', dark:'#141024' },   // Sky — the default lilac, near-black cards
+    { violet:'#6B4FBB', violetSoft:'rgba(107,79,187,.12)', white:'rgba(224,214,255,.68)', dark:'#2A1F4D' },   // Rich — deeper, cooler violet glass and cards
+    { violet:'#FA5687', violetSoft:'rgba(250,86,135,.12)', white:'rgba(255,255,255,.62)', dark:'#1F1016' }    // Orbs — coral highlight, plain white glass, warm-dark cards
   ];
   function applyMoodTheme(m){
     var th = MOOD_THEME[m] || MOOD_THEME[0];
     root.style.setProperty('--violet', th.violet);
+    root.style.setProperty('--violet-soft', th.violetSoft);
     root.style.setProperty('--white', th.white);
     root.style.setProperty('--dark', th.dark);
   }
