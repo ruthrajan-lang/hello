@@ -142,25 +142,6 @@
   .section{padding:88px 0 0}
   .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:36px; flex-wrap:wrap}
   .section-head h2{font:300 clamp(28px, 3vw, 40px)/1.1 var(--display); letter-spacing:-.01em}
-  .section-head .count{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
-
-  .work-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px}
-  .case-card{border:1px solid var(--line); border-radius:10px; background:var(--white); overflow:hidden; display:flex; flex-direction:column; transition:background-color .5s ease, border-color .5s ease}
-  .case-thumb{position:relative; height:170px; background:linear-gradient(135deg, #E4EFEA, #EEE9F6)}
-  .case-thumb span{position:absolute; left:12px; bottom:10px; font:500 10px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:rgba(30,26,46,.45); background:rgba(255,255,255,.65); padding:4px 7px; border-radius:5px}
-  .case-body{padding:22px; display:flex; flex-direction:column; gap:8px; flex:1}
-  .case-body .eyebrow{position:static}
-  .case-body h3{font:300 clamp(20px, 2vw, 24px)/1.15 var(--display); letter-spacing:-.01em; margin:0}
-  .case-body p{color:var(--muted); font-size:14px; margin:0}
-  .case-body .aside{font:italic 300 13.5px/1.5 var(--display); color:var(--muted); margin-top:2px}
-  .case-body .go{margin-top:auto; padding-top:10px; font:500 12px/1 var(--mono); color:var(--violet); text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:color .5s ease}
-  .case-body .go:hover{color:var(--ink)}
-
-  .more-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px}
-  .more-card{border:1px solid var(--line); border-radius:10px; background:var(--white); padding:18px; display:flex; flex-direction:column; gap:6px; transition:background-color .5s ease, border-color .5s ease}
-  .more-card .eyebrow{position:static}
-  .more-card h4{font:400 16px/1.25 var(--display); margin:0}
-  .more-card p{color:var(--muted); font-size:13px; margin:0}
 
   .about-sec{display:grid; grid-template-columns:1.4fr 1fr; gap:48px; align-items:center}
   .about-sec p{font-size:16px; line-height:1.6; color:var(--ink); max-width:52ch; margin:0}
@@ -222,19 +203,63 @@
   .v-check i.on{color:var(--ink)}
   .v-status{position:absolute; right:12px; bottom:12px; font:500 10px/1 var(--mono); padding:6px 8px; border-radius:4px; background:#E4EFEA; color:#2E6B4E; letter-spacing:.04em}
 
+  /* ==== playground: small live tools ==== */
+  .play{display:grid; grid-template-columns:repeat(12,1fr); gap:12px}
+  .tool{position:relative; border:1px solid var(--line); border-radius:10px; background:var(--white); backdrop-filter:blur(8px); padding:20px; display:flex; flex-direction:column; gap:14px; min-height:360px; transition:background-color .5s ease, border-color .5s ease}
+  .tool::before{content:"+"; position:absolute; left:7px; top:3px; font:400 12px/1 var(--mono); color:var(--violet); opacity:.5; transition:color .5s ease}
+  .tool .head{display:flex; justify-content:space-between; gap:12px; align-items:flex-start}
+  .tool h3{font:400 24px/1.1 var(--display); letter-spacing:-.01em; color:var(--ink)}
+  .tool .desc{color:var(--muted); font-size:14.5px; max-width:44ch}
+  .tool .status{font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; padding:6px 8px; border-radius:4px; white-space:nowrap}
+  .st-live{background:#E4EFEA; color:#2E6B4E} .st-build{background:var(--violet-soft); color:var(--violet)} .st-idea{background:rgba(30,26,46,.06); color:var(--muted)}
+  .tool .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:auto}
+  .tool .chips li{font:400 11px/1 var(--mono); padding:6px 8px; border:1px solid var(--line); border-radius:4px; color:var(--muted)}
+  .t-grad{grid-column:span 5}
+  .t-feed{grid-column:span 4}
+  .t-git{grid-column:span 3}
+  /* gradient tool */
+  .gprev{height:150px; border-radius:8px; border:1px solid var(--line); position:relative; overflow:hidden}
+  .gprev::after{content:""; position:absolute; inset:0; opacity:.245; mix-blend-mode:soft-light; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); pointer-events:none}
+  .gctl{display:grid; grid-template-columns:auto auto 1fr auto; gap:10px; align-items:center}
+  .gctl input[type=color]{width:34px; height:34px; border:1px solid var(--line); border-radius:6px; padding:2px; background:#fff; cursor:pointer}
+  .gctl input[type=range]{width:100%; accent-color:var(--violet)}
+  .gctl label{font:400 11px/1 var(--mono); color:var(--muted); display:flex; align-items:center; gap:8px}
+  .gcss{display:flex; gap:8px; align-items:center}
+  .gcss code{flex:1; font:400 11.5px/1.5 var(--mono); color:var(--muted); background:rgba(30,26,46,.04); border:1px solid var(--line); border-radius:6px; padding:8px 10px; white-space:nowrap; overflow:auto}
+  .btn{font:500 12px/1 var(--mono); letter-spacing:.04em; padding:10px 12px; border:1px solid var(--ink); background:var(--ink); color:var(--sky); border-radius:6px; cursor:pointer; white-space:nowrap}
+  .btn.ghost{background:transparent; color:var(--ink)}
+  /* feed */
+  .ffilters{display:flex; gap:6px; flex-wrap:wrap}
+  .ffilters button{font:500 11px/1 var(--mono); padding:7px 9px; border:1px solid var(--line); background:transparent; border-radius:999px; cursor:pointer; color:var(--muted)}
+  .ffilters button[aria-pressed="true"]{background:var(--ink); color:var(--sky); border-color:var(--ink)}
+  .feed{display:grid; gap:0; border-top:1px solid var(--line)}
+  .feed li{display:grid; grid-template-columns:1fr auto; gap:4px 14px; padding:11px 0; border-bottom:1px solid var(--line)}
+  .feed li[hidden]{display:none}
+  .feed h4{grid-column:1; font:500 14px/1.35 var(--body); color:var(--ink)}
+  .feed .src{grid-column:1; grid-row:2; font:400 11px/1.4 var(--mono); color:var(--muted); white-space:nowrap}
+  .feed .tag{grid-column:2; grid-row:1 / span 2; align-self:start; font:500 10px/1 var(--mono); padding:5px 7px; border-radius:4px; background:var(--violet-soft); color:var(--violet); letter-spacing:.04em}
+  /* git */
+  .git svg{width:100%; height:150px; display:block}
+  .git .scrub{display:flex; align-items:center; gap:10px}
+  .git input[type=range]{flex:1; accent-color:var(--violet)}
+  .git .ver{font:400 11px/1 var(--mono); color:var(--muted); min-width:52px; text-align:right}
+  .gitmsg{font-size:13.5px; color:var(--muted); min-height:42px}
+  .gitmsg b{color:var(--ink); font-weight:500; font-family:var(--mono); font-size:12px}
+  .gitprev{height:64px; border:1px solid var(--line); border-radius:6px; background:#fff; position:relative; overflow:hidden}
+  .gitprev i{position:absolute; border-radius:3px; background:#ECE7F2; transition:all .35s cubic-bezier(.22,1,.36,1)}
+
   @media (max-width:900px){
-    .work-grid{grid-template-columns:1fr}
-    .more-grid{grid-template-columns:repeat(2, 1fr)}
     .about-sec{grid-template-columns:1fr}
     .about-sec .photo{max-width:220px; margin-inline:auto; order:-1}
     .nav ul{gap:16px}
     .section{padding-top:64px}
     .snap{grid-column:span 6}
     .snap-section .sechead{grid-template-columns:1fr}
+    .t-grad{grid-column:span 12} .t-feed{grid-column:span 6} .t-git{grid-column:span 6}
   }
   @media (max-width:560px){
-    .more-grid{grid-template-columns:1fr}
-    .nav li:nth-child(3){display:none}
+    .nav li:nth-child(4){display:none}
+    .t-feed,.t-git{grid-column:span 12}
     .snap{grid-column:span 12}
   }
 </style>
@@ -249,6 +274,7 @@
     <span class="word">Ruth Thomson</span>
     <ul>
       <li><a href="#snapshots">Work</a></li>
+      <li><a href="#playground">Playground</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#" target="_blank" rel="noopener">Résumé</a></li>
       <li><a href="mailto:ruth@example.com">Email</a></li>
@@ -264,8 +290,8 @@
       <div class="copy">
         <p class="eyebrow">Ruth Thomson · Product designer · Psychology, then design</p>
         <div>
-          <h1>Designing for the <em>second week.</em></h1>
-          <p class="lede">Anyone can get someone through day one. I design for the moment the novelty wears off.</p>
+          <h1>Behavior design for <em>busy people</em></h1>
+          <p class="lede">Dense workflows, packed schedules, real constraints. I use psychology to make them feel simple, and testing to prove it.</p>
           <a class="cta" href="#snapshots">See the work →</a>
         </div>
       </div>
@@ -423,74 +449,73 @@
   </div>
 </section>
 
-<section class="section" id="featured-work">
+<section class="section snap-section" id="playground">
   <div class="wrap">
-    <div class="section-head">
-      <h2>Selected work</h2>
-      <span class="count">03 case studies</span>
+    <div class="sechead">
+      <div>
+        <p class="eyebrow">Playground</p>
+        <h2 class="h2">Things I built because I wanted them. <em>You can use them too.</em></h2>
+      </div>
+      <p class="lede">Small tools, live on the page. Each tile is the real thing, not a screenshot of it. Some are finished, some are mid-build, one is a sketch.</p>
     </div>
-    <div class="work-grid">
-      <article class="case-card">
-        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
-        <div class="case-body">
-          <p class="eyebrow">2026 · Lead · myKaarma</p>
-          <h3>RecLink</h3>
-          <p>The screen everyone lambasted. Stripped it back, then added only what earned its place.</p>
-          <p class="aside">Tested with dealerships who loved it, and one group who did not.</p>
-          <a class="go" href="#">Read case study →</a>
-        </div>
-      </article>
-      <article class="case-card">
-        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
-        <div class="case-body">
-          <p class="eyebrow">Product design · Vidsy</p>
-          <h3>Vidsy</h3>
-          <p>Creative teams were pitching from scattered references and gut feeling. I designed the AI-powered library that gave them one shared place to point to instead.</p>
-          <p class="aside">£133,280 in added value generation — the client's finance team's number, not mine.</p>
-          <a class="go" href="#">Read case study →</a>
-        </div>
-      </article>
-      <article class="case-card">
-        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
-        <div class="case-body">
-          <p class="eyebrow">UX / Branding · 1st Central</p>
-          <h3>1st Central</h3>
-          <p>Their quote journey was losing people before anyone saw a price. I rebuilt it end to end, from first click to bound policy.</p>
-          <p class="aside">£35 million in additional revenue over five years — proven slowly, not claimed overnight.</p>
-          <a class="go" href="#">Read case study →</a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>More work</h2>
-      <span class="count">Snapshots &amp; smaller projects</span>
-    </div>
-    <div class="more-grid">
-      <div class="more-card">
-        <p class="eyebrow">2026 · myKaarma</p>
-        <h4>Mobile Check-In</h4>
-        <p>A check-in flow tied to FlexCare, with live Mopar Diagnostic Pod status.</p>
-      </div>
-      <div class="more-card">
-        <p class="eyebrow">Product design · Riot Games</p>
-        <h4>Riot intranet</h4>
-        <p>My first real design project — built while I was still recruiting there and trying to prove I could do this instead.</p>
-      </div>
-      <div class="more-card">
-        <p class="eyebrow">Spec work</p>
-        <h4>Fitness app refresh</h4>
-        <p>Not shipped — a fitness app whose onboarding lost people before day two.</p>
-      </div>
-      <div class="more-card">
-        <p class="eyebrow">UX / UI design</p>
-        <h4>AI client feedback</h4>
-        <p>A mini project to make client feedback less of a scavenger hunt for the internal team.</p>
-      </div>
+    <div class="play">
+
+      <article class="tool t-grad">
+        <div class="head"><div><h3>Grain gradient</h3><p class="desc">Two colours, an angle, and a little film grain. Copy the CSS.</p></div><span class="status st-live">Live</span></div>
+        <div class="gprev" id="gprev" role="img" aria-label="Gradient preview"></div>
+        <div class="gctl">
+          <input type="color" id="gc1" value="#6B4FBB" aria-label="First colour">
+          <input type="color" id="gc2" value="#1FB8B0" aria-label="Second colour">
+          <label>Angle <input type="range" id="gang" min="0" max="360" value="135" aria-label="Angle"></label>
+          <label>Grain <input type="range" id="ggr" min="0" max="100" value="35" style="width:70px" aria-label="Grain"></label>
+        </div>
+        <div class="gcss"><code id="gcss">background: linear-gradient(135deg, #6B4FBB, #1FB8B0);</code><button class="btn" type="button" id="gcopy">Copy CSS</button></div>
+        <ul class="chips"><li>vanilla JS</li><li>SVG noise</li><li>no deps</li></ul>
+      </article>
+
+      <article class="tool t-feed">
+        <div class="head"><div><h3>Behaviour reader</h3><p class="desc">A feed of behavioural-science writing worth a designer's time, tagged by the effect it describes.</p></div><span class="status st-build">Building</span></div>
+        <div class="ffilters" role="group" aria-label="Filter by topic">
+          <button type="button" data-f="all" aria-pressed="true">All</button>
+          <button type="button" data-f="habit" aria-pressed="false">Habits</button>
+          <button type="button" data-f="choice" aria-pressed="false">Choice</button>
+          <button type="button" data-f="friction" aria-pressed="false">Friction</button>
+          <button type="button" data-f="motivation" aria-pressed="false">Motivation</button>
+        </div>
+        <ul class="feed" id="feed">
+          <li data-t="habit"><h4>Why habits form faster with a fixed cue than a fixed time</h4><span class="src">Example entry · journal summary</span><span class="tag">HABIT</span></li>
+          <li data-t="friction"><h4>Every extra field is a small goodbye</h4><span class="src">Example entry · blog</span><span class="tag">FRICTION</span></li>
+          <li data-t="choice"><h4>Defaults do the choosing for most people, most of the time</h4><span class="src">Example entry · review paper</span><span class="tag">CHOICE</span></li>
+          <li data-t="motivation"><h4>Streaks help until they break, then they hurt</h4><span class="src">Example entry · study</span><span class="tag">MOTIVATION</span></li>
+          <li data-t="habit"><h4>Small wins, logged visibly, beat big goals</h4><span class="src">Example entry · essay</span><span class="tag">HABIT</span></li>
+          <li data-t="choice"><h4>Three options is where confidence peaks</h4><span class="src">Example entry · experiment</span><span class="tag">CHOICE</span></li>
+        </ul>
+        <p class="aside">Entries are placeholders. The real version pulls from a hand-kept list and tags each piece by the behavioural effect, not the outlet.</p>
+        <ul class="chips"><li>RSS</li><li>hand-curated</li><li>tags by effect</li></ul>
+      </article>
+
+      <article class="tool t-git">
+        <div class="head"><div><h3>Design history</h3><p class="desc">Git-style version history for design files. Scrub through commits and watch the layout change.</p></div><span class="status st-idea">Sketch</span></div>
+        <div class="git">
+          <svg viewBox="0 0 300 150" aria-hidden="true">
+            <path d="M30 120 L270 120" stroke="rgba(30,26,46,.15)" stroke-width="2" fill="none"/>
+            <path d="M110 120 C140 120 140 70 170 70 L230 70 C255 70 255 120 270 120" stroke="rgba(107,79,187,.5)" stroke-width="2" fill="none"/>
+            <g id="gitnodes">
+              <circle cx="30" cy="120" r="6" fill="#1E1A2E"/><circle cx="70" cy="120" r="6" fill="#1E1A2E"/><circle cx="110" cy="120" r="6" fill="#1E1A2E"/>
+              <circle cx="170" cy="70" r="6" fill="#6B4FBB"/><circle cx="230" cy="70" r="6" fill="#6B4FBB"/>
+              <circle cx="190" cy="120" r="6" fill="#1E1A2E"/><circle cx="270" cy="120" r="6" fill="#1E1A2E"/>
+            </g>
+            <circle id="gitcursor" cx="30" cy="120" r="11" fill="none" stroke="#6B4FBB" stroke-width="2"/>
+            <text x="150" y="52" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6E6785">branch: rec-list-grouping</text>
+          </svg>
+          <div class="gitprev" id="gitprev"><i style="left:8px;top:8px;width:60%;height:10px"></i><i style="left:8px;top:26px;width:40%;height:8px"></i><i style="left:8px;top:42px;width:80%;height:8px"></i></div>
+          <div class="scrub"><input type="range" id="gitscrub" min="0" max="6" value="0" aria-label="Scrub commits"><span class="ver" id="gitver">v0.1</span></div>
+          <p class="gitmsg" id="gitmsg"><b>a1f3c</b> Initial list: flat, one row per recommendation.</p>
+        </div>
+        <ul class="chips"><li>concept</li><li>Figma API</li><li>needs a weekend</li></ul>
+      </article>
+
     </div>
   </div>
 </section>
@@ -764,6 +789,59 @@
 
   frame.addEventListener('click', function(){ if(!playing) play(); });
   frame.addEventListener('keydown', function(e){ if((e.key==='Enter'||e.key===' ') && !playing){ e.preventDefault(); play(); } });
+})();
+</script>
+
+<script>
+(function(){
+  /* gradient tool */
+  var c1=document.getElementById('gc1'), c2=document.getElementById('gc2'), ang=document.getElementById('gang'), gr=document.getElementById('ggr'), prev=document.getElementById('gprev'), css=document.getElementById('gcss');
+  function upd(){
+    var g='linear-gradient('+ang.value+'deg, '+c1.value.toUpperCase()+', '+c2.value.toUpperCase()+')';
+    prev.style.background=g;
+    prev.style.setProperty('--g', gr.value/100);
+    prev.style.filter='contrast('+(1+gr.value/300)+')';
+    css.textContent='background: '+g+'; /* grain '+gr.value+'% via SVG feTurbulence overlay */';
+  }
+  [c1,c2,ang,gr].forEach(function(el){ el.addEventListener('input', upd); });
+  upd();
+  document.getElementById('gcopy').addEventListener('click', function(){
+    var b=this; var txt=css.textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){ b.textContent='Copied'; }, function(){ b.textContent='Select and copy'; });
+    setTimeout(function(){ b.textContent='Copy CSS'; }, 1800);
+  });
+  var st=document.createElement('style'); document.head.appendChild(st);
+  gr.addEventListener('input', function(){ st.textContent='.gprev::after{opacity:'+(gr.value/100*.7)+'}'; });
+
+  /* feed filter */
+  var items=document.querySelectorAll('#feed li');
+  document.querySelectorAll('.ffilters button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.ffilters button').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
+      var f=b.dataset.f; items.forEach(function(li){ li.hidden = !(f==='all' || li.dataset.t===f); });
+    });
+  });
+
+  /* git scrubber */
+  var commits=[
+    {id:'a1f3c', v:'v0.1', msg:'Initial list: flat, one row per recommendation.', x:30, y:120, layout:[[8,8,60,10],[8,26,40,8],[8,42,80,8]]},
+    {id:'b72e0', v:'v0.2', msg:'Add urgency badge to each row.', x:70, y:120, layout:[[8,8,60,10],[8,26,40,8],[8,42,80,8],[200,8,40,10]]},
+    {id:'c9d11', v:'v0.3', msg:'Try grouping by concern (branch).', x:110, y:120, layout:[[8,8,90,10],[16,26,60,8],[16,40,60,8],[8,52,90,10]]},
+    {id:'d04aa', v:'v0.4', msg:'Concern headers collapsible; badges move to header.', x:170, y:70, layout:[[8,8,120,12],[200,8,40,12],[16,28,60,8],[16,42,60,8]]},
+    {id:'e5b39', v:'v0.5', msg:'Strip colour from rows; only headers carry it.', x:230, y:70, layout:[[8,8,120,12],[200,8,40,12],[16,28,80,8],[16,42,80,8]]},
+    {id:'f1c88', v:'v0.6', msg:'Main: estimate options added per recommendation.', x:190, y:120, layout:[[8,8,60,10],[8,26,40,8],[120,26,60,8],[8,42,80,8]]},
+    {id:'0a9e2', v:'v1.0', msg:'Merge grouping into main. Ship.', x:270, y:120, layout:[[8,8,120,12],[200,8,40,12],[16,28,80,8],[120,28,60,8],[16,42,80,8]]}
+  ];
+  var scrub=document.getElementById('gitscrub'), cur=document.getElementById('gitcursor'), msg=document.getElementById('gitmsg'), ver=document.getElementById('gitver'), gp=document.getElementById('gitprev');
+  function setCommit(i){
+    var c=commits[i]; cur.setAttribute('cx',c.x); cur.setAttribute('cy',c.y); ver.textContent=c.v;
+    msg.innerHTML='<b>'+c.id+'</b> '+c.msg;
+    var bars=gp.querySelectorAll('i');
+    c.layout.forEach(function(L,k){ var el=bars[k]||gp.appendChild(document.createElement('i')); el.style.left=L[0]+'px'; el.style.top=L[1]+'px'; el.style.width=L[2]+'px'; el.style.height=L[3]+'px'; el.style.opacity=1; el.style.background=(k===0&&i>=3)?'rgba(107,79,187,.35)':(L[0]>=200?'#6B4FBB':'#ECE7F2'); });
+    for(var k=c.layout.length;k<bars.length;k++){ bars[k].style.opacity=0; }
+  }
+  scrub.addEventListener('input', function(){ setCommit(+scrub.value); });
+  setCommit(0);
 })();
 </script>
 
