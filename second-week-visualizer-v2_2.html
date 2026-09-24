@@ -74,17 +74,14 @@
   .t-now dl div{display:grid; grid-template-columns:78px 1fr; gap:10px; font-size:14px}
   .t-now dt{font:400 11px/1.9 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
   .t-now dd{margin:0}
-  .t-work{grid-column:1 / span 4; grid-row:5 / span 3}
-  .t-work .thumb{position:absolute; inset:0 0 45% 0; background:linear-gradient(135deg, #E4EFEA, #EEE9F6); border-bottom:1px solid var(--line)}
-  .t-work .eyebrow{top:auto; bottom:calc(45% + 14px); left:22px}
-  .t-about{grid-column:5 / span 4; grid-row:5 / span 2}
-  .t-cta{grid-column:5 / span 4; grid-row:7 / span 1; background:rgba(247,244,240,.7); border-color:var(--line); color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between; transition:background-color .5s ease, border-color .5s ease, color .5s ease}
+  .t-about{grid-column:1 / span 4; grid-row:5 / span 2}
+  .t-cta{grid-column:9 / span 4; grid-row:6 / span 1; background:rgba(247,244,240,.7); border-color:var(--line); color:var(--ink); flex-direction:row; align-items:center; justify-content:space-between; transition:background-color .5s ease, border-color .5s ease, color .5s ease}
   .t-cta h2{font-size:22px; color:var(--ink); font-weight:400; transition:color .5s ease}
   .t-cta a{color:var(--stone); font:500 13px/1 var(--mono); text-decoration:none; border:1px solid var(--stone); background:rgba(246,242,248,.35); padding:10px 14px; border-radius:999px; white-space:nowrap; transition:background-color .3s ease, color .3s ease, border-color .3s ease}
   .t-cta a:hover{background:var(--stone); color:#fff}
 
   /* ---- video tile + inline play ---- */
-  .t-yt{grid-column:9 / span 4; grid-row:6 / span 2; padding:0; border-color:rgba(30,26,46,.18); background:var(--dark)}
+  .t-yt{grid-column:5 / span 4; grid-row:5 / span 2; padding:0; border-color:rgba(30,26,46,.18); background:var(--dark)}
   .t-yt::before{display:none}
   .video-frame{position:absolute; inset:0; border-radius:inherit; overflow:hidden; cursor:pointer; background:var(--dark); transition:background-color .5s ease}
   .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; pointer-events:none}
@@ -128,7 +125,6 @@
     .t-hero{grid-column:1 / span 6; grid-row:auto / span 4; min-height:420px}
     .t-tune{grid-column:1 / span 6; grid-row:auto / span 3}
     .t-now{grid-column:1 / span 6; grid-row:auto / span 2}
-    .t-work{grid-column:1 / span 6; grid-row:auto / span 3}
     .t-about{grid-column:1 / span 6; grid-row:auto / span 2}
     .t-yt{grid-column:1 / span 6; grid-row:auto / span 2}
     .t-cta{grid-column:1 / span 6; grid-row:auto / span 1}
@@ -259,14 +255,6 @@
         <div><dt>Rebuilding</dt><dd>The messiest screen in a dealership workspace.</dd></div>
         <div><dt>Studying</dt><dd>MHCID, UC Irvine.</dd></div>
       </dl>
-    </section>
-
-    <section class="tile t-work" id="work">
-      <div class="thumb" aria-hidden="true"></div>
-      <p class="eyebrow">2026 · Lead · myKaarma</p>
-      <h2>RecLink</h2>
-      <p>The screen everyone lambasted. Stripped it back, then added only what earned its place.</p>
-      <p class="aside">Tested with dealerships who loved it, and one group who did not.</p>
     </section>
 
     <section class="tile t-about">
