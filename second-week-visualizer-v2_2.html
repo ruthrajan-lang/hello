@@ -134,6 +134,63 @@
     .t-cta{grid-column:1 / span 6; grid-row:auto / span 1}
   }
   @media (prefers-reduced-motion:reduce){ .t-hero canvas{filter:none} }
+
+  /* ==== homepage blockout: nav, work, about, footer ==== */
+  .nav{position:sticky; top:0; z-index:30; background:rgba(246,242,248,.82); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:18px 0}
+  .nav .word{font:400 16px/1 var(--display); letter-spacing:-.01em; color:var(--ink)}
+  .nav ul{list-style:none; display:flex; gap:28px; margin:0; padding:0}
+  .nav a{color:var(--muted); text-decoration:none; font:500 12px/1 var(--mono); letter-spacing:.03em; text-transform:uppercase; transition:color .2s ease}
+  .nav a:hover{color:var(--ink)}
+
+  .section{padding:88px 0 0}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:36px; flex-wrap:wrap}
+  .section-head h2{font:300 clamp(28px, 3vw, 40px)/1.1 var(--display); letter-spacing:-.01em}
+  .section-head .count{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+
+  .work-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px}
+  .case-card{border:1px solid var(--line); border-radius:10px; background:var(--white); overflow:hidden; display:flex; flex-direction:column; transition:background-color .5s ease, border-color .5s ease}
+  .case-thumb{position:relative; height:170px; background:linear-gradient(135deg, #E4EFEA, #EEE9F6)}
+  .case-thumb span{position:absolute; left:12px; bottom:10px; font:500 10px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:rgba(30,26,46,.45); background:rgba(255,255,255,.65); padding:4px 7px; border-radius:5px}
+  .case-body{padding:22px; display:flex; flex-direction:column; gap:8px; flex:1}
+  .case-body .eyebrow{position:static}
+  .case-body h3{font:300 clamp(20px, 2vw, 24px)/1.15 var(--display); letter-spacing:-.01em; margin:0}
+  .case-body p{color:var(--muted); font-size:14px; margin:0}
+  .case-body .aside{font:italic 300 13.5px/1.5 var(--display); color:var(--muted); margin-top:2px}
+  .case-body .go{margin-top:auto; padding-top:10px; font:500 12px/1 var(--mono); color:var(--violet); text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:color .5s ease}
+  .case-body .go:hover{color:var(--ink)}
+
+  .more-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px}
+  .more-card{border:1px solid var(--line); border-radius:10px; background:var(--white); padding:18px; display:flex; flex-direction:column; gap:6px; transition:background-color .5s ease, border-color .5s ease}
+  .more-card .eyebrow{position:static}
+  .more-card h4{font:400 16px/1.25 var(--display); margin:0}
+  .more-card p{color:var(--muted); font-size:13px; margin:0}
+
+  .about-sec{display:grid; grid-template-columns:1.4fr 1fr; gap:48px; align-items:center}
+  .about-sec p{font-size:16px; line-height:1.6; color:var(--ink); max-width:52ch; margin:0}
+  .about-sec p + p{margin-top:14px}
+  .about-sec .tools{margin-top:18px; font:500 11px/1.6 var(--mono); letter-spacing:.04em; color:var(--muted)}
+  .about-sec .photo{aspect-ratio:4/5; border-radius:10px; background:linear-gradient(160deg, #EEE9F6, #E4EFEA); border:1px solid var(--line)}
+
+  .site-footer{background:var(--deep); color:var(--sky); border-radius:16px; padding:56px 40px; margin:24px 0; text-align:center}
+  .site-footer h2{font:300 clamp(28px, 4vw, 44px)/1.15 var(--display); letter-spacing:-.01em; max-width:16ch; margin:0 auto}
+  .site-footer h2 em{font-style:italic; color:var(--violet)}
+  .site-footer .links{margin-top:26px; display:flex; gap:22px; justify-content:center; flex-wrap:wrap}
+  .site-footer .links a{color:var(--sky); text-decoration:none; font:500 12.5px/1 var(--mono); letter-spacing:.03em; border-bottom:1px solid rgba(246,242,248,.35); padding-bottom:3px; transition:border-color .2s ease}
+  .site-footer .links a:hover{border-color:var(--sky)}
+
+  @media (max-width:900px){
+    .work-grid{grid-template-columns:1fr}
+    .more-grid{grid-template-columns:repeat(2, 1fr)}
+    .about-sec{grid-template-columns:1fr}
+    .about-sec .photo{max-width:220px; margin-inline:auto; order:-1}
+    .nav ul{gap:16px}
+    .section{padding-top:64px}
+  }
+  @media (max-width:560px){
+    .more-grid{grid-template-columns:1fr}
+    .nav li:nth-child(3){display:none}
+  }
 </style>
 </head>
 <body>
@@ -141,14 +198,19 @@
 
 
 
-<div class="wrap">
-  <div class="bar">
-    <div>
-      <p class="eyebrow">Hero visual · prototype</p>
-      <p class="title">Moody, fuzzy, alive. Structure around it.</p>
-    </div>
-  </div>
+<div class="nav">
+  <nav class="wrap nav-inner" aria-label="Primary">
+    <span class="word">Ruth Thomson</span>
+    <ul>
+      <li><a href="#featured-work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#" target="_blank" rel="noopener">Résumé</a></li>
+      <li><a href="mailto:ruth@example.com">Email</a></li>
+    </ul>
+  </nav>
+</div>
 
+<div class="wrap">
   <div class="bento">
     <section class="tile t-hero light" id="hero" aria-label="Hero">
       <canvas id="viz" aria-hidden="true"></canvas>
@@ -158,7 +220,7 @@
         <div>
           <h1>Designing for the <em>second week.</em></h1>
           <p class="lede">Anyone can get someone through day one. I design for the moment the novelty wears off.</p>
-          <a class="cta" href="#work">See the work →</a>
+          <a class="cta" href="#featured-work">See the work →</a>
         </div>
       </div>
     </section>
@@ -233,6 +295,107 @@
     </section>
   </div>
 
+</div>
+
+<section class="section" id="featured-work">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Selected work</h2>
+      <span class="count">03 case studies</span>
+    </div>
+    <div class="work-grid">
+      <article class="case-card">
+        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
+        <div class="case-body">
+          <p class="eyebrow">2026 · Lead · myKaarma</p>
+          <h3>RecLink</h3>
+          <p>The screen everyone lambasted. Stripped it back, then added only what earned its place.</p>
+          <p class="aside">Tested with dealerships who loved it, and one group who did not.</p>
+          <a class="go" href="#">Read case study →</a>
+        </div>
+      </article>
+      <article class="case-card">
+        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
+        <div class="case-body">
+          <p class="eyebrow">Product design · Vidsy</p>
+          <h3>Vidsy</h3>
+          <p>Creative teams were pitching from scattered references and gut feeling. I designed the AI-powered library that gave them one shared place to point to instead.</p>
+          <p class="aside">£133,280 in added value generation — the client's finance team's number, not mine.</p>
+          <a class="go" href="#">Read case study →</a>
+        </div>
+      </article>
+      <article class="case-card">
+        <div class="case-thumb" aria-hidden="true"><span>UI crop pending</span></div>
+        <div class="case-body">
+          <p class="eyebrow">UX / Branding · 1st Central</p>
+          <h3>1st Central</h3>
+          <p>Their quote journey was losing people before anyone saw a price. I rebuilt it end to end, from first click to bound policy.</p>
+          <p class="aside">£35 million in additional revenue over five years — proven slowly, not claimed overnight.</p>
+          <a class="go" href="#">Read case study →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>More work</h2>
+      <span class="count">Snapshots &amp; smaller projects</span>
+    </div>
+    <div class="more-grid">
+      <div class="more-card">
+        <p class="eyebrow">2026 · myKaarma</p>
+        <h4>Mobile Check-In</h4>
+        <p>A check-in flow tied to FlexCare, with live Mopar Diagnostic Pod status.</p>
+      </div>
+      <div class="more-card">
+        <p class="eyebrow">Product design · Riot Games</p>
+        <h4>Riot intranet</h4>
+        <p>My first real design project — built while I was still recruiting there and trying to prove I could do this instead.</p>
+      </div>
+      <div class="more-card">
+        <p class="eyebrow">Spec work</p>
+        <h4>Fitness app refresh</h4>
+        <p>Not shipped — a fitness app whose onboarding lost people before day two.</p>
+      </div>
+      <div class="more-card">
+        <p class="eyebrow">UX / UI design</p>
+        <h4>AI client feedback</h4>
+        <p>A mini project to make client feedback less of a scavenger hunt for the internal team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>About</h2>
+    </div>
+    <div class="about-sec">
+      <div>
+        <p>I'm a product designer blending psychology, visual craft, and a recruiter's read on why people actually decide.</p>
+        <p>At Vidsy I led an AI-powered inspiration library; before that I was recruiting at Amazon, Meta, and Riot Games, which taught me more about user behavior than any course did.</p>
+        <p>Right now I'm at myKaarma rebuilding the messiest screen in a dealership workspace, and studying for my MHCID at UC Irvine on the side.</p>
+        <p class="tools">FIGMA · WEBFLOW · AFTER EFFECTS · RESEARCH REPOS IN AIRTABLE</p>
+      </div>
+      <div class="photo" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer class="site-footer">
+    <h2>Working on something <em>messy?</em></h2>
+    <p style="margin-top:10px; color:rgba(246,242,248,.75); font-size:15px">Good. Let's talk.</p>
+    <div class="links">
+      <a href="mailto:ruth@example.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" target="_blank" rel="noopener">Résumé</a>
+    </div>
+  </footer>
 </div>
 
 <script>
