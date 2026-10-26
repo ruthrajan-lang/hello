@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Task Estimator</title>
+<style>
+  :root { --bg:#f6f5f2; --card:#fff; --ink:#1d1d1f; --mute:#6b6b70; --line:#e4e2dd; --acc:#3b5bdb; --acc-soft:#eef1fd; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141416; --card:#1e1e21; --ink:#ededee; --mute:#9a9aa1; --line:#2e2e33; --acc:#8ea2ff; --acc-soft:#23263a; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:860px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:24px; margin:0 0 4px; } h2 { font-size:15px; margin:0 0 10px; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); }
+  .sub { color:var(--mute); margin:0 0 24px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px; }
+  label { display:block; font-weight:600; margin:0 0 6px; }
+  textarea, select, input[type=number] { width:100%; font:inherit; color:inherit; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px; }
+  textarea { min-height:96px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chips label { font-weight:400; margin:0; padding:6px 10px; border:1px solid var(--line); border-radius:99px; cursor:pointer; font-size:13px; user-select:none; }
+  .chips input { display:none; } .chips label:has(input:checked) { background:var(--acc-soft); border-color:var(--acc); color:var(--acc); }
+  button { font:inherit; font-weight:600; border:0; border-radius:8px; padding:10px 18px; background:var(--acc); color:#fff; cursor:pointer; }
+  button.ghost { background:transparent; color:var(--acc); border:1px solid var(--line); padding:6px 12px; font-size:13px; }
+  button:disabled { opacity:.6; cursor:wait; }
+  .actions { margin-top:16px; display:flex; gap:12px; align-items:center; }
+  .err { color:#d9480f; }
+  .big { display:flex; gap:24px; flex-wrap:wrap; align-items:baseline; }
+  .big .n { font-size:36px; font-weight:700; } .big .n small { font-size:15px; color:var(--mute); font-weight:500; }
+  .big .lk .n { color:var(--acc); }
+  .meta { color:var(--mute); font-size:13px; }
+  .bar { display:flex; height:10px; border-radius:99px; overflow:hidden; margin:14px 0 8px; background:var(--line); }
+  table { width:100%; border-collapse:collapse; font-size:14px; } td { padding:6px 0; border-top:1px solid var(--line); vertical-align:top; } td.h { text-align:right; white-space:nowrap; width:60px; font-weight:600; }
+  ul { margin:0; padding-left:18px; } li { margin:4px 0; }
+  .q { padding:10px 0; border-top:1px solid var(--line); } .q:first-of-type { border-top:0; } .q .why { color:var(--mute); font-size:13px; }
+  .q input[type=checkbox] { margin-right:8px; }
+  .hist td { font-size:13px; } .hist td.h { width:auto; padding-left:12px; } .hist input { width:70px; padding:4px 6px; }
+  @media (max-width:600px) { .row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Design Task Estimator</h1>
+  <p class="sub">Describe a task to get an AI time estimate, a phase breakdown, and the questions to ask before you commit.</p>
+
+  <section class="card">
+    <label for="task">What's the task?</label>
+    <textarea id="task" placeholder="e.g. Redesign the appointment booking flow on mobile to add service add-ons and a price summary"></textarea>
+    <div class="row">
+      <div>
+        <label for="type">Type</label>
+        <select id="type">
+          <option value="">Not sure / mixed</option>
+          <option>New feature / flow</option><option>Iteration on existing screen</option><option>Single screen or modal</option>
+          <option>Design system component</option><option>UX research / discovery</option><option>Prototype for testing</option>
+          <option>Visual / marketing asset</option><option>Bug fix / polish</option>
+        </select>
+      </div>
+      <div>
+        <label>Context</label>
+        <div class="chips" id="ctx">
+          <label><input type="checkbox" value="Existing design system components available">Existing components</label>
+          <label><input type="checkbox" value="Requirements are still fuzzy">Fuzzy requirements</label>
+          <label><input type="checkbox" value="Multiple stakeholders need to sign off">Many stakeholders</label>
+          <label><input type="checkbox" value="Needs desktop and mobile">Desktop + mobile</label>
+          <label><input type="checkbox" value="Needs user testing">User testing</label>
+          <label><input type="checkbox" value="Hard deadline">Hard deadline</label>
+          <label><input type="checkbox" value="Unfamiliar product area for me">New area to me</label>
+        </div>
+      </div>
+    </div>
+    <div class="actions"><button id="go">Estimate</button><span id="status" class="meta"></span></div>
+  </section>
+
+  <div id="out"></div>
+
+  <section class="card" id="histCard" hidden>
+    <h2>Past estimates</h2>
+    <p class="meta" style="margin-top:-4px">Log actual hours when you finish. Future estimates are calibrated to how accurate you've been.</p>
+    <table class="hist"><tbody id="hist"></tbody></table>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const KEY = "design-estimator-history";
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+const save = (h) => { try { localStorage.setItem(KEY, JSON.stringify(h)); } catch {} };
+const COLORS = ["#3b5bdb","#12b886","#f59f00","#e64980","#7950f2","#15aabf","#fd7e14","#868e96"];
+
+$("#go").onclick = async () => {
+  const task = $("#task").value.trim();
+  if (!task) return $("#task").focus();
+  const btn = $("#go"); btn.disabled = true; $("#status").textContent = "Thinking…"; $("#status").className = "meta";
+  try {
+    const res = await fetch("/api/estimate", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ task, type: $("#type").value, context: [...document.querySelectorAll("#ctx input:checked")].map((i) => i.value), history: load() }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    render(data);
+    const h = load(); h.unshift({ id: Date.now(), task, likely: data.likely_hours, low: data.low_hours, high: data.high_hours, actual: null }); save(h.slice(0, 50));
+    renderHist(); $("#status").textContent = "";
+  } catch (e) { $("#status").textContent = e.message; $("#status").className = "err"; }
+  btn.disabled = false;
+};
+
+function render(d) {
+  const total = d.breakdown.reduce((a, b) => a + (b.hours || 0), 0) || 1;
+  const days = (h) => (h / 6).toFixed(h / 6 < 10 ? 1 : 0);
+  $("#out").innerHTML = `
+  <section class="card">
+    <h2>Estimate</h2>
+    <p style="margin-top:0">${esc(d.summary)}</p>
+    <div class="big">
+      <div><div class="meta">Best case</div><div class="n">${d.low_hours}<small>h</small></div></div>
+      <div class="lk"><div class="meta">Likely</div><div class="n">${d.likely_hours}<small>h</small></div></div>
+      <div><div class="meta">Worst case</div><div class="n">${d.high_hours}<small>h</small></div></div>
+    </div>
+    <p class="meta">≈ ${days(d.likely_hours)} working days at 6 focused hrs/day · Confidence: ${esc(d.confidence)}
+      · <button class="ghost" id="copy">Copy for Slack/Jira</button></p>
+    <div class="bar">${d.breakdown.map((b, i) => `<span title="${esc(b.phase)}" style="width:${(b.hours / total) * 100}%;background:${COLORS[i % 8]}"></span>`).join("")}</div>
+    <table>${d.breakdown.map((b, i) => `<tr><td><span style="color:${COLORS[i % 8]}">●</span> ${esc(b.phase)}${b.note ? `<div class="meta">${esc(b.note)}</div>` : ""}</td><td class="h">${b.hours}h</td></tr>`).join("")}</table>
+  </section>
+  <div class="row" style="margin-top:0">
+    <section class="card"><h2>Assumptions</h2><ul>${d.assumptions.map((a) => `<li>${esc(a)}</li>`).join("")}</ul></section>
+    <section class="card"><h2>Risks</h2><ul>${d.risks.map((a) => `<li>${esc(a)}</li>`).join("")}</ul></section>
+  </div>
+  <section class="card"><h2>Questions to tighten the estimate</h2>
+    ${d.scoping_questions.map((q) => `<div class="q"><label style="font-weight:400"><input type="checkbox">${esc(q)}</label></div>`).join("")}
+  </section>
+  <section class="card"><h2>Prioritization questions for the requester</h2>
+    ${d.priority_questions.map((q) => `<div class="q"><label style="font-weight:400;margin:0"><input type="checkbox">${esc(q.question)}</label><div class="why">${esc(q.why)}</div></div>`).join("")}
+  </section>`;
+  $("#copy").onclick = () => {
+    const txt = `Estimate: ${d.likely_hours}h likely (${d.low_hours}–${d.high_hours}h range, ${d.confidence} confidence)\n` +
+      d.breakdown.map((b) => `• ${b.phase}: ${b.hours}h`).join("\n") +
+      `\nAssumptions:\n` + d.assumptions.map((a) => `• ${a}`).join("\n") +
+      `\nOpen questions:\n` + d.priority_questions.map((q) => `• ${q.question}`).join("\n");
+    navigator.clipboard.writeText(txt).then(() => { $("#copy").textContent = "Copied ✓"; });
+  };
+}
+
+function renderHist() {
+  const h = load();
+  $("#histCard").hidden = !h.length;
+  $("#hist").innerHTML = h.map((e) => `<tr><td>${esc(e.task.slice(0, 90))}${e.task.length > 90 ? "…" : ""}</td>
+    <td class="h">${e.likely}h est</td>
+    <td class="h"><input type="number" min="0" step="0.5" placeholder="actual" value="${e.actual ?? ""}" data-id="${e.id}"></td>
+    <td class="h"><button class="ghost" data-del="${e.id}">✕</button></td></tr>`).join("");
+}
+$("#hist").addEventListener("change", (ev) => {
+  const id = +ev.target.dataset.id; if (!id) return;
+  const h = load(); const e = h.find((x) => x.id === id); if (e) { e.actual = parseFloat(ev.target.value) || null; save(h); }
+});
+$("#hist").addEventListener("click", (ev) => {
+  const id = +ev.target.dataset.del; if (!id) return;
+  save(load().filter((x) => x.id !== id)); renderHist();
+});
+renderHist();
+</script>
+</body>
+</html>
