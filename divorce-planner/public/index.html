@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colorado Divorce Planner</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1b;--mute:#6b6a66;--line:#e2e0da;--acc:#2f5f8a;--acc-ink:#fff;--ok:#2b7a4b;--warn:#b7791f;--bad:#b23b3b;--soft:#eef2f6}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15171a;--card:#1e2126;--ink:#ecebe7;--mute:#9a9892;--line:#2e3238;--acc:#6ea3d3;--acc-ink:#0f1a26;--soft:#232a33}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:20px 16px 0;max-width:1000px;margin:0 auto}h1{margin:0;font-size:22px}header p{margin:4px 0 12px;color:var(--mute)}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line)}nav button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:inherit;color:var(--mute);cursor:pointer}nav button.on{color:var(--ink);border-color:var(--acc);font-weight:600}
+main{max-width:1000px;margin:0 auto;padding:16px}section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:16px 0 6px}
+.row{display:flex;flex-wrap:wrap;gap:12px}.row>label{flex:1 1 180px;display:flex;flex-direction:column;font-size:13px;color:var(--mute)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;margin-top:3px;width:100%}
+textarea{min-height:60px}button.b{font:inherit;background:var(--acc);color:var(--acc-ink);border:0;border-radius:6px;padding:8px 14px;cursor:pointer}button.g{background:var(--soft);color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mute);font-weight:500;font-size:12px}td input,td select{padding:5px 7px;margin:0}
+.num{text-align:right}.tot{font-weight:600}.mute{color:var(--mute);font-size:13px}.small{font-size:12px;color:var(--mute)}
+.step{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}.step input[type=checkbox]{width:18px;height:18px;margin-top:4px;flex:none}.step.done .t{text-decoration:line-through;color:var(--mute)}.step .t{font-weight:500}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;background:var(--soft)}.pill.ok{color:var(--ok)}.pill.warn{color:var(--warn)}.pill.bad{color:var(--bad)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 12px}.bar i{display:block;height:100%;background:var(--acc)}
+.x{background:none;border:0;color:var(--bad);cursor:pointer;font-size:16px;padding:0 4px}
+.notice{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:16px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+a{color:var(--acc)}
+#print{display:none}
+@media print{body{background:#fff;color:#000}header,main{display:none}#print{display:block;padding:24px;font-size:13px}#print table{font-size:12px}#print h2{margin-top:18px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Colorado Divorce Planner</h1>
+<p>Everything stays in this browser. Export regularly. This is an organizer, not legal advice.</p>
+<nav><button data-tab="plan" class="on">Planner</button><button data-tab="work">Worksheet</button><button data-tab="docs">Documents</button></nav>
+</header>
+<main>
+<div class="tools"><button class="b g" id="exp">Export JSON</button><label class="b g" style="display:inline-block">Import JSON<input type="file" id="imp" accept=".json" hidden></label><button class="b g" id="prn">Print summary</button><button class="b g" id="wipe">Clear all data</button></div>
+
+<section id="plan" class="on">
+<div class="card">
+<h2>Case basics</h2>
+<div class="row">
+<label>Your name<input data-k="me"></label>
+<label>Spouse's name<input data-k="sp"></label>
+<label>County (filing district)<input data-k="county" placeholder="e.g. Denver"></label>
+<label>Marriage date<input type="date" data-k="mdate"></label>
+<label>Separation date<input type="date" data-k="sdate"></label>
+<label>Children under 19?<select data-k="kids"><option value="">—</option><option>Yes</option><option>No</option></select></label>
+<label>Filing type<select data-k="ftype"><option value="">—</option><option value="joint">Joint (co-petitioners)</option><option value="sole">Sole petitioner, spouse served</option></select></label>
+<label>Petition filed on<input type="date" data-k="fdate"></label>
+<label>Spouse served / joint filing date<input type="date" data-k="svdate"></label>
+<label>Case number<input data-k="case"></label>
+</div>
+<h3>Key dates</h3>
+<div id="dates" class="mute">Enter the filing and service dates to compute deadlines.</div>
+</div>
+<div class="card">
+<h2>Process checklist</h2>
+<div class="bar"><i id="pbar" style="width:0"></i></div>
+<div id="steps"></div>
+</div>
+<div class="card">
+<h2>Notes, questions for your lawyer or mediator</h2>
+<textarea data-k="pnotes" placeholder="Anything to raise at the next meeting"></textarea>
+</div>
+</section>
+
+<section id="work">
+<div class="notice">Colorado is an <b>equitable distribution</b> state: marital property is divided fairly, not necessarily 50/50. Property owned before the marriage, gifts and inheritances are generally separate, but their <i>increase in value</i> during the marriage is marital. Tag each item and propose a split; this is a negotiation worksheet, not a court formula.</div>
+<div class="card">
+<h2>Assets</h2>
+<table id="assets"><thead><tr><th>Item</th><th>Type</th><th class="num">Value</th><th class="num">Debt against it</th><th>Marital?</th><th>Goes to</th><th></th></tr></thead><tbody></tbody>
+<tfoot><tr class="tot"><td colspan="2">Net marital equity</td><td class="num" id="aval"></td><td class="num" id="adebt"></td><td colspan="3" id="asplit"></td></tr></tfoot></table>
+<button class="b g" id="addA">+ Add asset</button>
+</div>
+<div class="card">
+<h2>Debts (not tied to an asset above)</h2>
+<table id="debts"><thead><tr><th>Creditor</th><th class="num">Balance</th><th>Marital?</th><th>Goes to</th><th></th></tr></thead><tbody></tbody>
+<tfoot><tr class="tot"><td>Marital debt</td><td class="num" id="dtot"></td><td colspan="3" id="dsplit"></td></tr></tfoot></table>
+<button class="b g" id="addD">+ Add debt</button>
+</div>
+<div class="card">
+<h2>Income and maintenance estimate</h2>
+<div class="row">
+<label>Your gross monthly income<input type="number" data-k="inc1" min="0"></label>
+<label>Spouse's gross monthly income<input type="number" data-k="inc2" min="0"></label>
+<label>Months married (from marriage date to decree)<input type="number" data-k="months" min="0"></label>
+</div>
+<div id="maint" class="mute" style="margin-top:10px"></div>
+<p class="small">Colorado's advisory guideline (C.R.S. 14-10-114) for combined income up to $240,000/yr: maintenance = 40% of combined monthly adjusted gross income minus the lower earner's income. The term is 31% of the marriage length at 3 years, rising to 50% at 20 years; under 3 years is discretionary, over 20 may be indefinite. The court can deviate. Child support uses a separate income-shares formula: use the official <a href="https://childsupport.state.co.us/" target="_blank" rel="noopener">Colorado child support calculator</a> and record the result below.</p>
+<div class="row"><label>Child support (monthly, + if you receive, − if you pay)<input type="number" data-k="cs"></label><label>Maintenance to use in budget (+ receive, − pay)<input type="number" data-k="mUse"></label></div>
+</div>
+<div class="card">
+<h2>Post-divorce monthly budget</h2>
+<table id="budget"><thead><tr><th>Expense</th><th class="num">Monthly</th><th></th></tr></thead><tbody></tbody></table>
+<button class="b g" id="addB">+ Add expense</button>
+<div id="bsum" style="margin-top:12px"></div>
+</div>
+</section>
+
+<section id="docs">
+<div class="notice">Colorado requires both spouses to exchange a Sworn Financial Statement and supporting documents (C.R.C.P. 16.2) within <b>42 days</b> of service or joint filing. Gathering these early removes most of the delay in a case.</div>
+<div class="card">
+<h2>Document tracker</h2>
+<div class="bar"><i id="dbar" style="width:0"></i></div>
+<table id="doclist"><thead><tr><th>Document</th><th>Status</th><th>Where / notes</th><th></th></tr></thead><tbody></tbody></table>
+<button class="b g" id="addDoc">+ Add document</button>
+</div>
+<div class="card">
+<h2>Issues to resolve</h2>
+<p class="small">List the open questions (who keeps the house, parenting schedule, debt responsibility). These print on the summary so a lawyer or mediator can see where the disagreements are.</p>
+<table id="issues"><thead><tr><th>Issue</th><th>Your position</th><th>Spouse's position</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
+<button class="b g" id="addI">+ Add issue</button>
+</div>
+</section>
+</main>
+<div id="print"></div>
+
+<script>
+const KEY='co-divorce-planner';
+const STEPS=[
+['Before filing',[
+ ['Confirm residency: you or your spouse has lived in Colorado at least 91 days before filing'],
+ ['Decide sole petition (spouse is served) or joint petition (both sign as co-petitioners)'],
+ ['Pull your free credit reports and list every joint account, card and loan'],
+ ['Open an individual bank account and route your own paycheck there (do not drain joint accounts)'],
+ ['Change passwords, set up a private email, and secure your devices'],
+ ['Copy key records now while you still have access: tax returns, statements, deeds, titles, pay stubs'],
+ ['Consult a family law attorney or mediator; ask about flat-fee or limited-scope help if cost is a concern'],
+ ['If safety is a concern, learn about protection orders (JDF 402) and a safety plan'],
+]],
+['Filing',[
+ ['Complete the Petition for Dissolution of Marriage (JDF 1101) and Case Information Sheet'],
+ ['Sole petition: complete the Summons (JDF 1102); joint petition: both sign the petition'],
+ ['File in the district court of the county where either spouse lives; pay the filing fee (about $230) or file a fee waiver (JDF 205)'],
+ ['Note the automatic temporary injunction: once filed and served, neither spouse may transfer or hide property, cancel insurance, or take the children out of state without consent'],
+]],
+['Service and response',[
+ ['Sole petition: have the spouse served by sheriff or process server, or have them sign a Waiver and Acceptance of Service'],
+ ['File proof of service (Return of Service)'],
+ ['Respondent files a Response (JDF 1103) within 21 days of service'],
+]],
+['Financial disclosure (due 42 days after service or joint filing)',[
+ ['Complete the Sworn Financial Statement (JDF 1111) and Supporting Schedule (JDF 1111SS)'],
+ ['Exchange the mandatory disclosure documents (see Documents tab) and file the Certificate of Compliance'],
+ ['Attend the Initial Status Conference (scheduled by the court, usually within 42 days of filing)'],
+]],
+['Children (skip if none)',[
+ ['Complete the court-ordered parenting class and file the certificate'],
+ ['Draft the Parenting Plan (JDF 1113): decision-making, parenting time schedule, holidays, relocation'],
+ ['Run the Colorado child support worksheet and attach it'],
+ ['If needed, ask for Temporary Orders (JDF 1106) for support, parenting time or who stays in the home'],
+]],
+['Negotiation',[
+ ['Attend mediation (most districts order it before a contested hearing)'],
+ ['Draft and sign the Separation Agreement (JDF 1115): property, debts, maintenance'],
+ ['Complete the Support Order (JDF 1117) if there is maintenance or child support'],
+]],
+['Finalizing',[
+ ['Wait out the 91-day period after service or joint filing (earliest date a decree can enter)'],
+ ['Uncontested: file the Affidavit for Decree Without Appearance (JDF 1201) with the proposed Decree (JDF 1116)'],
+ ['Contested: file the pretrial statement and attend the permanent orders hearing'],
+ ['Receive the signed Decree of Dissolution; request certified copies'],
+]],
+['After the decree',[
+ ['Submit QDROs or similar orders to divide retirement accounts'],
+ ['Transfer vehicle titles, refinance or quitclaim the house, close or split joint accounts and cards'],
+ ['Update beneficiaries on life insurance, retirement and bank accounts; update your will and powers of attorney'],
+ ['Health insurance: enroll via COBRA or Connect for Health Colorado within 60 days of losing coverage'],
+ ['Name change, if ordered in the decree: Social Security, DMV, passport, bank, employer'],
+ ['Taxes: filing status follows your marital status on December 31; agree who claims the children'],
+ ['Set up child support through the Family Support Registry if ordered'],
+]]];
+const DOCS=['Last 3 years of federal and state tax returns','Pay stubs for the last 3 months (both spouses)','Bank statements, last 3 years, every account','Credit card statements, last 3 years','Retirement and pension statements (401k, IRA, PERA)','Investment and brokerage statements','Mortgage statements and property deeds','Home appraisal or market estimate','Vehicle titles and loan statements','Life, health, auto and homeowner insurance policies','Business ownership records and financials','Personal financial statements given to lenders','Outstanding loan and debt documents','Prenuptial or postnuptial agreement','Children: school, medical and childcare cost records','Marriage certificate','Monthly expense records (budget, receipts)'];
+const BUDGET=['Rent or mortgage','Utilities','Groceries','Transportation','Health insurance and medical','Childcare and school','Debt payments','Phone and internet','Personal and clothing','Savings','Legal fees','Other'];
+
+let S=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s)return s}catch(e){}return{f:{},done:{},assets:[],debts:[],budget:BUDGET.map(n=>({n,v:''})),docs:DOCS.map(n=>({n,s:'',w:''})),issues:[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const money=n=>(+n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+const addDays=(d,n)=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+n);return x};
+const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// tabs
+$$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.toggle('on',x===b));$$('main section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.tab))});
+
+// fields
+$$('[data-k]').forEach(el=>{el.value=S.f[el.dataset.k]??'';el.oninput=()=>{S.f[el.dataset.k]=el.value;save();renderDates();renderMaint();renderBudget()}});
+
+function renderDates(){
+ const f=S.f,o=[],today=new Date();today.setHours(0,0,0,0);
+ const line=(label,d,why)=>{const days=Math.round((d-today)/864e5);const cls=days<0?'ok':days<=7?'bad':days<=21?'warn':'';o.push(`<div><b>${label}:</b> ${fmt(d)} <span class="pill ${cls}">${days<0?'passed':days+' days'}</span> <span class="small">${why}</span></div>`)};
+ if(f.svdate){
+  if(f.ftype==='sole')line('Response due',addDays(f.svdate,21),'21 days after service');
+  line('Financial disclosure due',addDays(f.svdate,42),'42 days after service or joint filing, C.R.C.P. 16.2');
+  line('Earliest decree',addDays(f.svdate,91),'91-day waiting period, C.R.S. 14-10-106');
+ }
+ if(f.fdate)line('Initial status conference by about',addDays(f.fdate,42),'typically within 42 days of filing; the court sets the real date');
+ if(f.mdate){const m=Math.floor((today-new Date(f.mdate+'T00:00'))/(365.25*864e5/12));o.push(`<div class="small">Married ${m} months so far (${(m/12).toFixed(1)} years). Enter the expected months on the Worksheet tab for the maintenance estimate.</div>`)}
+ $('#dates').innerHTML=o.join('')||'Enter the filing and service dates to compute deadlines.';
+}
+
+function renderSteps(){
+ let n=0,t=0,h='';
+ STEPS.forEach(([ph,items],pi)=>{h+=`<h3>${ph}</h3>`;items.forEach(([txt],ii)=>{const id=pi+'.'+ii,d=!!S.done[id];t++;if(d)n++;h+=`<div class="step${d?' done':''}"><input type="checkbox" data-id="${id}" ${d?'checked':''}><div class="t">${txt}</div></div>`})});
+ $('#steps').innerHTML=h;$('#pbar').style.width=(100*n/t)+'%';
+ $$('#steps input').forEach(c=>c.onchange=()=>{S.done[c.dataset.id]=c.checked;save();renderSteps()});
+}
+
+// generic editable table
+function table(sel,rows,cols,foot){
+ const tb=$(sel+' tbody');
+ tb.innerHTML=rows.map((r,i)=>'<tr>'+cols.map(c=>{const v=esc(r[c.k]);if(c.sel)return `<td><select data-i="${i}" data-k="${c.k}">${c.sel.map(o=>`<option value="${o}" ${r[c.k]===o?'selected':''}>${o||'—'}</option>`).join('')}</select></td>`;return `<td class="${c.num?'num':''}"><input data-i="${i}" data-k="${c.k}" type="${c.num?'number':'text'}" value="${v}" placeholder="${c.p||''}"></td>`}).join('')+`<td><button class="x" data-i="${i}" title="Remove">×</button></td></tr>`).join('');
+ tb.querySelectorAll('input,select').forEach(el=>el.oninput=()=>{rows[el.dataset.i][el.dataset.k]=el.value;save();foot&&foot()});
+ tb.querySelectorAll('.x').forEach(b=>b.onclick=()=>{rows.splice(b.dataset.i,1);save();table(sel,rows,cols,foot)});
+ foot&&foot();
+}
+const WHO=['','Me','Spouse','Sell and split','Undecided'],MAR=['','Marital','Separate (mine)','Separate (spouse)','Mixed'];
+const split=(rows,val)=>{const s={Me:0,Spouse:0,other:0};rows.forEach(r=>{if(r.m&&r.m!=='Marital'&&r.m!=='Mixed')return;const v=val(r);if(r.to==='Me')s.Me+=v;else if(r.to==='Spouse')s.Spouse+=v;else s.other+=v});return s};
+function footA(){
+ const m=S.assets.filter(r=>r.m==='Marital'||r.m==='Mixed'),v=m.reduce((a,r)=>a+(+r.v||0),0),d=m.reduce((a,r)=>a+(+r.d||0),0);
+ $('#aval').textContent=money(v);$('#adebt').textContent=money(d);const s=split(S.assets,r=>(+r.v||0)-(+r.d||0));
+ $('#asplit').innerHTML=`Net ${money(v-d)} · proposed: me ${money(s.Me)}, spouse ${money(s.Spouse)}, unassigned ${money(s.other)}`;
+}
+function footD(){
+ const t=S.debts.filter(r=>r.m==='Marital'||r.m==='Mixed').reduce((a,r)=>a+(+r.v||0),0),s=split(S.debts,r=>+r.v||0);
+ $('#dtot').textContent=money(t);$('#dsplit').innerHTML=`proposed: me ${money(s.Me)}, spouse ${money(s.Spouse)}, unassigned ${money(s.other)}`;
+}
+const ACOLS=[{k:'n',p:'Family home'},{k:'t',sel:['','Real estate','Vehicle','Bank','Retirement','Investment','Business','Personal property','Other']},{k:'v',num:1},{k:'d',num:1},{k:'m',sel:MAR},{k:'to',sel:WHO}];
+const DCOLS=[{k:'n',p:'Chase Visa'},{k:'v',num:1},{k:'m',sel:MAR},{k:'to',sel:WHO}];
+const BCOLS=[{k:'n'},{k:'v',num:1}];
+const DOCCOLS=[{k:'n'},{k:'s',sel:['','Have it','Requested','Spouse has it','Not applicable']},{k:'w',p:'folder, account, who to ask'}];
+const ICOLS=[{k:'n',p:'Who keeps the house'},{k:'a'},{k:'b'},{k:'s',sel:['','Open','Agreed','Mediation','Court']}];
+
+function renderMaint(){
+ const a=+S.f.inc1||0,b=+S.f.inc2||0,mo=+S.f.months||0,hi=Math.max(a,b),lo=Math.min(a,b),c=a+b;
+ if(!c){$('#maint').textContent='Enter both incomes.';return}
+ let amt=Math.max(0,.4*c-lo),who=a>b?'you would pay your spouse':'your spouse would pay you';if(a===b)amt=0;
+ let term='';if(mo>=36&&mo<=240){const pct=31+(mo-36)*19/204;term=`Guideline term about <b>${Math.round(mo*pct/100)} months</b> (${pct.toFixed(0)}% of a ${mo}-month marriage).`}else if(mo>240)term='Over 20 years: the court may order maintenance for a specified term or indefinitely.';else if(mo>0)term='Under 3 years: no guideline term; the court decides.';
+ const cap=c*12>240000?'<div class="pill warn">Combined income exceeds $240,000/yr, so the formula is not presumptive; the court decides.</div>':'';
+ $('#maint').innerHTML=`Advisory guideline amount: <b>${money(amt)}/month</b>${amt?`, ${who}`:''}. ${term} ${cap}<div class="small">Maintenance is not tax-deductible to the payer or taxable to the recipient for orders after 2018.</div>`;
+}
+function renderBudget(){
+ const ex=S.budget.reduce((a,r)=>a+(+r.v||0),0),inc=(+S.f.inc1||0)+(+S.f.mUse||0)+(+S.f.cs||0),net=inc-ex;
+ $('#bsum').innerHTML=`<div>Income incl. support: <b>${money(inc)}</b> · Expenses: <b>${money(ex)}</b> · Net: <b class="${net<0?'pill bad':'pill ok'}">${money(net)}/month</b></div>`;
+}
+function renderDocs(){
+ table('#doclist',S.docs,DOCCOLS,()=>{const n=S.docs.filter(d=>d.s&&d.s!=='Requested').length;$('#dbar').style.width=(100*n/(S.docs.length||1))+'%'});
+}
+function renderAll(){
+ renderDates();renderSteps();table('#assets',S.assets,ACOLS,footA);table('#debts',S.debts,DCOLS,footD);table('#budget',S.budget,BCOLS,renderBudget);renderDocs();table('#issues',S.issues,ICOLS);renderMaint();
+}
+$('#addA').onclick=()=>{S.assets.push({n:'',t:'',v:'',d:'',m:'Marital',to:''});save();table('#assets',S.assets,ACOLS,footA)};
+$('#addD').onclick=()=>{S.debts.push({n:'',v:'',m:'Marital',to:''});save();table('#debts',S.debts,DCOLS,footD)};
+$('#addB').onclick=()=>{S.budget.push({n:'',v:''});save();table('#budget',S.budget,BCOLS,renderBudget)};
+$('#addDoc').onclick=()=>{S.docs.push({n:'',s:'',w:''});save();renderDocs()};
+$('#addI').onclick=()=>{S.issues.push({n:'',a:'',b:'',s:'Open'});save();table('#issues',S.issues,ICOLS)};
+
+// export / import / wipe / print
+$('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='divorce-planner-'+new Date().toISOString().slice(0,10)+'.json';a.click()};
+$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const s=JSON.parse(t);if(!s.f||!s.assets)throw 0;S=s;save();$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}catch(x){alert('That file is not a planner export.')}})};
+$('#wipe').onclick=()=>{if(confirm('Erase everything saved in this browser?')){localStorage.removeItem(KEY);S=load();$$('[data-k]').forEach(el=>el.value='');renderAll()}};
+$('#prn').onclick=()=>{
+ const f=S.f,r=s=>esc(s||'—'),rows=(a,fn)=>a.map(fn).join('');
+ const open=STEPS.flatMap(([ph,it],pi)=>it.filter((_,ii)=>!S.done[pi+'.'+ii]).map(([t])=>`<li>${t}</li>`)).slice(0,12).join('');
+ $('#print').innerHTML=`<h1>Case summary: ${r(f.me)} and ${r(f.sp)}</h1><p>Prepared ${fmt(new Date())}. County: ${r(f.county)}. Case no.: ${r(f.case)}. Married ${r(f.mdate)}, separated ${r(f.sdate)}. Children under 19: ${r(f.kids)}. Filing: ${r(f.ftype)}, filed ${r(f.fdate)}, served/joint ${r(f.svdate)}.</p>
+ <h2>Assets</h2><table><tr><th>Item</th><th>Type</th><th>Value</th><th>Debt</th><th>Character</th><th>Proposed</th></tr>${rows(S.assets,a=>`<tr><td>${r(a.n)}</td><td>${r(a.t)}</td><td>${money(a.v)}</td><td>${money(a.d)}</td><td>${r(a.m)}</td><td>${r(a.to)}</td></tr>`)}</table>
+ <h2>Debts</h2><table><tr><th>Creditor</th><th>Balance</th><th>Character</th><th>Proposed</th></tr>${rows(S.debts,a=>`<tr><td>${r(a.n)}</td><td>${money(a.v)}</td><td>${r(a.m)}</td><td>${r(a.to)}</td></tr>`)}</table>
+ <h2>Income</h2><p>Me: ${money(f.inc1)}/mo. Spouse: ${money(f.inc2)}/mo. Months married (expected at decree): ${r(f.months)}. Child support entered: ${money(f.cs)}. Maintenance assumed: ${money(f.mUse)}.</p>
+ <h2>Open issues</h2><table><tr><th>Issue</th><th>My position</th><th>Spouse's position</th><th>Status</th></tr>${rows(S.issues,a=>`<tr><td>${r(a.n)}</td><td>${r(a.a)}</td><td>${r(a.b)}</td><td>${r(a.s)}</td></tr>`)}</table>
+ <h2>Documents</h2><table><tr><th>Document</th><th>Status</th><th>Notes</th></tr>${rows(S.docs,a=>`<tr><td>${r(a.n)}</td><td>${r(a.s)}</td><td>${r(a.w)}</td></tr>`)}</table>
+ <h2>Next process steps</h2><ul>${open||'<li>All steps checked off.</li>'}</ul><h2>Notes</h2><p>${r(f.pnotes).replace(/\n/g,'<br>')}</p>`;
+ window.print();
+};
+renderAll();
+</script>
+</body>
+</html>
