@@ -182,8 +182,8 @@ function load(){try{return norm(JSON.parse(localStorage.getItem(KEY)))}catch(e){
 let S=load();
 let tm,syncOK=false;const stat=(t,c)=>{const e=document.getElementById('sync');e.textContent=t;e.className='pill '+(c||'')};
 function save(){S.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!syncOK)return;stat('Saving…');clearTimeout(tm);tm=setTimeout(push,800)}
-async function push(){try{const r=await fetch('/api/state',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(S)});if(!r.ok)throw 0;stat('Saved to cloud','ok')}catch(e){stat('Cloud save failed, kept locally','bad')}}
-async function pull(){try{const r=await fetch('/api/state');if(!r.ok)throw 0;const s=await r.json();syncOK=true;if(s&&s.f&&(s.t||0)>(S.t||0)){S=norm(s);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}else if(S.t&&(!s||(s.t||0)<S.t))push();stat('Synced to cloud','ok')}catch(e){stat('Local only (no cloud)')}}
+async function push(){try{const r=await fetch('api/state',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(S)});if(!r.ok)throw 0;stat('Saved to cloud','ok')}catch(e){stat('Cloud save failed, kept locally','bad')}}
+async function pull(){try{const r=await fetch('api/state');if(!r.ok)throw 0;const s=await r.json();syncOK=true;if(s&&s.f&&(s.t||0)>(S.t||0)){S=norm(s);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}else if(S.t&&(!s||(s.t||0)<S.t))push();stat('Synced to cloud','ok')}catch(e){stat('Local only (no cloud)')}}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const money=n=>(+n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
 const addDays=(d,n)=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+n);return x};

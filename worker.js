@@ -4,7 +4,7 @@ const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, header
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== '/api/state') return env.ASSETS.fetch(request);
+    if (url.pathname !== '/divorce-planner/api/state') return env.ASSETS.fetch(request);
     if (request.method === 'GET') {
       const v = await env.STATE.get(KEY);
       return json(v ? JSON.parse(v) : null);
