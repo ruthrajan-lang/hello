@@ -48,7 +48,12 @@ a{color:var(--acc)}
 <label>Marriage date<input type="date" data-k="mdate"></label>
 <label>Separation date<input type="date" data-k="sdate"></label>
 <label>Children under 19?<select data-k="kids"><option value="">—</option><option>Yes</option><option>No</option></select></label>
-<label>Filing type<select data-k="ftype"><option value="">—</option><option value="joint">Joint (co-petitioners)</option><option value="sole">Sole petitioner, spouse served</option></select></label>
+<label>What are you filing for?<select data-k="kind"><option value="">—</option><option value="divorce">Divorce (dissolution of marriage)</option><option value="sep">Legal separation</option></select></label>
+<label>Filing type<select data-k="ftype"><option value="">—</option><option value="joint">Joint (both sign as co-petitioners)</option><option value="sole">On my own (spouse is served)</option></select></label>
+<label>Do you and your spouse agree on terms?<select data-k="agree"><option value="">—</option><option value="agree">Agree on everything</option><option value="mostly">Mostly, a few open issues</option><option value="contest">Contested</option></select></label>
+<label>Representation<select data-k="rep"><option value="">—</option><option value="self">Self-represented</option><option value="atty">Attorney</option><option value="med">Mediator or collaborative</option></select></label>
+<label>Need a court fee waiver?<select data-k="fee"><option value="">—</option><option value="yes">Yes, apply for one</option><option value="no">No, paying the fee</option></select></label>
+<label>Restore a former name?<select data-k="name"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option></select></label>
 <label>Petition filed on<input type="date" data-k="fdate"></label>
 <label>Spouse served / joint filing date<input type="date" data-k="svdate"></label>
 <label>Case number<input data-k="case"></label>
@@ -58,6 +63,7 @@ a{color:var(--acc)}
 </div>
 <div class="card">
 <h2>Process checklist</h2>
+<p class="small">Tailored to your answers above. <span id="hidden"></span> Form links go to the Colorado Judicial Branch; form numbers changed in 2024-2025, so always download the current version.</p>
 <div class="bar"><i id="pbar" style="width:0"></i></div>
 <div id="steps"></div>
 </div>
@@ -89,7 +95,7 @@ a{color:var(--acc)}
 <label>Months married (from marriage date to decree)<input type="number" data-k="months" min="0"></label>
 </div>
 <div id="maint" class="mute" style="margin-top:10px"></div>
-<p class="small">Colorado's advisory guideline (C.R.S. 14-10-114) for combined income up to $240,000/yr: maintenance = 40% of combined monthly adjusted gross income minus the lower earner's income. The term is 31% of the marriage length at 3 years, rising to 50% at 20 years; under 3 years is discretionary, over 20 may be indefinite. The court can deviate. Child support uses a separate income-shares formula: use the official <a href="https://childsupport.state.co.us/" target="_blank" rel="noopener">Colorado child support calculator</a> and record the result below.</p>
+<p class="small">Colorado's advisory guideline (C.R.S. 14-10-114) for combined income up to $240,000/yr: maintenance = 40% of combined monthly adjusted gross income minus the lower earner's income. The term is 31% of the marriage length at 3 years, rising to 50% at 20 years; under 3 years is discretionary, over 20 may be indefinite. The court can deviate. Child support uses a separate income-shares formula: use the official <a href="https://www.coloradojudicial.gov/self-help/calculate-support-payments" target="_blank" rel="noopener">official Colorado child support and maintenance calculator</a> and record the result below.</p>
 <div class="row"><label>Child support (monthly, + if you receive, − if you pay)<input type="number" data-k="cs"></label><label>Maintenance to use in budget (+ receive, − pay)<input type="number" data-k="mUse"></label></div>
 </div>
 <div class="card">
@@ -101,7 +107,7 @@ a{color:var(--acc)}
 </section>
 
 <section id="docs">
-<div class="notice">Colorado requires both spouses to exchange a Sworn Financial Statement and supporting documents (C.R.C.P. 16.2) within <b>42 days</b> of service or joint filing. Gathering these early removes most of the delay in a case.</div>
+<div class="notice">Colorado requires both spouses to exchange a Sworn Financial Statement and supporting documents (C.R.C.P. 16.2) within <b>42 days</b> of service or joint filing. Gathering these early removes most of the delay in a case. <a href="https://www.coloradojudicial.gov/self-help-and-forms/self-help-forms/certificate-compliance-mandatory-financial-disclosures" target="_blank" rel="noopener">Certificate of Compliance JDF 1104</a> · <a href="https://www.coloradojudicial.gov/self-help-and-forms/self-help-forms/sworn-financial-statement" target="_blank" rel="noopener">Sworn Financial Statement JDF 1111</a></div>
 <div class="card">
 <h2>Document tracker</h2>
 <div class="bar"><i id="dbar" style="width:0"></i></div>
@@ -120,59 +126,66 @@ a{color:var(--acc)}
 
 <script>
 const KEY='co-divorce-planner';
+const J='https://www.coloradojudicial.gov',F=J+'/self-help-and-forms/self-help-forms/';
 const STEPS=[
 ['Before filing',[
- ['Confirm residency: you or your spouse has lived in Colorado at least 91 days before filing'],
- ['Decide sole petition (spouse is served) or joint petition (both sign as co-petitioners)'],
- ['Pull your free credit reports and list every joint account, card and loan'],
- ['Open an individual bank account and route your own paycheck there (do not drain joint accounts)'],
- ['Change passwords, set up a private email, and secure your devices'],
- ['Copy key records now while you still have access: tax returns, statements, deeds, titles, pay stubs'],
- ['Consult a family law attorney or mediator; ask about flat-fee or limited-scope help if cost is a concern'],
- ['If safety is a concern, learn about protection orders (JDF 402) and a safety plan'],
+ {t:'Confirm residency',d:'You or your spouse must have lived in Colorado at least 91 days before filing. If there are children, they must have lived in Colorado at least 182 days (or since birth) for the court to decide parenting issues.',l:[['Official divorce guide (JDF 1010)',J+'/sites/default/files/2025-07/JDF1010.pdf']]},
+ {t:'Choose divorce or legal separation',d:'Both divide property and can set parenting and support. Legal separation does not end the marriage; it can be converted to a divorce later (JDF 1321). Some people choose it for insurance or religious reasons.',l:[['Divorce and separation overview',J+'/self-help/divorce-and-separation']]},
+ {t:'Choose joint or sole filing',d:'Joint: you both sign the Petition as co-petitioners, there is no service step, and the 91-day clock starts at filing. Sole: you file alone, your spouse is served, and the clock starts at service.',w:''},
+ {t:'Decide how you will be represented',d:'Self-represented people follow the same rules as attorneys. The court\'s Self-Help Centers and Family Court Facilitators can explain procedure but not give legal advice. Limited-scope ("unbundled") attorneys can take just the parts you want help with.',l:[['Self-help resources',J+'/self-help-resources'],['Find a licensed lawyer (Colorado Bar)','https://www.cobar.org/Licensed-Lawyer'],['Colorado Legal Services (free, income-qualified)','https://www.coloradolegalservices.org/']]},
+ {t:'Pull your credit reports and list every joint account',d:'Get all three bureaus free at annualcreditreport.com. Note every joint card, loan and account so nothing is missed in the financial statement.',l:[['AnnualCreditReport.com','https://www.annualcreditreport.com/']]},
+ {t:'Open an individual bank account and route your own pay there',d:'Do not drain or hide joint funds: once the case is filed, an automatic injunction bars transferring or concealing property except for ordinary living expenses, and judges notice.'},
+ {t:'Change passwords and set up a private email',d:'Shared devices, cloud accounts and phone plans leak everything. Use a new email for the case and turn on two-factor authentication.'},
+ {t:'Copy key records while you still have access',d:'Tax returns, pay stubs, statements, deeds, titles, insurance, retirement balances. The Documents tab lists what the court will require.'},
+ {t:'If you are not safe, get a protection order',d:'A civil protection order (JDF 402) can be requested at the county or district court the same day, before any divorce filing, and can cover children and the home.',l:[['Getting a protection order',J+'/self-help/getting-protection-order']],w:''},
+ {t:'Check whether you qualify for a fee waiver',d:'If your income is low enough, the court can waive the filing fee (JDF 205/206). Fee waivers must be filed on paper or in person; the e-filing system cannot process them.',l:[['File without payment',J+'/taxonomy/term/811?resource_type=811']],w:'fee'},
 ]],
 ['Filing',[
- ['Complete the Petition for Dissolution of Marriage (JDF 1101) and Case Information Sheet'],
- ['Sole petition: complete the Summons (JDF 1102); joint petition: both sign the petition'],
- ['File in the district court of the county where either spouse lives; pay the filing fee (about $230) or file a fee waiver (JDF 205)'],
- ['Note the automatic temporary injunction: once filed and served, neither spouse may transfer or hide property, cancel insurance, or take the children out of state without consent'],
+ {t:'Complete the Petition (JDF 1011) and Case Information Sheet (JDF 1000)',d:'The Petition states the marriage is irretrievably broken (Colorado is no-fault), lists children, and asks for name restoration if you want it. Attach JDF 1091 if you need extra space for children or parties.',l:[['Petition JDF 1011',J+'/media/11337'],['Case Information Sheet JDF 1000',J+'/media/4350'],['All divorce forms',J+'/taxonomy/term/448?form_category=513']]},
+ {t:'Complete the Summons (JDF 1012), caption only',d:'Only for a sole filing. The clerk issues it; it tells your spouse they have 21 days to respond after service.',l:[['Summons JDF 1012',J+'/media/11306']],w:'sole'},
+ {t:'File in the district court of the county where either spouse lives',d:'File online through Colorado Courts E-Filing (available to self-represented parties for divorce cases, small e-file fee not waivable) or in person at the clerk\'s office. Filing fee about $230 for the petition; the response fee is about $116. Confirm current amounts with the clerk.',l:[['E-filing for non-attorneys',J+'/e-filing-non-attorneys'],['Find your district court',J+'/trial-courts-county']]},
+ {t:'Apply for the fee waiver with your filing',d:'Submit JDF 205 (application) and JDF 206 (order) with the Petition, on paper. The court rules within a few days.',l:[['File without payment',J+'/taxonomy/term/811?resource_type=811']],w:'fee'},
+ {t:'Read the automatic temporary injunction',d:'From filing (petitioner) or service (respondent), neither spouse may transfer, hide or borrow against property outside ordinary expenses, cancel insurance, or take the children out of state without written consent or a court order. It is printed in the Summons/Petition.'},
 ]],
 ['Service and response',[
- ['Sole petition: have the spouse served by sheriff or process server, or have them sign a Waiver and Acceptance of Service'],
- ['File proof of service (Return of Service)'],
- ['Respondent files a Response (JDF 1103) within 21 days of service'],
+ {t:'Have your spouse served, or get a signed Waiver of Service',d:'Service must be by someone 18+ who is not a party (sheriff, process server, a friend). If your spouse cooperates, they sign JDF 1013 Waiver of Service instead and you file it. The 91-day clock starts on the date of service or waiver.',l:[['How to serve (JDF 1099)',J+'/sites/default/files/2026-01/JDF1099.pdf'],['Waiver of Service JDF 1013',F+'waiver-service-divorceseparation'],['Service of process help',J+'/self-help-service-process']],w:'sole'},
+ {t:'File the Return of Service (JDF 1014)',d:'The server signs it; file it before the Initial Status Conference. Without proof of service the case cannot move.',l:[['Return of Service JDF 1014',F+'return-service-divorceseparation']],w:'sole'},
+ {t:'Spouse files the Response (JDF 1015) within 21 days',d:'If they do not respond, you can ask for a default. If they do, read it: it says what they agree and disagree with and starts the contested issues list.',l:[['Response JDF 1015',J+'/media/8816']],w:'sole'},
 ]],
 ['Financial disclosure (due 42 days after service or joint filing)',[
- ['Complete the Sworn Financial Statement (JDF 1111) and Supporting Schedule (JDF 1111SS)'],
- ['Exchange the mandatory disclosure documents (see Documents tab) and file the Certificate of Compliance'],
- ['Attend the Initial Status Conference (scheduled by the court, usually within 42 days of filing)'],
+ {t:'Complete the Sworn Financial Statement (JDF 1111) and Supporting Schedules (JDF 1111SS)',d:'Each spouse files their own, under oath: income, expenses, every asset and debt. The Worksheet tab mirrors its categories so you can fill it from there. Mistakes here are the most common reason settlements get reopened.',l:[['Sworn Financial Statement JDF 1111',F+'sworn-financial-statement'],['Supporting Schedules JDF 1111SS',F+'supporting-schedules']]},
+ {t:'Exchange the mandatory disclosure documents and file the Certificate of Compliance (JDF 1104)',d:'C.R.C.P. 16.2 lists the records both sides must hand over (the Documents tab tracks them). You do not file the documents themselves, just the certificate saying you exchanged them.',l:[['Certificate of Compliance JDF 1104',F+'certificate-compliance-mandatory-financial-disclosures'],['Case process after filing',J+'/self-help/about-family-cases-forms/case-process']]},
+ {t:'Attend the Initial Status Conference',d:'Usually within about 42 days of filing, with a Family Court Facilitator or magistrate. Bring your financial statement. You leave with a Case Management Order listing deadlines, mediation and hearing dates. In an agreed case, say so: the court may let you skip straight to finalizing.',l:[['What happens at the conference',J+'/self-help/about-family-cases-forms/case-process']]},
 ]],
-['Children (skip if none)',[
- ['Complete the court-ordered parenting class and file the certificate'],
- ['Draft the Parenting Plan (JDF 1113): decision-making, parenting time schedule, holidays, relocation'],
- ['Run the Colorado child support worksheet and attach it'],
- ['If needed, ask for Temporary Orders (JDF 1106) for support, parenting time or who stays in the home'],
+['Children',[
+ {t:'Complete the court-approved parenting class and file the certificate',d:'Required for parents of minor children in almost every district (C.R.S. 14-10-123.7), about $25-65 per person, usually online. Each parent takes it separately and must finish before the final hearing or decree.',l:[['Approved class providers by district',J+'/parenting-class-providers']],w:'kids'},
+ {t:'Draft the Parenting Plan (JDF 1113)',d:'Decision-making (joint or sole for school, medical, religion), a regular parenting-time schedule, holidays, exchanges, communication, relocation, and how disputes get resolved. Courts approve almost any plan both parents sign.',l:[['Parenting Plan JDF 1113',J+'/media/2880']],w:'kids'},
+ {t:'Run the child support calculation',d:'Colorado uses an income-shares formula based on both incomes, overnights, health insurance and childcare. Use the free official calculator (create a free account) and enter the result on the Worksheet tab.',l:[['Official child support and maintenance calculator',J+'/self-help/calculate-support-payments'],['How child support is calculated','https://childsupport.colorado.gov/calculating-payments/']],w:'kids'},
+ {t:'Ask for Temporary Orders if you need support or a schedule now',d:'A motion for temporary orders can set interim parenting time, child support, maintenance, who stays in the home and who pays which bills while the case is pending. Ask about it at the Initial Status Conference.',w:'kids contest'},
 ]],
-['Negotiation',[
- ['Attend mediation (most districts order it before a contested hearing)'],
- ['Draft and sign the Separation Agreement (JDF 1115): property, debts, maintenance'],
- ['Complete the Support Order (JDF 1117) if there is maintenance or child support'],
+['Reaching agreement',[
+ {t:'Attend mediation',d:'Most districts order mediation before any contested hearing. The court\'s Office of Dispute Resolution offers mediators at a set hourly rate, with a reduced-fee application (JDF 211). Afterward file the Certificate of Mediation Compliance (JDF 1337).',l:[['Mediation and dispute resolution options',J+'/court-services/mediation-services-and-other-dispute-resolution-options'],['Find a court mediator',J+'/find-odr-mediator'],['Reduced-fee mediation JDF 211',F+'application-reduced-fees-mediation'],['Certificate of compliance JDF 1337',F+'certificate-mediation-compliance']],w:'contest'},
+ {t:'Draft and sign the Property and Financial Agreement (JDF 1115)',d:'This is the separation agreement: who gets each asset and debt, maintenance amount and term, and how retirement accounts split. Both sign; once the judge adopts it in the decree it is binding. Use the Worksheet tab to build the numbers.',l:[['Property and Financial Agreement JDF 1115',F+'property-and-financial-agreement']]},
+ {t:'Complete the Support Order (JDF 1117)',d:'Required whenever child support or maintenance is ordered. It records amounts, start dates and payment method.',l:[['Support Order JDF 1117',J+'/sites/default/files/2024-09/JDF1117.pdf']]},
+ {t:'Review the agreement with a lawyer before signing',d:'Even one hour of limited-scope review is cheap compared to undoing a bad property split. Maintenance and retirement division are hard to change afterwards.',l:[['Find a licensed lawyer','https://www.cobar.org/Licensed-Lawyer']],w:'self'},
 ]],
 ['Finalizing',[
- ['Wait out the 91-day period after service or joint filing (earliest date a decree can enter)'],
- ['Uncontested: file the Affidavit for Decree Without Appearance (JDF 1201) with the proposed Decree (JDF 1116)'],
- ['Contested: file the pretrial statement and attend the permanent orders hearing'],
- ['Receive the signed Decree of Dissolution; request certified copies'],
+ {t:'Wait out the 91-day period',d:'The judge cannot sign a decree until 91 days after service (sole) or filing (joint), C.R.S. 14-10-106. Use the time to finish disclosures, the parenting class and the agreement.'},
+ {t:'Uncontested: file the Affidavit for Decree Without Appearance (JDF 1018) with the proposed Decree (JDF 1019)',d:'If everything is signed and all required certificates are filed, you can ask the court to enter the decree on paper without a hearing. Attach the agreement, parenting plan, support order and child support worksheet.',l:[['Affidavit JDF 1018',F+'affidavit-decree-without-appearance'],['Decree JDF 1019',J+'/sites/default/files/2024-05/JDF1019.pdf']],w:'agree'},
+ {t:'Contested: schedule the permanent orders hearing and file the Pretrial Statement (JDF 1129)',d:'Ask the clerk or facilitator how your district sets hearings. File the pretrial statement, witness list (JDF 71) and exhibit list (JDF 72) by the deadlines in your Case Management Order.',l:[['Pretrial Statement JDF 1129',F+'pre-trial-statement-family-matters'],['Hearing and trial forms',J+'/self-help/about-family-cases-forms/case-process']],w:'contest'},
+ {t:'Receive the signed Decree and order certified copies',d:'You will need certified copies for banks, retirement plans, the DMV and Social Security. Order several at once from the clerk.'},
 ]],
 ['After the decree',[
- ['Submit QDROs or similar orders to divide retirement accounts'],
- ['Transfer vehicle titles, refinance or quitclaim the house, close or split joint accounts and cards'],
- ['Update beneficiaries on life insurance, retirement and bank accounts; update your will and powers of attorney'],
- ['Health insurance: enroll via COBRA or Connect for Health Colorado within 60 days of losing coverage'],
- ['Name change, if ordered in the decree: Social Security, DMV, passport, bank, employer'],
- ['Taxes: filing status follows your marital status on December 31; agree who claims the children'],
- ['Set up child support through the Family Support Registry if ordered'],
+ {t:'Divide retirement accounts with a QDRO or PERA order',d:'401(k)s and pensions need a Qualified Domestic Relations Order signed by the judge and sent to the plan; Colorado PERA has its own form (JDF 1202). The decree alone does not move the money.',l:[['PERA domestic relations orders','https://copera.org/welcome-pera-members/life-and-job-changes/divorce-domestic-relations-orders']]},
+ {t:'Transfer titles, refinance or quitclaim the house, close joint accounts',d:'Do each within the deadlines in the agreement. A spouse who stays on a mortgage remains liable to the lender regardless of the decree.'},
+ {t:'Update beneficiaries, will and powers of attorney',d:'Life insurance, retirement accounts and payable-on-death designations do not change automatically. Revoke any power of attorney naming your ex-spouse.'},
+ {t:'Sort out health insurance within 60 days',d:'Losing a spouse\'s plan is a qualifying event: enroll through Connect for Health Colorado or COBRA within 60 days or you wait for open enrollment.',l:[['Connect for Health Colorado','https://connectforhealthco.com/']]},
+ {t:'Restore your former name everywhere',d:'If the decree restores your name, update Social Security first, then DMV, passport, bank, employer. If you did not ask in the Petition, file JDF 1824/1825 in the same court (no fee within 60 days of the decree).',l:[['Name restoration order JDF 1825',F+'order-name-restoration-post-divorceseparation']],w:'name'},
+ {t:'Handle taxes',d:'Your filing status follows your marital status on December 31. Agree in writing who claims each child, and remember maintenance under post-2018 orders is neither deductible nor taxable.',l:[['IRS: separating or divorcing','https://www.irs.gov/newsroom/some-tax-considerations-for-people-who-are-separating-or-divorcing']]},
+ {t:'Set up child support payments through the Family Support Registry',d:'Payments through the registry create an official record, which protects both parents if there is ever a dispute about arrears.',l:[['Family Support Registry','https://childsupport.colorado.gov/family-support-registry']],w:'kids'},
 ]]];
+const WHEN={kids:f=>f.kids!=='No',sole:f=>f.ftype!=='joint',joint:f=>f.ftype!=='sole',contest:f=>f.agree!=='agree',agree:f=>f.agree!=='contest',self:f=>f.rep!=='atty',fee:f=>f.fee!=='no',name:f=>f.name!=='no'};
+const show=st=>!st.w||st.w.split(' ').every(k=>!WHEN[k]||WHEN[k](S.f));
 const DOCS=['Last 3 years of federal and state tax returns','Pay stubs for the last 3 months (both spouses)','Bank statements, last 3 years, every account','Credit card statements, last 3 years','Retirement and pension statements (401k, IRA, PERA)','Investment and brokerage statements','Mortgage statements and property deeds','Home appraisal or market estimate','Vehicle titles and loan statements','Life, health, auto and homeowner insurance policies','Business ownership records and financials','Personal financial statements given to lenders','Outstanding loan and debt documents','Prenuptial or postnuptial agreement','Children: school, medical and childcare cost records','Marriage certificate','Monthly expense records (budget, receipts)'];
 const BUDGET=['Rent or mortgage','Utilities','Groceries','Transportation','Health insurance and medical','Childcare and school','Debt payments','Phone and internet','Personal and clothing','Savings','Legal fees','Other'];
 
@@ -194,7 +207,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 $$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.toggle('on',x===b));$$('main section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.tab))});
 
 // fields
-$$('[data-k]').forEach(el=>{el.value=S.f[el.dataset.k]??'';el.oninput=()=>{S.f[el.dataset.k]=el.value;save();renderDates();renderMaint();renderBudget()}});
+$$('[data-k]').forEach(el=>{el.value=S.f[el.dataset.k]??'';el.oninput=()=>{S.f[el.dataset.k]=el.value;save();renderDates();renderSteps();renderMaint();renderBudget()}});
 
 function renderDates(){
  const f=S.f,o=[],today=new Date();today.setHours(0,0,0,0);
@@ -210,9 +223,11 @@ function renderDates(){
 }
 
 function renderSteps(){
- let n=0,t=0,h='';
- STEPS.forEach(([ph,items],pi)=>{h+=`<h3>${ph}</h3>`;items.forEach(([txt],ii)=>{const id=pi+'.'+ii,d=!!S.done[id];t++;if(d)n++;h+=`<div class="step${d?' done':''}"><input type="checkbox" data-id="${id}" ${d?'checked':''}><div class="t">${txt}</div></div>`})});
- $('#steps').innerHTML=h;$('#pbar').style.width=(100*n/t)+'%';
+ let n=0,t=0,hid=0,h='';
+ STEPS.forEach(([ph,items],pi)=>{let ph_h='';items.forEach((st,ii)=>{const id=pi+'.'+ii;if(!show(st)){hid++;return}const d=!!S.done[id];t++;if(d)n++;
+  ph_h+=`<div class="step${d?' done':''}"><input type="checkbox" data-id="${id}" ${d?'checked':''}><div><div class="t">${st.t}</div><div class="small">${st.d||''}</div>${st.l?'<div class="small">'+st.l.map(([a,u])=>`<a href="${u}" target="_blank" rel="noopener">${a}</a>`).join(' · ')+'</div>':''}</div></div>`});
+  if(ph_h)h+=`<h3>${ph}</h3>`+ph_h});
+ $('#steps').innerHTML=h;$('#pbar').style.width=(100*n/(t||1))+'%';$('#hidden').textContent=hid?`${hid} step${hid>1?'s':''} hidden because they do not apply to your choices.`:'';
  $$('#steps input').forEach(c=>c.onchange=()=>{S.done[c.dataset.id]=c.checked;save();renderSteps()});
 }
 
@@ -271,8 +286,8 @@ $('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{
 $('#wipe').onclick=()=>{if(confirm('Erase everything, including the cloud copy?')){localStorage.removeItem(KEY);S=load();$$('[data-k]').forEach(el=>el.value='');renderAll();save()}};
 $('#prn').onclick=()=>{
  const f=S.f,r=s=>esc(s||'—'),rows=(a,fn)=>a.map(fn).join('');
- const open=STEPS.flatMap(([ph,it],pi)=>it.filter((_,ii)=>!S.done[pi+'.'+ii]).map(([t])=>`<li>${t}</li>`)).slice(0,12).join('');
- $('#print').innerHTML=`<h1>Case summary: ${r(f.me)} and ${r(f.sp)}</h1><p>Prepared ${fmt(new Date())}. County: ${r(f.county)}. Case no.: ${r(f.case)}. Married ${r(f.mdate)}, separated ${r(f.sdate)}. Children under 19: ${r(f.kids)}. Filing: ${r(f.ftype)}, filed ${r(f.fdate)}, served/joint ${r(f.svdate)}.</p>
+ const open=STEPS.flatMap(([ph,it],pi)=>it.filter((st,ii)=>show(st)&&!S.done[pi+'.'+ii]).map(st=>`<li>${st.t}</li>`)).slice(0,12).join('');
+ $('#print').innerHTML=`<h1>Case summary: ${r(f.me)} and ${r(f.sp)}</h1><p>Prepared ${fmt(new Date())}. County: ${r(f.county)}. Case no.: ${r(f.case)}. Married ${r(f.mdate)}, separated ${r(f.sdate)}. Children under 19: ${r(f.kids)}. ${r(f.kind)}, filing: ${r(f.ftype)}, terms: ${r(f.agree)}, representation: ${r(f.rep)}, filed ${r(f.fdate)}, served/joint ${r(f.svdate)}.</p>
  <h2>Assets</h2><table><tr><th>Item</th><th>Type</th><th>Value</th><th>Debt</th><th>Character</th><th>Proposed</th></tr>${rows(S.assets,a=>`<tr><td>${r(a.n)}</td><td>${r(a.t)}</td><td>${money(a.v)}</td><td>${money(a.d)}</td><td>${r(a.m)}</td><td>${r(a.to)}</td></tr>`)}</table>
  <h2>Debts</h2><table><tr><th>Creditor</th><th>Balance</th><th>Character</th><th>Proposed</th></tr>${rows(S.debts,a=>`<tr><td>${r(a.n)}</td><td>${money(a.v)}</td><td>${r(a.m)}</td><td>${r(a.to)}</td></tr>`)}</table>
  <h2>Income</h2><p>Me: ${money(f.inc1)}/mo. Spouse: ${money(f.inc2)}/mo. Months married (expected at decree): ${r(f.months)}. Child support entered: ${money(f.cs)}. Maintenance assumed: ${money(f.mUse)}.</p>
