@@ -32,7 +32,7 @@ a{color:var(--acc)}
 <body>
 <header>
 <h1>Colorado Divorce Planner</h1>
-<p>Everything stays in this browser. Export regularly. This is an organizer, not legal advice.</p>
+<p>Saves automatically and syncs across your devices. <span id="sync" class="pill">Connecting…</span> This is an organizer, not legal advice.</p>
 <nav><button data-tab="plan" class="on">Planner</button><button data-tab="work">Worksheet</button><button data-tab="docs">Documents</button></nav>
 </header>
 <main>
@@ -176,9 +176,14 @@ const STEPS=[
 const DOCS=['Last 3 years of federal and state tax returns','Pay stubs for the last 3 months (both spouses)','Bank statements, last 3 years, every account','Credit card statements, last 3 years','Retirement and pension statements (401k, IRA, PERA)','Investment and brokerage statements','Mortgage statements and property deeds','Home appraisal or market estimate','Vehicle titles and loan statements','Life, health, auto and homeowner insurance policies','Business ownership records and financials','Personal financial statements given to lenders','Outstanding loan and debt documents','Prenuptial or postnuptial agreement','Children: school, medical and childcare cost records','Marriage certificate','Monthly expense records (budget, receipts)'];
 const BUDGET=['Rent or mortgage','Utilities','Groceries','Transportation','Health insurance and medical','Childcare and school','Debt payments','Phone and internet','Personal and clothing','Savings','Legal fees','Other'];
 
+const blank=()=>({f:{},done:{},assets:[],debts:[],budget:BUDGET.map(n=>({n,v:''})),docs:DOCS.map(n=>({n,s:'',w:''})),issues:[]});
+const norm=s=>{const b=blank();if(!s||typeof s!=='object')return b;for(const k in b)if(k==='f'||k==='done'){if(!s[k]||typeof s[k]!=='object')s[k]={}}else if(!Array.isArray(s[k]))s[k]=b[k];return s};
+function load(){try{return norm(JSON.parse(localStorage.getItem(KEY)))}catch(e){return blank()}}
 let S=load();
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s)return s}catch(e){}return{f:{},done:{},assets:[],debts:[],budget:BUDGET.map(n=>({n,v:''})),docs:DOCS.map(n=>({n,s:'',w:''})),issues:[]}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let tm,syncOK=false;const stat=(t,c)=>{const e=document.getElementById('sync');e.textContent=t;e.className='pill '+(c||'')};
+function save(){S.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!syncOK)return;stat('Saving…');clearTimeout(tm);tm=setTimeout(push,800)}
+async function push(){try{const r=await fetch('/api/state',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(S)});if(!r.ok)throw 0;stat('Saved to cloud','ok')}catch(e){stat('Cloud save failed, kept locally','bad')}}
+async function pull(){try{const r=await fetch('/api/state');if(!r.ok)throw 0;const s=await r.json();syncOK=true;if(s&&s.f&&(s.t||0)>(S.t||0)){S=norm(s);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}else if(S.t&&(!s||(s.t||0)<S.t))push();stat('Synced to cloud','ok')}catch(e){stat('Local only (no cloud)')}}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const money=n=>(+n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
 const addDays=(d,n)=>{const x=new Date(d+'T00:00');x.setDate(x.getDate()+n);return x};
@@ -262,8 +267,8 @@ $('#addI').onclick=()=>{S.issues.push({n:'',a:'',b:'',s:'Open'});save();table('#
 
 // export / import / wipe / print
 $('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='divorce-planner-'+new Date().toISOString().slice(0,10)+'.json';a.click()};
-$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const s=JSON.parse(t);if(!s.f||!s.assets)throw 0;S=s;save();$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}catch(x){alert('That file is not a planner export.')}})};
-$('#wipe').onclick=()=>{if(confirm('Erase everything saved in this browser?')){localStorage.removeItem(KEY);S=load();$$('[data-k]').forEach(el=>el.value='');renderAll()}};
+$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const s=JSON.parse(t);if(!s.f||!s.assets)throw 0;S=norm(s);save();$$('[data-k]').forEach(el=>el.value=S.f[el.dataset.k]??'');renderAll()}catch(x){alert('That file is not a planner export.')}})};
+$('#wipe').onclick=()=>{if(confirm('Erase everything, including the cloud copy?')){localStorage.removeItem(KEY);S=load();$$('[data-k]').forEach(el=>el.value='');renderAll();save()}};
 $('#prn').onclick=()=>{
  const f=S.f,r=s=>esc(s||'—'),rows=(a,fn)=>a.map(fn).join('');
  const open=STEPS.flatMap(([ph,it],pi)=>it.filter((_,ii)=>!S.done[pi+'.'+ii]).map(([t])=>`<li>${t}</li>`)).slice(0,12).join('');
@@ -276,7 +281,7 @@ $('#prn').onclick=()=>{
  <h2>Next process steps</h2><ul>${open||'<li>All steps checked off.</li>'}</ul><h2>Notes</h2><p>${r(f.pnotes).replace(/\n/g,'<br>')}</p>`;
  window.print();
 };
-renderAll();
+renderAll();pull();
 </script>
 </body>
 </html>
