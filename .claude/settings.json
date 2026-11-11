@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Figma",
+      "mcp__Granola__search_meetings",
+      "mcp__Granola__get_meetings",
+      "mcp__Granola__search_transcripts",
+      "mcp__Granola__get_meeting_transcript",
+      "mcp__Granola__query_granola_meetings"
+    ]
+  }
+}
