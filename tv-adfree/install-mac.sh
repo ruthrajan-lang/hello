@@ -114,16 +114,16 @@ EOF
 fi
 
 bold "Step 6/6: Installing on the TV"
-install_wgt() { # install_wgt <file> <package-id>
+install_wgt() { # install_wgt <file> <app-id>
   if ! tizen install -n "build/$1" -s "$TV_IP:26101"; then
     echo "Install of $1 failed. Details from the TV:"
     sdb -s "$TV_IP:26101" shell 0 vd_appinstall "$2" "/home/owner/share/tmp/sdk_tools/tmp/$1" 2>&1 | tail -15 || true
     die "Paste the lines above into the chat."
   fi
 }
-install_wgt AdFreeTube.wgt AdFreeTube
-install_wgt AdFreePluto.wgt AdFreePlut
-install_wgt AdFreeUpdater.wgt AdFreeUpdt
+install_wgt AdFreeTube.wgt AdFreeTube.AdFreeTube
+install_wgt AdFreePluto.wgt AdFreePlut.AdFreePluto
+install_wgt AdFreeUpdater.wgt AdFreeUpdt.AdFreeUpdater
 
 bold "Installed."
 cat <<EOF

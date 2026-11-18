@@ -74,7 +74,9 @@ function installOne(conn, host, app) {
     const remote = REMOTE_DIR + '/' + app.file;
     return conn.push(data, remote).then(() => {
       log('Installing ' + app.name + '…');
-      return conn.shell('0 vd_appinstall ' + app.pkg + ' ' + remote);
+      // Samsung's installer is given the app ID (package.AppName); the package ID alone installs
+      // the app but files it under the wrong name in My Apps, which breaks its icon there.
+      return conn.shell('0 vd_appinstall ' + (app.appId || app.pkg) + ' ' + remote);
     });
   }).then((out) => {
     if (/fail|error/i.test(out)) { // success output varies by TV model, so only treat explicit failures as errors
