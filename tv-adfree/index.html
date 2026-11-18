@@ -51,17 +51,30 @@ function check() {
     }
     get("/launch").then(function () { app.exit(); });
   }).catch(function () {
-    if (++tries > 40) return show("The background service didn't start.", "Fully restart the TV (hold Power until the logo appears) and try again.");
-    setTimeout(check, 250);
+    tries++;
+    if (tries === 20) show("Starting the background service…", "The first start can take up to a minute.");
+    if (tries % 40 === 0) startService(); // nudge it again every ~20s
+    if (tries > 180) return show("The background service didn't start.",
+      "Unplug the TV for 30 seconds, then open AdFree Tube again. Press OK to retry now.");
+    setTimeout(check, 500);
   });
 }
 
-tizen.application.launchAppControl(
-  new tizen.ApplicationControl("http://tizen.org/appcontrol/operation/service"),
-  app.appInfo.packageId + ".Injector",
-  check,
-  function (e) { show("Couldn't start the background service.", e.message); }
-);
+function startService() {
+  tizen.application.launchAppControl(
+    new tizen.ApplicationControl("http://tizen.org/appcontrol/operation/service"),
+    app.appInfo.packageId + ".Injector",
+    function () {},
+    function (e) { show("Couldn't start the background service.", e.name + ": " + e.message); }
+  );
+}
+
+document.addEventListener("keydown", function (e) {
+  if (e.keyCode === 13 && tries > 180) { tries = 0; show("Retrying…"); startService(); check(); }
+});
+
+startService();
+check();
 </script>
 </body>
 </html>
