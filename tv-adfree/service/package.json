@@ -1,0 +1,14 @@
+{
+  "name": "adfree-tube-service",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "adbhost": "0.0.2",
+    "chrome-remote-interface": "0.25.7"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0"
+  }
+}

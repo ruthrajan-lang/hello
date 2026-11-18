@@ -1,2 +1,4 @@
 .wrangler
 node_modules
+tv-adfree/service/dist
+tv-adfree/build
