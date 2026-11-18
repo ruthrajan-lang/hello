@@ -5,6 +5,7 @@
 const http = require('http');
 const https = require('https');
 const crypto = require('crypto');
+const zlib = require('zlib');
 const { URL } = require('url');
 
 const PORT = 8101;
@@ -14,18 +15,23 @@ let session = null; // { token, stitcher, params, expires }
 
 function get(url, headers, redirects) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers: Object.assign({ 'User-Agent': 'Mozilla/5.0 (SMART-TV; Tizen) AdFreePluto' }, headers) }, (res) => {
+    // Ask for compressed responses: Pluto's catalog is ~33 MB raw but ~4.6 MB gzipped.
+    const req = https.get(url, { headers: Object.assign({ 'User-Agent': 'Mozilla/5.0 (SMART-TV; Tizen) AdFreePluto', 'Accept-Encoding': 'gzip' }, headers) }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && (redirects || 0) < 5) {
         res.resume();
         return resolve(get(new URL(res.headers.location, url).toString(), headers, (redirects || 0) + 1));
       }
-      let body = '';
-      res.setEncoding('utf8');
-      res.on('data', (c) => { body += c; });
-      res.on('end', () => (res.statusCode >= 400 ? reject(new Error('HTTP ' + res.statusCode)) : resolve(body)));
+      const chunks = [];
+      res.on('data', (c) => chunks.push(c));
+      res.on('end', () => {
+        if (res.statusCode >= 400) return reject(new Error('HTTP ' + res.statusCode));
+        const raw = Buffer.concat(chunks);
+        if (res.headers['content-encoding'] !== 'gzip') return resolve(raw.toString('utf8'));
+        zlib.gunzip(raw, (err, out) => (err ? reject(err) : resolve(out.toString('utf8'))));
+      });
     });
     req.on('error', reject);
-    req.setTimeout(15000, () => req.destroy(new Error('timeout')));
+    req.setTimeout(30000, () => req.destroy(new Error('timeout')));
   });
 }
 
@@ -64,12 +70,18 @@ function slim(item) {
   };
 }
 
+// The catalog changes a few times a day, so keep it for 30 minutes.
+let catCache = null;
 function categories() {
-  return api('/v4/vod/categories?includeItems=true&offset=1000&page=1').then((j) =>
-    (j.categories || [])
+  if (catCache && Date.now() - catCache.at < 30 * 60 * 1000) return Promise.resolve(catCache.data);
+  return api('/v4/vod/categories?includeItems=true&offset=1000&page=1').then((j) => {
+    const data = (j.categories || [])
       .filter((c) => c.items && c.items.length)
-      .map((c) => ({ name: c.name, items: c.items.filter((i) => i.type === 'movie' || i.type === 'series').map(slim) }))
-      .filter((c) => c.items.length));
+      .map((c) => ({ name: c.name, items: c.items.filter((i) => i.type === 'movie' || i.type === 'series').slice(0, 60).map(slim) }))
+      .filter((c) => c.items.length);
+    catCache = { at: Date.now(), data };
+    return data;
+  });
 }
 
 function series(id) {
@@ -210,5 +222,7 @@ http.createServer((req, res) => {
   res.statusCode = 404;
   res.end('not found');
 }).listen(PORT, '127.0.0.1');
+
+categories().catch(() => {}); // warm up so the app opens fast
 
 module.exports = { onStart() {}, onRequest() {}, onExit() {}, _rewriteMedia: rewriteMedia };

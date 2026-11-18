@@ -29,8 +29,10 @@
     $('status').style.display = name === 'status' ? 'flex' : 'none';
   }
   function status(text) { $('status').textContent = text; show('status'); }
+  // Requests wait until the background service is up (the home screen may show from cache first).
+  var serviceReadyResolve, serviceReady = new Promise(function (res) { serviceReadyResolve = res; });
   function getJSON(path) {
-    return fetch(SERVICE + path).then(function (r) {
+    return serviceReady.then(function () { return fetch(SERVICE + path); }).then(function (r) {
       return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || r.status); return j; });
     });
   }
@@ -116,7 +118,7 @@
 
   var tries = 0;
   function waitForService() {
-    fetch(SERVICE + '/ping').then(function () { loadHome(); }).catch(function () {
+    fetch(SERVICE + '/ping').then(function () { serviceReadyResolve(); loadHome(); }).catch(function () {
       tries++;
       if (tries % 40 === 0) startService();
       if (tries === 20) status('Starting… the first launch can take up to a minute.');
@@ -125,14 +127,44 @@
     });
   }
 
-  function loadHome() {
-    status('Loading Pluto…');
-    getJSON('/api/categories').then(function (cats) {
+  // The last catalog is kept on the TV so the home screen appears instantly next time.
+  var HOME_CACHE = 'adfree.home';
+  function cacheHome(cats) {
+    var small = cats.slice(0, 80).map(function (c) {
+      return { name: c.name, items: c.items.slice(0, 30).map(function (i) {
+        return Object.assign({}, i, { description: (i.description || '').slice(0, 220) });
+      }) };
+    });
+    try { localStorage.setItem(HOME_CACHE, JSON.stringify(small)); } catch (e) {}
+  }
+  function showCachedHome() {
+    try {
+      var cats = JSON.parse(localStorage.getItem(HOME_CACHE));
+      if (!cats || !cats.length) return false;
       home.all = cats;
       applyFilter();
       show('home');
       focusHome();
-    }).catch(function (e) { status('Couldn\'t load Pluto (' + e.message + '). Press OK to try again.'); });
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function loadHome() {
+    var shown = screen !== 'status';
+    if (!shown) status('Loading Pluto…');
+    getJSON('/api/categories').then(function (cats) {
+      cacheHome(cats);
+      home.all = cats;
+      if (shown) {
+        if (screen === 'home') refreshHome(); else home.dirty = true; // update quietly without moving focus
+      } else {
+        applyFilter();
+        show('home');
+        focusHome();
+      }
+    }).catch(function (e) {
+      if (!shown) status('Couldn\'t load Pluto (' + e.message + '). Press OK to try again.');
+    });
   }
 
   // ---------- home ----------
@@ -489,5 +521,6 @@
   });
 
   startService();
+  showCachedHome();
   waitForService();
 })();
