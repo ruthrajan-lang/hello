@@ -15,6 +15,7 @@
   #hero { position: absolute; left: 80px; top: 130px; right: 80px; height: 250px; }
   #hero h1 { margin: 0 0 12px; font-size: 56px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #hero .meta { color: var(--accent); font-size: 26px; margin-bottom: 14px; }
+  #hero .tip { position: absolute; right: 0; top: 112px; font-size: 22px; color: var(--muted); }
   #hero p { margin: 0; font-size: 26px; line-height: 1.4; color: var(--muted); max-width: 1200px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   #rows { position: absolute; left: 0; right: 0; top: 400px; bottom: 0; overflow: hidden; }
   #rowsInner { transition: transform .25s ease; }
@@ -72,7 +73,7 @@
   #bar { height: 10px; background: rgba(255,255,255,.25); border-radius: 5px; overflow: hidden; }
   #fill { height: 100%; width: 0; background: var(--accent); }
   #osd .times { display: flex; justify-content: space-between; font-size: 24px; color: var(--muted); margin-top: 12px; }
-  #toast { position: absolute; top: 40px; right: 60px; background: rgba(0,0,0,.8); padding: 12px 22px; border-radius: 10px; font-size: 26px; display: none; }
+  #toast { position: absolute; z-index: 10; top: 40px; right: 60px; background: rgba(0,0,0,.8); padding: 12px 22px; border-radius: 10px; font-size: 26px; display: none; }
 </style>
 </head>
 <body>
@@ -81,7 +82,7 @@
 <div id="home" class="screen">
   <div id="tabs"><span data-f="all" class="sel">All</span><span data-f="movie">Movies</span><span data-f="series">TV Shows</span></div>
   <div id="searchbar"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="text" placeholder="Search movies & shows"></div>
-  <div id="hero"><h1></h1><div class="meta"></div><p></p></div>
+  <div id="hero"><h1></h1><div class="meta"></div><p></p><div class="tip"></div></div>
   <div id="rows"><div id="rowsInner"></div></div>
 </div>
 
@@ -93,15 +94,16 @@
 <div id="series" class="screen">
   <h1></h1><div class="desc"></div>
   <div id="seasons"></div>
-  <div class="hint">◀ ▶ season · OK play · Back return</div>
+  <div class="hint">◀ ▶ season · OK play · ⏯ Watch Later · Back return</div>
   <div id="episodes"><div id="epInner"></div></div>
 </div>
 
 <div id="player" class="screen">
   <video id="video"></video>
   <div id="osd"><div class="title"></div><div id="bar"><div id="fill"></div></div><div class="times"><span id="cur">0:00</span><span id="dur">0:00</span></div></div>
-  <div id="toast"></div>
 </div>
+
+<div id="toast"></div>
 
 <script src="vendor/hls.min.js"></script>
 <script src="app.js"></script>

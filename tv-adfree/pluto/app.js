@@ -83,6 +83,27 @@
     return eps.map(function (ep) { return Object.assign({}, ep, { seriesId: info.id, seriesName: info.name, seriesImage: info.image }); });
   }
 
+  // ---------- watch later (saved on the TV) ----------
+  var LATER_KEY = 'adfree.later';
+  function loadLater() { try { return JSON.parse(localStorage.getItem(LATER_KEY)) || []; } catch (e) { return []; } }
+  function saveLater(list) { try { localStorage.setItem(LATER_KEY, JSON.stringify(list)); } catch (e) {} }
+  // Continue Watching entries for episodes save the whole series to Watch Later.
+  function laterItem(it) {
+    if (it.seriesId) return { id: it.seriesId, type: 'series', name: it.seriesName, image: it.seriesImage, description: '', rating: it.rating || '', genre: it.genre || '' };
+    return { id: it.id, type: it.type, name: it.name, image: it.image, description: it.description, rating: it.rating, genre: it.genre, duration: it.duration, path: it.path };
+  }
+  function isLater(it) { var id = laterItem(it).id; return loadLater().some(function (x) { return x.id === id; }); }
+  function toggleLater(it) {
+    var item = laterItem(it), list = loadLater();
+    var had = list.some(function (x) { return x.id === item.id; });
+    list = list.filter(function (x) { return x.id !== item.id; });
+    if (!had) list.unshift(item);
+    saveLater(list);
+    toast(had ? 'Removed from Watch Later' : 'Added to Watch Later');
+    home.dirty = true;
+    return !had;
+  }
+
   // ---------- startup ----------
   function startService() {
     try {
@@ -144,6 +165,8 @@
     home.rows = [];
     var recent = loadRecent().filter(function (r) { return byFilter({ type: r.seriesId ? 'series' : 'movie' }); });
     if (recent.length) home.rows.push({ name: 'Continue Watching', items: recent });
+    var later = loadLater().filter(byFilter);
+    if (later.length) home.rows.push({ name: 'Watch Later', items: later });
     home.all.forEach(function (c) {
       if (home.rows.length >= MAX_ROWS) return;
       var items = c.items.filter(byFilter).slice(0, MAX_ITEMS);
@@ -155,6 +178,18 @@
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('sel', tabs[i].dataset.f === home.filter);
     $('rowsInner').style.transform = 'translateY(0)';
     renderHome();
+  }
+
+  function refreshHome() {
+    var row = home.rows[home.r], it = row && row.items[home.c[home.r]];
+    applyFilter();
+    home.dirty = false;
+    for (var r = 0; row && r < home.rows.length; r++) {
+      if (home.rows[r].name !== row.name) continue;
+      home.r = r;
+      for (var c = 0; c < home.rows[r].items.length; c++) if (home.rows[r].items[c].id === it.id) home.c[r] = c;
+    }
+    focusHome();
   }
 
   function focusHome() {
@@ -172,6 +207,7 @@
     hero.querySelector('h1').textContent = it.recent ? recentTitle(it) : it.name;
     hero.querySelector('.meta').textContent = [it.type === 'series' ? 'Series' : mins(it.duration), it.rating, it.genre].filter(Boolean).join(' · ');
     hero.querySelector('p').textContent = it.description;
+    hero.querySelector('.tip').textContent = isLater(it) ? '⏯ Remove from Watch Later' : '⏯ Add to Watch Later';
     loadImages();
   }
 
@@ -192,6 +228,7 @@
     else if (k === KEY.LEFT && home.c[home.r] > 0) home.c[home.r]--;
     else if (k === KEY.RIGHT && home.c[home.r] < home.rows[home.r].items.length - 1) home.c[home.r]++;
     else if (k === KEY.ENTER) return openItem(home.rows[home.r].items[home.c[home.r]]);
+    else if (k === KEY.PLAYPAUSE || k === KEY.PLAY) { toggleLater(home.rows[home.r].items[home.c[home.r]]); return refreshHome(); }
     else if (k === KEY.BACK) return exitApp();
     else return;
     focusHome();
@@ -246,6 +283,7 @@
     else if (k === KEY.UP && res.i >= 4) res.i -= 4;
     else if (k === KEY.DOWN && res.i + 4 < n) res.i += 4;
     else if (k === KEY.ENTER && n) return openItem(res.items[res.i], 'results');
+    else if ((k === KEY.PLAYPAUSE || k === KEY.PLAY) && n) { toggleLater(res.items[res.i]); return; }
     else if (k === KEY.BACK) { show('home'); return; }
     else return;
     focusResult();
@@ -294,6 +332,7 @@
     else if (k === KEY.LEFT && ser.s > 0) { ser.s--; ser.e = 0; renderSeason(); }
     else if (k === KEY.RIGHT && ser.s < ser.data.seasons.length - 1) { ser.s++; ser.e = 0; renderSeason(); }
     else if (k === KEY.ENTER) startPlayback(withSeries(eps, ser.item), ser.e, 'series');
+    else if (k === KEY.PLAYPAUSE || k === KEY.PLAY) toggleLater(ser.item);
     else if (k === KEY.BACK) show(ser.from);
   }
 

@@ -19,6 +19,7 @@ A second app, **AdFree Pluto**, plays Pluto TV's free on-demand movies and shows
 
 - Pluto splices its ads into the same video stream as the show. The app's background helper (`pluto/service/index.js`) downloads Pluto's playlist and keeps only the pieces that belong to the movie or episode itself, so the ad breaks are never played.
 - It uses its own remote-friendly screens (`pluto/index.html`, `pluto/app.js`): rows of movies and series, a season and episode list, and a simple player.
+- **Watch Later**: press **⏯** on any title (or on a series page) to add or remove it. Saved titles show in a Watch Later row.
 - **Continue Watching** (top row) remembers what you watched on this TV and resumes where you stopped.
 - Browse with the **All / Movies / TV Shows** tabs at the top, or search. Press **Up** from the first row to reach them.
 - Player controls: **OK** pauses or plays, **◀ ▶** skip 10 seconds, **⏪ ⏩** skip 1 minute, and **Back** exits. The next episode plays automatically.
