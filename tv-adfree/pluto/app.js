@@ -7,7 +7,8 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var screen = 'status';
-  var home = { rows: [], r: 0, c: [] };
+  var home = { all: [], rows: [], r: 0, c: [], filter: 'all', top: 0 };
+  var FILTERS = ['all', 'movie', 'series'];
   var ser = { data: null, s: 0, e: 0 };
   var play = { queue: [], index: 0, osdTimer: 0 };
   var video = $('video');
@@ -65,9 +66,8 @@
   function loadHome() {
     status('Loading Pluto…');
     getJSON('/api/categories').then(function (cats) {
-      home.rows = cats.slice(0, MAX_ROWS).map(function (c) { return { name: c.name, items: c.items.slice(0, MAX_ITEMS) }; });
-      home.c = home.rows.map(function () { return 0; });
-      renderHome();
+      home.all = cats;
+      applyFilter();
       show('home');
       focusHome();
     }).catch(function (e) { status('Couldn\'t load Pluto (' + e.message + '). Press OK to try again.'); });
@@ -95,11 +95,30 @@
     }
   }
 
+  function byFilter(it) { return home.filter === 'all' || it.type === home.filter; }
+
+  // Rebuild the rows for the chosen tab (All / Movies / TV Shows).
+  function applyFilter() {
+    home.rows = [];
+    home.all.forEach(function (c) {
+      if (home.rows.length >= MAX_ROWS) return;
+      var items = c.items.filter(byFilter).slice(0, MAX_ITEMS);
+      if (items.length) home.rows.push({ name: c.name, items: items });
+    });
+    home.c = home.rows.map(function () { return 0; });
+    var tabs = $('tabs').children;
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('sel', tabs[i].dataset.f === home.filter);
+    $('rowsInner').style.transform = 'translateY(0)';
+    renderHome();
+  }
+
   function focusHome() {
     var old = document.querySelector('.card.focus');
     if (old) old.classList.remove('focus');
-    $('searchbar').classList.toggle('focus', home.r < 0);
-    if (home.r < 0) return;
+    var tabs = $('tabs').children;
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('focus', home.r < 0 && home.top === i);
+    $('searchbar').classList.toggle('focus', home.r < 0 && home.top === tabs.length);
+    if (home.r < 0 || !home.rows.length) return;
     var r = home.r, c = home.c[r], it = home.rows[r].items[c];
     $('card' + r + '_' + c).classList.add('focus');
     $('rowsInner').style.transform = 'translateY(' + (-r * 330) + 'px)';
@@ -112,11 +131,15 @@
   }
 
   function homeKey(k) {
-    if (home.r < 0) {
-      if (k === KEY.ENTER) { q.focus(); return; }          // opens the TV keyboard
-      if (k === KEY.DOWN) { home.r = 0; focusHome(); }
-      else if (k === KEY.BACK) exitApp();
-      return;
+    if (home.r < 0) { // top bar: filter tabs, then the search box
+      if (k === KEY.LEFT && home.top > 0) home.top--;
+      else if (k === KEY.RIGHT && home.top < FILTERS.length) home.top++;
+      else if (k === KEY.ENTER && home.top === FILTERS.length) { q.focus(); return; } // opens the TV keyboard
+      else if (k === KEY.ENTER) { home.filter = FILTERS[home.top]; applyFilter(); }
+      else if (k === KEY.DOWN && home.rows.length) home.r = 0;
+      else if (k === KEY.BACK) return exitApp();
+      else return;
+      return focusHome();
     }
     if (k === KEY.UP && home.r === 0) home.r = -1;
     else if (k === KEY.UP && home.r > 0) home.r--;
@@ -146,6 +169,7 @@
     if (!text) return;
     status('Searching for "' + text + '"…');
     getJSON('/api/search?q=' + encodeURIComponent(text)).then(function (items) {
+      items = items.filter(byFilter);
       res = { items: items, i: 0, from: 'home' };
       $('results').querySelector('h1').textContent = items.length ? 'Results for "' + text + '"' : 'No results for "' + text + '"';
       $('gridInner').innerHTML = items.map(function (it, i) {
