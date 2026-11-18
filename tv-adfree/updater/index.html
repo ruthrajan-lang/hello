@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AdFree Updater</title>
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0d0d12; color: #f2f2f5; font-family: sans-serif; }
+  main { padding: 110px 160px; }
+  h1 { font-size: 60px; margin: 0 0 16px; }
+  .sub { font-size: 28px; color: #a0a0ad; margin-bottom: 50px; }
+  #apps { font-size: 30px; margin-bottom: 40px; line-height: 1.7; }
+  #apps .new { color: #4cd964; }
+  #log { font-size: 28px; line-height: 1.6; color: #d0d0da; white-space: pre-wrap; }
+  #hint { position: absolute; left: 160px; bottom: 90px; font-size: 26px; color: #a0a0ad; }
+  b { color: #4cd964; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AdFree Updater</h1>
+  <div class="sub">Installs the latest AdFree apps from your Mac. Host PC IP stays on 127.0.0.1.</div>
+  <div id="apps"></div>
+  <div id="log">Starting…</div>
+</main>
+<div id="hint">On your Mac, run <b>./install-mac.sh --serve</b> first. &nbsp; OK: install updates &nbsp;·&nbsp; Back: exit</div>
+<script>
+"use strict";
+var SERVICE = "http://127.0.0.1:8102";
+var app = tizen.application.getCurrentApplication();
+var busy = false, tries = 0;
+var $ = function (id) { return document.getElementById(id); };
+
+function remember(h) { try { localStorage.setItem("adfree.mac", h); } catch (e) {} }
+function hint() { try { return localStorage.getItem("adfree.mac") || ""; } catch (e) { return ""; } }
+function get(path) { return fetch(SERVICE + path).then(function (r) { return r.json(); }); }
+
+function installed(appId) {
+  try { return tizen.application.getAppInfo(appId).version; } catch (e) { return null; }
+}
+
+function check() {
+  $("log").textContent = "Looking for your Mac…";
+  get("/check?hint=" + encodeURIComponent(hint())).then(function (r) {
+    if (r.error) { $("log").textContent = r.error + "\n\nPress OK to look again."; return; }
+    remember(r.host);
+    $("apps").innerHTML = r.apps.map(function (a) {
+      var have = installed(a.appId);
+      var isNew = have !== a.version;
+      return "<div class='" + (isNew ? "new" : "") + "'>" + a.name + ": " + (have ? "installed " + have : "not installed") +
+        " → available " + a.version + (isNew ? "" : " (up to date)") + "</div>";
+    }).join("");
+    $("log").textContent = "Found your Mac at " + r.host + ". Press OK to install.";
+  }).catch(function () {
+    if (++tries > 120) { $("log").textContent = "The background service didn't start. Unplug the TV for 30 seconds and try again."; return; }
+    setTimeout(check, 500);
+  });
+}
+
+function update() {
+  if (busy) return;
+  busy = true;
+  get("/update?hint=" + encodeURIComponent(hint())).then(poll).catch(function () { busy = false; });
+}
+
+function poll() {
+  get("/progress").then(function (j) {
+    $("log").textContent = j.log.join("\n");
+    if (j.host) remember(j.host);
+    if (j.done) { busy = false; $("log").textContent += j.ok ? "\n\nPress Back to exit." : "\n\nPress OK to try again."; return; }
+    setTimeout(poll, 700);
+  }).catch(function () {
+    // The service restarts when the updater updates itself.
+    $("log").textContent += "\nAdFree Updater was updated. Reopen it any time.";
+    busy = false;
+  });
+}
+
+document.addEventListener("keydown", function (e) {
+  if (e.keyCode === 13) { if ($("apps").innerHTML) update(); else check(); }
+  if (e.keyCode === 10009) app.exit();
+});
+
+tizen.application.launchAppControl(
+  new tizen.ApplicationControl("http://tizen.org/appcontrol/operation/service"),
+  app.appInfo.packageId + ".Service", check, function (e) { $("log").textContent = "Couldn't start the background service: " + e.message; });
+</script>
+</body>
+</html>

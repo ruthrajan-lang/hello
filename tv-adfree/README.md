@@ -24,6 +24,14 @@ A second app, **AdFree Pluto**, plays Pluto TV's free on-demand movies and shows
 - Player controls: **OK** pauses or plays, **◀ ▶** skip 10 seconds, **⏪ ⏩** skip 1 minute, and **Back** exits. The next episode plays automatically.
 - It doesn't need the 127.0.0.1 Developer Mode setting, but leaving it set doesn't hurt.
 
+## AdFree Updater (no more Host PC IP switching)
+
+After one normal install, leave the TV's Host PC IP on **127.0.0.1** permanently. To update:
+
+1. On the Mac, run `./install-mac.sh --serve`. It builds the apps and shares them on your Wi-Fi. If macOS asks whether Python may accept incoming connections, click **Allow**.
+2. On the TV, open **AdFree Updater** and press **OK**. It finds the Mac, downloads the apps, and installs them through the TV's own developer connection.
+3. When the TV says **All done**, press Ctrl+C on the Mac.
+
 ## Install (Mac)
 
 You need your Mac and the TV on the same Wi-Fi network.
@@ -72,4 +80,5 @@ Open **AdFree Tube** from Apps. You can move it to your home row.
 | `service/src/adblock.js` | The ad blocker that runs inside YouTube |
 | `package.sh` | Builds, stages, and signs the `.wgt` |
 | `pluto/` | AdFree Pluto app and its playlist-cleaning service |
+| `updater/` | AdFree Updater app: installs updates from the Mac over Wi-Fi |
 | `install-mac.sh` | Mac installer: tools, certificate, build, and install |

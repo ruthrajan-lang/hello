@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# One-command installer for AdFree Tube (macOS).
-# Usage:  ./install-mac.sh <TV_IP> [--new-cert]
+# One-command installer for the AdFree apps (macOS).
+# Usage:  ./install-mac.sh <TV_IP> [--new-cert]   install directly (TV's Host PC IP must be this Mac)
+#         ./install-mac.sh --serve                share updates for the AdFree Updater app on the TV
+#                                                 (TV's Host PC IP stays 127.0.0.1)
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -13,18 +15,19 @@ bold() { printf '\n\033[1m%s\033[0m\n' "$*"; }
 die()  { printf '\n\033[31m%s\033[0m\n' "$*" >&2; exit 1; }
 pause() { read -r -p "$1 Press Return to continue… " _; }
 
-TV_IP=""; NEW_CERT=0
+TV_IP=""; NEW_CERT=0; SERVE=0
 for arg in "$@"; do
   case "$arg" in
     --new-cert) NEW_CERT=1 ;;
+    --serve) SERVE=1 ;;
     *) TV_IP="$arg" ;;
   esac
 done
-if [ -z "$TV_IP" ]; then
+if [ -z "$TV_IP" ] && [ "$SERVE" = "0" ]; then
   echo "TV IP: on the TV, open Settings → General → Network → Network Status → IP Settings."
   read -r -p "Enter your TV's IP address: " TV_IP
 fi
-[ -n "$TV_IP" ] || die "A TV IP address is required."
+[ -n "$TV_IP" ] || [ "$SERVE" = "1" ] || die "A TV IP address is required."
 
 MAC_IP="$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo 'unknown')"
 
@@ -63,6 +66,7 @@ PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'packag
 ./fix-certmgr.sh --no-open
 echo "OK"
 
+if [ "$SERVE" = "0" ]; then
 bold "Step 3/6: Connecting to the TV at $TV_IP"
 echo "The TV must be in Developer Mode with Host PC IP set to this Mac: $MAC_IP"
 echo "(On the TV: Apps → press 1 2 3 4 5 → Developer mode On → enter $MAC_IP → restart TV.)"
@@ -72,6 +76,7 @@ until sdb connect "$TV_IP" 2>&1 | grep -qi "connected"; do
 done
 sdb devices
 echo "OK"
+fi
 
 bold "Step 4/6: Samsung certificate"
 # Assumes the certificate profile already exists. Run with --new-cert to create one.
@@ -98,6 +103,16 @@ bold "Step 5/6: Building and signing the apps"
 ./package.sh "$PROFILE" || die "Signing failed. If the profile name isn't \"$PROFILE\", run: ./install-mac.sh $TV_IP --new-cert"
 echo "$PROFILE" > "$SAVED"
 
+if [ "$SERVE" = "1" ]; then
+  bold "Step 6/6: Sharing updates with the TV"
+  cat <<EOF
+On the TV, open "AdFree Updater" and press OK. It finds this Mac ($MAC_IP) by itself.
+If macOS asks whether Python may accept incoming connections, click Allow.
+Leave this window open until the TV says "All done", then press Ctrl+C here.
+EOF
+  cd build && exec python3 -m http.server 8765 --bind 0.0.0.0
+fi
+
 bold "Step 6/6: Installing on the TV"
 install_wgt() { # install_wgt <file> <package-id>
   if ! tizen install -n "build/$1" -s "$TV_IP:26101"; then
@@ -108,11 +123,13 @@ install_wgt() { # install_wgt <file> <package-id>
 }
 install_wgt AdFreeTube.wgt AdFreeTube
 install_wgt AdFreePluto.wgt AdFreePlut
+install_wgt AdFreeUpdater.wgt AdFreeUpdt
 
 bold "Installed."
 cat <<EOF
   • AdFree Pluto: ready now. Open it from Apps. No setting changes needed.
   • AdFree Tube (YouTube) only: it needs Host PC IP set to 127.0.0.1.
     Apps → Settings → 1 2 3 4 5 → Host PC IP 127.0.0.1, then restart the TV.
-    Set it back to $MAC_IP before running this installer again.
+  • Future updates: leave Host PC IP on 127.0.0.1. Run ./install-mac.sh --serve here,
+    then open "AdFree Updater" on the TV and press OK.
 EOF
