@@ -30,7 +30,7 @@
 "use strict";
 var SERVICE = "http://127.0.0.1:8102";
 var app = tizen.application.getCurrentApplication();
-var busy = false, tries = 0;
+var busy = false, tries = 0, upToDate = [];
 var $ = function (id) { return document.getElementById(id); };
 
 function remember(h) { try { localStorage.setItem("adfree.mac", h); } catch (e) {} }
@@ -46,9 +46,11 @@ function check() {
   get("/check?hint=" + encodeURIComponent(hint())).then(function (r) {
     if (r.error) { $("log").textContent = r.error + "\n\nPress OK to look again, or ▲ to type the Mac's IP address."; return; }
     remember(r.host);
+    upToDate = [];
     $("apps").innerHTML = r.apps.map(function (a) {
       var have = installed(a.appId);
       var isNew = have !== a.version;
+      if (!isNew) upToDate.push(a.appId + "@" + a.version);
       return "<div class='" + (isNew ? "new" : "") + "'>" + a.name + ": " + (have ? "installed " + have : "not installed") +
         " → available " + a.version + (isNew ? "" : " (up to date)") + "</div>";
     }).join("");
@@ -62,7 +64,7 @@ function check() {
 function update() {
   if (busy) return;
   busy = true;
-  get("/update?hint=" + encodeURIComponent(hint())).then(poll).catch(function () { busy = false; });
+  get("/update?hint=" + encodeURIComponent(hint()) + "&skip=" + encodeURIComponent(upToDate.join(","))).then(poll).catch(function () { busy = false; });
 }
 
 function poll() {

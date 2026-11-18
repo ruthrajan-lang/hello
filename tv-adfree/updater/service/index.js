@@ -87,7 +87,7 @@ function installOne(conn, host, app) {
   });
 }
 
-function runUpdate(hint) {
+function runUpdate(hint, skip) {
   Object.assign(job, { running: true, done: false, ok: false, log: [], host: null });
   log('Looking for your Mac…');
   let conn;
@@ -101,7 +101,10 @@ function runUpdate(hint) {
     return conn.connect().then(() => m);
   }).then((m) => {
     // Install the updater itself last: installing it restarts this service.
-    const apps = (m.apps || []).slice().sort((a, b) => (a.pkg === SELF_PKG) - (b.pkg === SELF_PKG));
+    // Skip apps the TV says are already at this version.
+    const apps = (m.apps || []).filter((a) => skip.indexOf(a.appId + '@' + a.version) === -1)
+      .sort((a, b) => (a.pkg === SELF_PKG) - (b.pkg === SELF_PKG));
+    if (!apps.length) log('Everything is already up to date.');
     return apps.reduce((p, app) => p.then(() => {
       if (app.pkg === SELF_PKG) log('Updating AdFree Updater last; it will close when done.');
       return installOne(conn, job.host, app);
@@ -128,7 +131,7 @@ http.createServer((req, res) => {
       .catch((e) => res.end(JSON.stringify({ error: e.message })));
   }
   if (u.pathname === '/update') {
-    if (!job.running) runUpdate(u.searchParams.get('hint'));
+    if (!job.running) runUpdate(u.searchParams.get('hint'), (u.searchParams.get('skip') || '').split(','));
     return res.end('{"started":true}');
   }
   if (u.pathname === '/progress') return res.end(JSON.stringify(job));
