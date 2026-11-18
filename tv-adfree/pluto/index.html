@@ -73,14 +73,14 @@
   #bar { height: 10px; background: rgba(255,255,255,.25); border-radius: 5px; overflow: hidden; }
   #fill { height: 100%; width: 0; background: var(--accent); }
   #osd .times { display: flex; justify-content: space-between; font-size: 24px; color: var(--muted); margin-top: 12px; }
-  #toast { position: absolute; z-index: 10; top: 40px; right: 60px; background: rgba(0,0,0,.8); padding: 12px 22px; border-radius: 10px; font-size: 26px; display: none; }
+  #toast { position: absolute; z-index: 10; top: 130px; right: 60px; background: rgba(0,0,0,.8); padding: 12px 22px; border-radius: 10px; font-size: 26px; display: none; }
 </style>
 </head>
 <body>
 <div id="status">Loading Pluto…</div>
 
 <div id="home" class="screen">
-  <div id="tabs"><span data-f="all" class="sel">All</span><span data-f="movie">Movies</span><span data-f="series">TV Shows</span></div>
+  <div id="tabs"><span data-f="all" class="sel">All</span><span data-f="movie">Movies</span><span data-f="series">TV Shows</span><span data-f="later">Watch Later</span></div>
   <div id="searchbar"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="text" placeholder="Search movies & shows"></div>
   <div id="hero"><h1></h1><div class="meta"></div><p></p><div class="tip"></div></div>
   <div id="rows"><div id="rowsInner"></div></div>

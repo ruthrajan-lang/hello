@@ -8,7 +8,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var screen = 'status';
   var home = { all: [], rows: [], r: 0, c: [], filter: 'all', top: 0 };
-  var FILTERS = ['all', 'movie', 'series'];
+  var FILTERS = ['all', 'movie', 'series', 'later'];
   var ser = { data: null, s: 0, e: 0 };
   var play = { queue: [], index: 0, osdTimer: 0 };
   var video = $('video');
@@ -158,11 +158,12 @@
     }
   }
 
-  function byFilter(it) { return home.filter === 'all' || it.type === home.filter; }
+  function byFilter(it) { return home.filter === 'all' || home.filter === 'later' || it.type === home.filter; }
 
   // Rebuild the rows for the chosen tab (All / Movies / TV Shows).
   function applyFilter() {
     home.rows = [];
+    if (home.filter === 'later') return showLaterTab();
     var recent = loadRecent().filter(function (r) { return byFilter({ type: r.seriesId ? 'series' : 'movie' }); });
     if (recent.length) home.rows.push({ name: 'Continue Watching', items: recent });
     var later = loadLater().filter(byFilter);
@@ -172,12 +173,34 @@
       var items = c.items.filter(byFilter).slice(0, MAX_ITEMS);
       if (items.length) home.rows.push({ name: c.name, items: items });
     });
+    finishRows();
+  }
+
+  function finishRows() {
     home.c = home.rows.map(function () { return 0; });
-    home.r = Math.min(Math.max(home.r, 0), home.rows.length - 1);
+    home.r = home.rows.length ? Math.min(Math.max(home.r, 0), home.rows.length - 1) : -1;
     var tabs = $('tabs').children;
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('sel', tabs[i].dataset.f === home.filter);
     $('rowsInner').style.transform = 'translateY(0)';
     renderHome();
+  }
+
+  // Watch Later tab: saved movies and shows in their own rows.
+  function showLaterTab() {
+    var later = loadLater();
+    var movies = later.filter(function (x) { return x.type === 'movie'; });
+    var shows = later.filter(function (x) { return x.type === 'series'; });
+    if (movies.length) home.rows.push({ name: 'Movies', items: movies });
+    if (shows.length) home.rows.push({ name: 'TV Shows', items: shows });
+    finishRows();
+    if (!home.rows.length) {
+      home.r = -1;
+      var hero = $('hero');
+      hero.querySelector('h1').textContent = 'Nothing saved yet';
+      hero.querySelector('.meta').textContent = '';
+      hero.querySelector('p').textContent = 'Press ⏯ on any movie or show to save it here.';
+      hero.querySelector('.tip').textContent = '';
+    }
   }
 
   function refreshHome() {
