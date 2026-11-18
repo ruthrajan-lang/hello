@@ -1,17 +1,31 @@
 #!/usr/bin/env bash
-# Builds the service, stages only the files the TV needs, and signs a .wgt.
+# Builds both apps, stages only the files the TV needs, and signs them.
 # Usage: ./package.sh <certificate-profile-name>
+# Output: build/AdFreeTube.wgt and build/AdFreePluto.wgt
 set -euo pipefail
 cd "$(dirname "$0")"
 PROFILE="${1:?Pass your Samsung certificate profile name (from Tizen Certificate Manager)}"
 
 (cd service && npm install --no-audit --no-fund && npm run build)
+rm -rf build stage && mkdir -p build
 
-rm -rf build && mkdir -p build/service/dist
-cp config.xml index.html icon.png build/
-cp service/dist/index.js build/service/dist/
+# sign <stage-dir> <output-name>: Samsung's installer fails on names with spaces, so rename.
+sign() {
+  tizen package -t wgt -s "$PROFILE" -- "$1"
+  mv "$1"/*.wgt "build/$2"
+  echo "Built build/$2"
+}
 
-tizen package -t wgt -s "$PROFILE" -- build
-# Samsung's installer fails on file names with spaces, so give it a plain name.
-for f in build/*.wgt; do [ "$f" = build/AdFreeTube.wgt ] || mv "$f" build/AdFreeTube.wgt; done
-echo "Done: build/AdFreeTube.wgt"
+# YouTube app
+mkdir -p stage/tube/service/dist
+cp config.xml index.html icon.png stage/tube/
+cp service/dist/index.js stage/tube/service/dist/
+sign stage/tube AdFreeTube.wgt
+
+# Pluto app (its service has no dependencies, so no build step)
+mkdir -p stage/pluto/service
+cp pluto/config.xml pluto/index.html pluto/app.js pluto/icon.png stage/pluto/
+cp pluto/service/index.js stage/pluto/service/
+sign stage/pluto AdFreePluto.wgt
+
+rm -rf stage

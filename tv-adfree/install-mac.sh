@@ -87,23 +87,26 @@ tizen security-profiles list || true
 read -r -p "Type the profile name to sign with: " PROFILE
 [ -n "$PROFILE" ] || die "A profile name is required."
 
-bold "Step 5/6: Building and signing the app"
+bold "Step 5/6: Building and signing the apps"
 ./package.sh "$PROFILE"
-WGT="$(ls build/*.wgt | head -1)"
 
 bold "Step 6/6: Installing on the TV"
-if ! tizen install -n "$WGT" -s "$TV_IP:26101"; then
-  echo "Install failed. Details from the TV:"
-  sdb -s "$TV_IP:26101" shell 0 vd_appinstall AdFreeTube /home/owner/share/tmp/sdk_tools/tmp/AdFreeTube.wgt 2>&1 | tail -15 || true
-  die "Paste the lines above into the chat."
-fi
+install_wgt() { # install_wgt <file> <package-id>
+  if ! tizen install -n "build/$1" -s "$TV_IP:26101"; then
+    echo "Install of $1 failed. Details from the TV:"
+    sdb -s "$TV_IP:26101" shell 0 vd_appinstall "$2" "/home/owner/share/tmp/sdk_tools/tmp/$1" 2>&1 | tail -15 || true
+    die "Paste the lines above into the chat."
+  fi
+}
+install_wgt AdFreeTube.wgt AdFreeTube
+install_wgt AdFreePluto.wgt AdFreePlut
 
 bold "Installed. One last step on the TV:"
 cat <<EOF
-  1. Open Apps and press 1 2 3 4 5.
-  2. Change Host PC IP from $MAC_IP to 127.0.0.1.
-  3. Restart the TV (hold Power until the Samsung logo appears).
-  4. Open "AdFree Tube" from Apps. Look for the "Ad blocking on" badge.
+  1. Open Apps → Settings and press 1 2 3 4 5.
+  2. Change Host PC IP from $MAC_IP to 127.0.0.1. (AdFree Tube needs this; AdFree Pluto works either way.)
+  3. Restart the TV (unplug it for 30 seconds).
+  4. Open "AdFree Tube" or "AdFree Pluto" from Apps.
 
 To update later, set Host PC IP back to $MAC_IP and run this script again.
 EOF

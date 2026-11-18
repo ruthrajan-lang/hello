@@ -13,6 +13,15 @@ Built for the QN55S90DAFXZA (2024, Tizen 8). It should also work on other Samsun
 
 The script is built into the app rather than downloaded each time. YouTube changes can't silently swap in new code, and the app works even if a CDN is down.
 
+## AdFree Pluto
+
+A second app, **AdFree Pluto**, plays Pluto TV's free on-demand movies and shows without the ad breaks. It doesn't cover live channels.
+
+- Pluto splices its ads into the same video stream as the show. The app's background helper (`pluto/service/index.js`) downloads Pluto's playlist and keeps only the pieces that belong to the movie or episode itself, so the ad breaks are never played.
+- It uses its own remote-friendly screens (`pluto/index.html`, `pluto/app.js`): rows of movies and series, a season and episode list, and a simple player.
+- Player controls: **OK** pauses or plays, **◀ ▶** skip 10 seconds, **⏪ ⏩** skip 1 minute, and **Back** exits. The next episode plays automatically.
+- It doesn't need the 127.0.0.1 Developer Mode setting, but leaving it set doesn't hurt.
+
 ## Install (Mac)
 
 You need your Mac and the TV on the same Wi-Fi network.
@@ -60,4 +69,5 @@ Open **AdFree Tube** from Apps. You can move it to your home row.
 | `service/src/index.js` | Background service that debug-launches the app and inserts the script |
 | `service/src/adblock.js` | The ad blocker that runs inside YouTube |
 | `package.sh` | Builds, stages, and signs the `.wgt` |
+| `pluto/` | AdFree Pluto app and its playlist-cleaning service |
 | `install-mac.sh` | Mac installer: tools, certificate, build, and install |
