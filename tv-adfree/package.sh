@@ -18,19 +18,19 @@ sign() {
 
 # YouTube app
 mkdir -p stage/tube/service/dist
-cp config.xml index.html icon.png icon_16b9.png stage/tube/
+cp config.xml index.html icon.png stage/tube/
 cp service/dist/index.js stage/tube/service/dist/
 sign stage/tube AdFreeTube.wgt
 
 # Pluto app (its service has no dependencies, so no build step)
 mkdir -p stage/pluto/service
-cp -R pluto/config.xml pluto/index.html pluto/app.js pluto/icon.png pluto/icon_16b9.png pluto/vendor stage/pluto/
+cp -R pluto/config.xml pluto/index.html pluto/app.js pluto/icon.png pluto/vendor stage/pluto/
 cp pluto/service/index.js stage/pluto/service/
 sign stage/pluto AdFreePluto.wgt
 
 # Updater app (installs updates from the Mac so Host PC IP can stay 127.0.0.1)
 mkdir -p stage/updater/service
-cp updater/config.xml updater/index.html updater/icon.png updater/icon_16b9.png stage/updater/
+cp updater/config.xml updater/index.html updater/icon.png stage/updater/
 cp updater/service/index.js updater/service/sdb.js stage/updater/service/
 sign stage/updater AdFreeUpdater.wgt
 

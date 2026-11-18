@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets" id="http://adfree.local/pluto" version="1.0.9" viewmodes="maximized">
+<widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets" id="http://adfree.local/pluto" version="1.1.0" viewmodes="maximized">
     <tizen:application id="AdFreePlut.AdFreePluto" package="AdFreePlut" required_version="3.0"/>
     <tizen:profile name="tv-samsung"/>
     <name>AdFree Pluto</name>
     <content src="index.html"/>
-    <icon src="icon_16b9.png" width="1920" height="1080"/>
     <icon src="icon.png" width="512" height="512"/>
     <access origin="*" subdomains="true"/>
     <feature name="http://tizen.org/feature/screen.size.all"/>
