@@ -82,6 +82,22 @@ function series(id) {
   }));
 }
 
+// Search returns bare IDs; look up full details (pictures, playable path) in one batch.
+function search(q) {
+  return boot().then((s) => get('https://service-media-search.clusters.pluto.tv/v1/search?limit=60&q=' + encodeURIComponent(q),
+    { Authorization: 'Bearer ' + s.token }))
+    .then(JSON.parse)
+    .then((j) => {
+      const ids = (j.data || []).filter((i) => i.type === 'movie' || i.type === 'series').map((i) => i.id).slice(0, 40);
+      if (!ids.length) return [];
+      return api('/v4/vod/items?ids=' + ids.join(',')).then((items) => {
+        const byId = {};
+        (items || []).forEach((it) => { byId[it._id] = it; });
+        return ids.filter((id) => byId[id]).map((id) => slim(byId[id]));
+      });
+    });
+}
+
 function playUrl(path) {
   return boot().then((s) => s.stitcher + '/v2' + path + '?' + s.params + '&jwt=' + s.token + '&masterJWTPassthrough=true');
 }
@@ -180,6 +196,7 @@ http.createServer((req, res) => {
   if (u.pathname === '/ping') return res.end('ok');
   if (u.pathname === '/api/categories') return json(categories());
   if (u.pathname === '/api/series') return json(series(u.searchParams.get('id')));
+  if (u.pathname === '/api/search') return json(search(u.searchParams.get('q') || ''));
   if (u.pathname === '/api/play') {
     return json(playUrl(u.searchParams.get('path')).then((url) => ({ url: proxied(url) })));
   }

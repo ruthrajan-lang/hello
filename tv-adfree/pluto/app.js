@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var SERVICE = 'http://127.0.0.1:8101';
-  var KEY = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, PLAYPAUSE: 10252, PLAY: 415, PAUSE: 19, STOP: 413, FF: 417, RW: 412 };
+  var KEY = { DONE: 65376, CANCEL: 65385, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, PLAYPAUSE: 10252, PLAY: 415, PAUSE: 19, STOP: 413, FF: 417, RW: 412 };
   var MAX_ROWS = 40, MAX_ITEMS = 40;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -11,6 +11,9 @@
   var ser = { data: null, s: 0, e: 0 };
   var play = { queue: [], index: 0, osdTimer: 0 };
   var video = $('video');
+  var q = $('q');
+  var res = { items: [], i: 0, from: 'home' };
+  var hls = null;
 
   // ---------- helpers ----------
   try {
@@ -20,7 +23,7 @@
 
   function show(name) {
     screen = name;
-    ['home', 'series', 'player'].forEach(function (s) { $(s).classList.toggle('on', s === name); });
+    ['home', 'results', 'series', 'player'].forEach(function (s) { $(s).classList.toggle('on', s === name); });
     $('status').style.display = name === 'status' ? 'flex' : 'none';
   }
   function status(text) { $('status').textContent = text; show('status'); }
@@ -95,6 +98,8 @@
   function focusHome() {
     var old = document.querySelector('.card.focus');
     if (old) old.classList.remove('focus');
+    $('searchbar').classList.toggle('focus', home.r < 0);
+    if (home.r < 0) return;
     var r = home.r, c = home.c[r], it = home.rows[r].items[c];
     $('card' + r + '_' + c).classList.add('focus');
     $('rowsInner').style.transform = 'translateY(' + (-r * 330) + 'px)';
@@ -107,7 +112,14 @@
   }
 
   function homeKey(k) {
-    if (k === KEY.UP && home.r > 0) home.r--;
+    if (home.r < 0) {
+      if (k === KEY.ENTER) { q.focus(); return; }          // opens the TV keyboard
+      if (k === KEY.DOWN) { home.r = 0; focusHome(); }
+      else if (k === KEY.BACK) exitApp();
+      return;
+    }
+    if (k === KEY.UP && home.r === 0) home.r = -1;
+    else if (k === KEY.UP && home.r > 0) home.r--;
     else if (k === KEY.DOWN && home.r < home.rows.length - 1) home.r++;
     else if (k === KEY.LEFT && home.c[home.r] > 0) home.c[home.r]--;
     else if (k === KEY.RIGHT && home.c[home.r] < home.rows[home.r].items.length - 1) home.c[home.r]++;
@@ -117,25 +129,72 @@
     focusHome();
   }
 
-  function openItem(it) {
-    if (it.type === 'series') return openSeries(it);
-    startPlayback([it], 0, 'home');
+  function openItem(it, from) {
+    from = from || 'home';
+    if (it.type === 'series') return openSeries(it, from);
+    startPlayback([it], 0, from);
+  }
+
+  // ---------- search ----------
+  function searchKey(k) {
+    if (k === KEY.ENTER || k === KEY.DONE) { q.blur(); runSearch(q.value.trim()); return true; }
+    if (k === KEY.CANCEL || k === KEY.BACK) { q.blur(); return true; }
+    return false; // let the keyboard handle everything else
+  }
+
+  function runSearch(text) {
+    if (!text) return;
+    status('Searching for "' + text + '"…');
+    getJSON('/api/search?q=' + encodeURIComponent(text)).then(function (items) {
+      res = { items: items, i: 0, from: 'home' };
+      $('results').querySelector('h1').textContent = items.length ? 'Results for "' + text + '"' : 'No results for "' + text + '"';
+      $('gridInner').innerHTML = items.map(function (it, i) {
+        return '<div class="card" id="res' + i + '" style="background-image:url(&quot;' + esc(it.image) + '&quot;)">' +
+          (it.type === 'series' ? '<span class="badge">Series</span>' : '') + '<div class="t">' + esc(it.name) + '</div></div>';
+      }).join('');
+      show('results');
+      focusResult();
+    }).catch(function (e) {
+      status('Search failed (' + e.message + ').');
+      setTimeout(function () { show('home'); }, 2500);
+    });
+  }
+
+  function focusResult() {
+    var old = document.querySelector('#gridInner .card.focus');
+    if (old) old.classList.remove('focus');
+    var el = $('res' + res.i);
+    if (!el) return;
+    el.classList.add('focus');
+    $('gridInner').style.transform = 'translateY(' + (-Math.max(0, Math.floor(res.i / 4) - 1) * 252) + 'px)';
+  }
+
+  function resultsKey(k) {
+    var n = res.items.length;
+    if (k === KEY.LEFT && res.i % 4 > 0) res.i--;
+    else if (k === KEY.RIGHT && res.i % 4 < 3 && res.i < n - 1) res.i++;
+    else if (k === KEY.UP && res.i >= 4) res.i -= 4;
+    else if (k === KEY.DOWN && res.i + 4 < n) res.i += 4;
+    else if (k === KEY.ENTER && n) return openItem(res.items[res.i], 'results');
+    else if (k === KEY.BACK) { show('home'); return; }
+    else return;
+    focusResult();
   }
 
   // ---------- series ----------
-  function openSeries(it) {
+  function openSeries(it, from) {
     status('Loading ' + it.name + '…');
     getJSON('/api/series?id=' + encodeURIComponent(it.id)).then(function (d) {
       d.seasons = d.seasons.filter(function (s) { return s.episodes.length; });
       if (!d.seasons.length) throw new Error('no episodes available');
-      ser = { data: d, s: 0, e: 0 };
+      ser = { data: d, s: 0, e: 0, from: from };
       $('series').querySelector('h1').textContent = d.name;
       $('series').querySelector('.desc').textContent = d.description;
       renderSeason();
       show('series');
     }).catch(function (e) {
       status('Couldn\'t open this series (' + e.message + ').');
-      setTimeout(function () { show('home'); }, 2500);
+      setTimeout(function () { show(from); }, 2500);
     });
   }
 
@@ -165,7 +224,7 @@
     else if (k === KEY.LEFT && ser.s > 0) { ser.s--; ser.e = 0; renderSeason(); }
     else if (k === KEY.RIGHT && ser.s < ser.data.seasons.length - 1) { ser.s++; ser.e = 0; renderSeason(); }
     else if (k === KEY.ENTER) startPlayback(eps, ser.e, 'series');
-    else if (k === KEY.BACK) show('home');
+    else if (k === KEY.BACK) show(ser.from);
   }
 
   // ---------- player ----------
@@ -176,8 +235,7 @@
     status('Starting ' + it.name + '…');
     getJSON('/api/play?path=' + encodeURIComponent(it.path)).then(function (p) {
       $('osd').querySelector('.title').textContent = it.name;
-      video.src = p.url;
-      video.play();
+      attach(p.url);
       show('player');
       showOsd();
     }).catch(function (e) {
@@ -186,7 +244,40 @@
     });
   }
 
+  // Pluto streams use separate audio tracks and encryption, which the TV's built-in
+  // player handles poorly, so play them with hls.js (the same player pluto.tv uses).
+  function attach(url) {
+    detach();
+    if (window.Hls && Hls.isSupported()) {
+      var recovered = false;
+      hls = new Hls({ maxBufferLength: 30, backBufferLength: 30, enableWorker: true });
+      hls.on(Hls.Events.MANIFEST_PARSED, function () { video.play(); });
+      hls.on(Hls.Events.ERROR, function (ev, d) {
+        if (!d.fatal) return;
+        if (d.type === Hls.ErrorTypes.NETWORK_ERROR) { hls.startLoad(); return; }
+        if (d.type === Hls.ErrorTypes.MEDIA_ERROR && !recovered) { recovered = true; hls.recoverMediaError(); return; }
+        failPlayback(d.details);
+      });
+      hls.loadSource(url);
+      hls.attachMedia(video);
+    } else {
+      video.src = url;
+      video.play();
+    }
+  }
+
+  function detach() {
+    if (hls) { hls.destroy(); hls = null; }
+  }
+
+  function failPlayback(detail) {
+    if (screen !== 'player') return;
+    toast('Playback error' + (detail ? ': ' + detail : ''));
+    setTimeout(stopPlayback, 4000);
+  }
+
   function stopPlayback() {
+    detach();
     video.pause();
     video.removeAttribute('src');
     video.load();
@@ -221,7 +312,8 @@
     else stopPlayback();
   });
   video.addEventListener('error', function () {
-    if (screen === 'player') { toast('Playback error'); setTimeout(stopPlayback, 2000); }
+    if (hls) return; // hls.js reports and recovers its own errors
+    failPlayback(video.error ? 'code ' + video.error.code : '');
   });
 
   function playerKey(k) {
@@ -238,7 +330,12 @@
 
   document.addEventListener('keydown', function (e) {
     var k = e.keyCode;
+    if (document.activeElement === q) {
+      if (searchKey(k)) e.preventDefault();
+      return;
+    }
     if (screen === 'home') homeKey(k);
+    else if (screen === 'results') resultsKey(k);
     else if (screen === 'series') seriesKey(k);
     else if (screen === 'player') playerKey(k);
     else if (screen === 'status') {
