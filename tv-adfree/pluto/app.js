@@ -23,6 +23,7 @@
   } catch (e) {}
 
   function show(name) {
+    if (name === 'home' && home.dirty && home.all.length) { home.dirty = false; applyFilter(); setTimeout(focusHome, 0); }
     screen = name;
     ['home', 'results', 'series', 'player'].forEach(function (s) { $(s).classList.toggle('on', s === name); });
     $('status').style.display = name === 'status' ? 'flex' : 'none';
@@ -41,6 +42,46 @@
   }
   function mins(ms) { return ms ? Math.round(ms / 60000) + ' min' : ''; }
   function exitApp() { try { tizen.application.getCurrentApplication().exit(); } catch (e) { window.close(); } }
+
+  // ---------- recently viewed (saved on the TV) ----------
+  var RECENT_KEY = 'adfree.recent', MAX_RECENT = 20;
+  function loadRecent() { try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (e) { return []; } }
+  function saveRecent(list) { try { localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, MAX_RECENT))); } catch (e) {} }
+  function recentKey(it) { return it.seriesId || it.id; }
+  function recordView(it, pos, dur) {
+    var list = loadRecent().filter(function (r) { return recentKey(r) !== recentKey(it); });
+    list.unshift(Object.assign({}, it, { recent: true, pos: pos || 0, dur: dur || 0, at: Date.now() }));
+    saveRecent(list);
+    home.dirty = true;
+  }
+  function resumePoint(it) {
+    var r = loadRecent().filter(function (x) { return x.id === it.id; })[0];
+    return r && r.pos > 30 && r.pos < r.dur - 60 ? r.pos : 0;
+  }
+  function recentTitle(r) { return r.seriesId ? r.seriesName + ' · S' + r.season + ' E' + r.number : r.name; }
+
+  // Open a Continue Watching entry: movies play directly; episodes load their season so
+  // the next episode can follow automatically.
+  function openRecent(r) {
+    if (!r.seriesId) return startPlayback([r], 0, 'home');
+    status('Loading ' + r.seriesName + '…');
+    getJSON('/api/series?id=' + encodeURIComponent(r.seriesId)).then(function (d) {
+      var info = { id: r.seriesId, name: r.seriesName, image: r.seriesImage };
+      for (var s = 0; s < d.seasons.length; s++) {
+        var eps = d.seasons[s].episodes;
+        for (var e = 0; e < eps.length; e++) {
+          if (eps[e].id === r.id) return startPlayback(withSeries(eps, info), e, 'home');
+        }
+      }
+      throw new Error('episode no longer available');
+    }).catch(function (e) {
+      status('Couldn\'t resume (' + e.message + ').');
+      setTimeout(function () { show('home'); }, 2500);
+    });
+  }
+  function withSeries(eps, info) {
+    return eps.map(function (ep) { return Object.assign({}, ep, { seriesId: info.id, seriesName: info.name, seriesImage: info.image }); });
+  }
 
   // ---------- startup ----------
   function startService() {
@@ -79,8 +120,9 @@
       return '<div class="row"><h2>' + esc(row.name) + '</h2><div class="strip" id="strip' + r + '">' +
         row.items.map(function (it, c) {
           return '<div class="card" id="card' + r + '_' + c + '" data-img="' + esc(it.image) + '">' +
-            (it.type === 'series' ? '<span class="badge">Series</span>' : '') +
-            '<div class="t">' + esc(it.name) + '</div></div>';
+            (it.type === 'series' && !it.recent ? '<span class="badge">Series</span>' : '') +
+            (it.recent && it.dur ? '<div class="prog"><div style="width:' + Math.min(100, it.pos / it.dur * 100) + '%"></div></div>' : '') +
+            '<div class="t">' + esc(it.recent ? recentTitle(it) : it.name) + '</div></div>';
         }).join('') + '</div></div>';
     }).join('');
   }
@@ -100,12 +142,15 @@
   // Rebuild the rows for the chosen tab (All / Movies / TV Shows).
   function applyFilter() {
     home.rows = [];
+    var recent = loadRecent().filter(function (r) { return byFilter({ type: r.seriesId ? 'series' : 'movie' }); });
+    if (recent.length) home.rows.push({ name: 'Continue Watching', items: recent });
     home.all.forEach(function (c) {
       if (home.rows.length >= MAX_ROWS) return;
       var items = c.items.filter(byFilter).slice(0, MAX_ITEMS);
       if (items.length) home.rows.push({ name: c.name, items: items });
     });
     home.c = home.rows.map(function () { return 0; });
+    home.r = Math.min(Math.max(home.r, 0), home.rows.length - 1);
     var tabs = $('tabs').children;
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('sel', tabs[i].dataset.f === home.filter);
     $('rowsInner').style.transform = 'translateY(0)';
@@ -124,7 +169,7 @@
     $('rowsInner').style.transform = 'translateY(' + (-r * 330) + 'px)';
     $('strip' + r).style.transform = 'translateX(' + (-Math.max(0, c - 1) * 408) + 'px)';
     var hero = $('hero');
-    hero.querySelector('h1').textContent = it.name;
+    hero.querySelector('h1').textContent = it.recent ? recentTitle(it) : it.name;
     hero.querySelector('.meta').textContent = [it.type === 'series' ? 'Series' : mins(it.duration), it.rating, it.genre].filter(Boolean).join(' · ');
     hero.querySelector('p').textContent = it.description;
     loadImages();
@@ -154,6 +199,7 @@
 
   function openItem(it, from) {
     from = from || 'home';
+    if (it.recent) return openRecent(it);
     if (it.type === 'series') return openSeries(it, from);
     startPlayback([it], 0, from);
   }
@@ -211,7 +257,7 @@
     getJSON('/api/series?id=' + encodeURIComponent(it.id)).then(function (d) {
       d.seasons = d.seasons.filter(function (s) { return s.episodes.length; });
       if (!d.seasons.length) throw new Error('no episodes available');
-      ser = { data: d, s: 0, e: 0, from: from };
+      ser = { data: d, s: 0, e: 0, from: from, item: it };
       $('series').querySelector('h1').textContent = d.name;
       $('series').querySelector('.desc').textContent = d.description;
       renderSeason();
@@ -247,7 +293,7 @@
     else if (k === KEY.DOWN && ser.e < eps.length - 1) { ser.e++; focusEpisode(); }
     else if (k === KEY.LEFT && ser.s > 0) { ser.s--; ser.e = 0; renderSeason(); }
     else if (k === KEY.RIGHT && ser.s < ser.data.seasons.length - 1) { ser.s++; ser.e = 0; renderSeason(); }
-    else if (k === KEY.ENTER) startPlayback(eps, ser.e, 'series');
+    else if (k === KEY.ENTER) startPlayback(withSeries(eps, ser.item), ser.e, 'series');
     else if (k === KEY.BACK) show(ser.from);
   }
 
@@ -258,8 +304,12 @@
     if (!it.path) { toast('This title isn\'t available right now'); return; }
     status('Starting ' + it.name + '…');
     getJSON('/api/play?path=' + encodeURIComponent(it.path)).then(function (p) {
-      $('osd').querySelector('.title').textContent = it.name;
-      attach(p.url);
+      $('osd').querySelector('.title').textContent = it.seriesId ? it.seriesName + ' · S' + it.season + ' E' + it.number + ' · ' + it.name : it.name;
+      var start = resumePoint(it);
+      play.current = it; play.lastSave = 0;
+      recordView(it, start, it.duration / 1000);
+      attach(p.url, start);
+      if (start) toast('Resuming at ' + fmt(start) + ' · press ⏪ to rewind');
       show('player');
       showOsd();
     }).catch(function (e) {
@@ -270,12 +320,12 @@
 
   // Pluto streams use separate audio tracks and encryption, which the TV's built-in
   // player handles poorly, so play them with hls.js (the same player pluto.tv uses).
-  function attach(url) {
+  function attach(url, start) {
     detach();
     if (!window.Hls) { failPlayback('player file missing from the app, reinstall it'); return; }
     if (Hls.isSupported()) {
       var recovered = false;
-      hls = new Hls({ maxBufferLength: 30, backBufferLength: 30, enableWorker: true });
+      hls = new Hls({ maxBufferLength: 30, backBufferLength: 30, enableWorker: true, startPosition: start || -1 });
       hls.on(Hls.Events.MANIFEST_PARSED, function () { video.play(); });
       hls.on(Hls.Events.ERROR, function (ev, d) {
         if (!d.fatal) return;
@@ -287,6 +337,7 @@
       hls.attachMedia(video);
     } else {
       video.src = url;
+      if (start) video.addEventListener('loadedmetadata', function once() { video.currentTime = start; video.removeEventListener('loadedmetadata', once); });
       video.play();
     }
   }
@@ -302,6 +353,8 @@
   }
 
   function stopPlayback() {
+    if (play.current && video.duration && video.currentTime > 0) recordView(play.current, video.currentTime, video.duration);
+    play.current = null;
     detach();
     video.pause();
     video.removeAttribute('src');
@@ -331,8 +384,11 @@
     $('cur').textContent = fmt(video.currentTime);
     $('dur').textContent = fmt(video.duration);
     $('fill').style.width = (video.duration ? video.currentTime / video.duration * 100 : 0) + '%';
+    var now = Date.now();
+    if (play.current && video.duration && now - play.lastSave > 10000) { play.lastSave = now; recordView(play.current, video.currentTime, video.duration); }
   });
   video.addEventListener('ended', function () {
+    if (play.current) recordView(play.current, 0, video.duration); // finished: keep it listed, start from the beginning next time
     if (play.index < play.queue.length - 1) { toast('Next episode'); startPlayback(play.queue, play.index + 1, play.from); }
     else stopPlayback();
   });
