@@ -15,6 +15,10 @@ function log(line) { job.log.push(line); }
 
 function fetchBuf(url, timeoutMs) {
   return new Promise((resolve, reject) => {
+    // Hard deadline: on some TVs a connect to an address with no device can hang for minutes.
+    const timer = setTimeout(() => { req.destroy(); reject(new Error('timeout')); }, timeoutMs || 30000);
+    const done = (fn) => (v) => { clearTimeout(timer); fn(v); };
+    resolve = done(resolve); reject = done(reject);
     const req = http.get(url, (res) => {
       if (res.statusCode !== 200) { res.resume(); return reject(new Error('HTTP ' + res.statusCode)); }
       const chunks = [];
@@ -27,7 +31,7 @@ function fetchBuf(url, timeoutMs) {
 }
 
 function manifest(host) {
-  return fetchBuf('http://' + host + ':' + UPDATE_PORT + '/adfree.json', 1500).then((b) => JSON.parse(b.toString()));
+  return fetchBuf('http://' + host + ':' + UPDATE_PORT + '/adfree.json', 1200).then((b) => JSON.parse(b.toString()));
 }
 
 function localPrefixes() {
@@ -52,7 +56,7 @@ function findMac(hint) {
       const pump = () => {
         if (found) return;
         if (next >= candidates.length && active === 0) return reject(new Error('No Mac is sharing updates. On the Mac run: ./install-mac.sh --serve'));
-        while (active < 48 && next < candidates.length) {
+        while (active < 64 && next < candidates.length) {
           const h = candidates[next++];
           active++;
           tryHost(h).then((ok) => { found = true; resolve(ok); }, () => {}).then(() => { active--; pump(); });

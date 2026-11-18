@@ -11,6 +11,8 @@
   #apps { font-size: 30px; margin-bottom: 40px; line-height: 1.7; }
   #apps .new { color: #4cd964; }
   #log { font-size: 28px; line-height: 1.6; color: #d0d0da; white-space: pre-wrap; }
+  #manual { font-size: 30px; margin-top: 30px; }
+  #manual input { font-size: 30px; padding: 10px 18px; width: 360px; background: #1a1a22; color: #fff; border: 3px solid #4cd964; border-radius: 10px; }
   #hint { position: absolute; left: 160px; bottom: 90px; font-size: 26px; color: #a0a0ad; }
   b { color: #4cd964; }
 </style>
@@ -21,8 +23,9 @@
   <div class="sub">Installs the latest AdFree apps from your Mac. Host PC IP stays on 127.0.0.1.</div>
   <div id="apps"></div>
   <div id="log">Starting…</div>
+  <div id="manual" style="display:none">Mac IP address: <input id="ip" type="text" placeholder="e.g. 10.0.0.45"> <span style="color:#a0a0ad">(OK to type, Done to search)</span></div>
 </main>
-<div id="hint">On your Mac, run <b>./install-mac.sh --serve</b> first. &nbsp; OK: install updates &nbsp;·&nbsp; Back: exit</div>
+<div id="hint">On your Mac, run <b>./install-mac.sh --serve</b> first. &nbsp; OK: install updates &nbsp;·&nbsp; ▲: type the Mac&#39;s IP &nbsp;·&nbsp; Back: exit</div>
 <script>
 "use strict";
 var SERVICE = "http://127.0.0.1:8102";
@@ -39,9 +42,9 @@ function installed(appId) {
 }
 
 function check() {
-  $("log").textContent = "Looking for your Mac…";
+  $("log").textContent = "Looking for your Mac… (this can take up to a minute)";
   get("/check?hint=" + encodeURIComponent(hint())).then(function (r) {
-    if (r.error) { $("log").textContent = r.error + "\n\nPress OK to look again."; return; }
+    if (r.error) { $("log").textContent = r.error + "\n\nPress OK to look again, or ▲ to type the Mac's IP address."; return; }
     remember(r.host);
     $("apps").innerHTML = r.apps.map(function (a) {
       var have = installed(a.appId);
@@ -75,7 +78,16 @@ function poll() {
   });
 }
 
+// Manual Mac address: Up shows the box, OK opens the TV keyboard, Done searches that address.
+var ip = $("ip");
+ip.addEventListener("keydown", function (e) {
+  if (e.keyCode === 13 || e.keyCode === 65376) { e.stopPropagation(); e.preventDefault(); ip.blur(); remember(ip.value.trim()); $("apps").innerHTML = ""; check(); }
+  else if (e.keyCode === 65385 || e.keyCode === 10009) { e.stopPropagation(); e.preventDefault(); ip.blur(); }
+});
+
 document.addEventListener("keydown", function (e) {
+  if (document.activeElement === ip) return;
+  if (e.keyCode === 38) { $("manual").style.display = "block"; ip.value = hint(); ip.focus(); return; }
   if (e.keyCode === 13) { if ($("apps").innerHTML) update(); else check(); }
   if (e.keyCode === 10009) app.exit();
 });
