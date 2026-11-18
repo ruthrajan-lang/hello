@@ -82,16 +82,56 @@
     if (v && v.tagName === 'VIDEO' && v.muted && !adPlaying()) v.muted = false;
   }, true);
 
-  // Small confirmation badge so you can tell the blocker loaded.
-  function badge() {
-    if (!document.body) return setTimeout(badge, 500);
+  // Small on-screen note in the top-right corner.
+  function toast(text, ms) {
+    if (!document.body) return setTimeout(function () { toast(text, ms); }, 500);
     var b = document.createElement('div');
-    b.textContent = 'Ad blocking on';
+    b.textContent = text;
     b.style.cssText = 'position:fixed;top:32px;right:48px;z-index:2147483647;padding:10px 20px;border-radius:8px;' +
       'background:rgba(0,0,0,.75);color:#fff;font:600 24px sans-serif;transition:opacity .6s';
     document.body.appendChild(b);
-    setTimeout(function () { b.style.opacity = '0'; }, 4000);
-    setTimeout(function () { b.remove(); }, 5000);
+    setTimeout(function () { b.style.opacity = '0'; }, ms || 3000);
+    setTimeout(function () { b.remove(); }, (ms || 3000) + 1000);
   }
-  badge();
+  toast('Ad blocking on', 4000);
+
+  // SponsorBlock: skip community-marked sponsor reads, self-promos and subscribe reminders.
+  var SB_CATEGORIES = ['sponsor', 'selfpromo', 'interaction'];
+  var SB_NAMES = { sponsor: 'sponsor', selfpromo: 'self-promotion', interaction: 'subscribe reminder' };
+  var sb = { id: null, segments: [] };
+
+  function currentVideoId() {
+    var m = /[?&]v=([\w-]{11})/.exec(location.hash + '&' + location.search);
+    return m ? m[1] : null;
+  }
+
+  function loadSegments(id) {
+    sb.id = id;
+    sb.segments = [];
+    fetch('https://sponsor.ajay.app/api/skipSegments?videoID=' + id +
+      '&categories=' + encodeURIComponent(JSON.stringify(SB_CATEGORIES)))
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        if (sb.id !== id) return;
+        sb.segments = (list || []).filter(function (s) { return s.actionType === 'skip' || !s.actionType; })
+          .map(function (s) { return { start: s.segment[0], end: s.segment[1], category: s.category }; });
+      })
+      .catch(function () {});
+  }
+
+  setInterval(function () {
+    var id = currentVideoId();
+    if (id !== sb.id) { if (id) loadSegments(id); else sb = { id: null, segments: [] }; }
+    if (!sb.segments.length || adPlaying()) return;
+    var v = document.querySelector('video');
+    if (!v || v.paused) return;
+    for (var i = 0; i < sb.segments.length; i++) {
+      var s = sb.segments[i];
+      if (v.currentTime >= s.start && v.currentTime < s.end - 0.5) {
+        v.currentTime = s.end;
+        toast('Skipped ' + (SB_NAMES[s.category] || s.category));
+        break;
+      }
+    }
+  }, 500);
 })();

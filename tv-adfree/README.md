@@ -1,6 +1,6 @@
 # AdFree Tube for Samsung TVs
 
-A small Tizen app that opens YouTube's TV interface with ads removed. It strips ad data out of YouTube's responses before the player sees them. If an ad still gets through, it skips it automatically. It has no extra features, so there's less to break.
+A small Tizen app that opens YouTube's TV interface with ads removed and sponsor segments skipped (via SponsorBlock). It strips ad data out of YouTube's responses before the player sees them. If an ad still gets through, it skips it automatically. It has no extra features, so there's less to break.
 
 Built for the QN55S90DAFXZA (2024, Tizen 8). It should also work on other Samsung TVs from 2017 onward.
 
