@@ -54,6 +54,7 @@ PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'packag
 # Certificate Manager plus Samsung's certificate add-on (needed to sign apps for real TVs).
 "$PM" install --accept-license certificate-manager-product cert-add-on || \
   die "Couldn't install Samsung Certificate Manager. Re-run this script; if it fails again, open $PM's GUI and install 'Samsung Certificate Extension'."
+./fix-certmgr.sh --no-open
 echo "OK"
 
 bold "Step 3/6: Connecting to the TV at $TV_IP"
@@ -69,7 +70,7 @@ echo "OK"
 bold "Step 4/6: Samsung certificate"
 read -r -p "Already created a Samsung certificate profile for this TV? (y/N) " HAVE
 if [ "${HAVE:-n}" != "y" ] && [ "${HAVE:-n}" != "Y" ]; then
-  CM="$(find "$TS/tools/certificate-manager" -maxdepth 1 -name '*.app' 2>/dev/null | head -1)"
+  CM="$(find "$TS/tools/certificate-manager" -maxdepth 1 -iname 'certificate-manager.app' 2>/dev/null | head -1)"
   [ -n "$CM" ] || die "Certificate Manager wasn't found in $TS/tools/certificate-manager."
   cat <<EOF
 Certificate Manager is opening. In it:
