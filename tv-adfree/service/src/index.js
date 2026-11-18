@@ -1,4 +1,4 @@
-'use strict';
+// Not strict mode: the bundled adbhost library relies on sloppy-mode globals.
 // Background service (Node.js, runs on the TV).
 // 1. The launcher asks /state whether Developer Mode points at this TV (127.0.0.1).
 // 2. /launch: once the launcher exits, relaunch the app in debug mode over the TV's own sdb port.
@@ -37,16 +37,35 @@ function getJson(url) {
   });
 }
 
-function tvState() {
-  return getJson('http://127.0.0.1:8001/api/v2/').then((j) => {
-    const d = j.device || {};
-    return {
-      devMode: d.developerMode === '1',
-      hostIp: d.developerIP || '',
-      loopback: d.developerIP === '127.0.0.1' || d.developerIP === '1.0.0.127',
-      ip: d.ip
-    };
+// The real test: can we open the TV's developer (sdb) connection from here?
+// That only works when Developer Mode is on and its Host PC IP is 127.0.0.1.
+function sdbReachable() {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (ok) => { if (done) return; done = true; try { sdb._stream.end(); } catch (e) {} resolve(ok); };
+    const sdb = adbhost.createConnection({ host: '127.0.0.1', port: 26101 });
+    sdb.on('connect', () => finish(true));
+    sdb._stream.on('error', () => finish(false));
+    sdb._stream.on('close', () => finish(false));
+    setTimeout(() => finish(false), 4000);
   });
+}
+
+// Settings the TV reports about itself; only used to explain problems and find its IP.
+function tvInfo() {
+  return getJson('http://127.0.0.1:8001/api/v2/')
+    .then((j) => j.device || {})
+    .catch((e) => ({ error: String(e && e.message || e) }));
+}
+
+function tvState() {
+  return Promise.all([sdbReachable(), tvInfo()]).then(([ready, d]) => ({
+    ready,
+    devMode: d.developerMode,
+    hostIp: d.developerIP || '',
+    ip: d.ip || '127.0.0.1',
+    infoError: d.error
+  }));
 }
 
 function appRunning() {
@@ -120,14 +139,14 @@ http.createServer((req, res) => {
   if (req.url === '/state') {
     return tvState()
       .then((s) => send(Object.assign({ busy }, s)))
-      .catch(() => send({ busy, devMode: false, loopback: false, hostIp: '' }));
+      .catch((e) => send({ busy, ready: false, infoError: String(e) }));
   }
   if (req.url === '/launch') {
     if (busy) return send({ ok: true });
     setBusy(true);
     send({ ok: true });
-    return tvState()
-      .then((s) => waitForExit(100).then(() => debugLaunch(s.ip)))
+    return tvInfo()
+      .then((d) => waitForExit(100).then(() => debugLaunch(d.ip || '127.0.0.1')))
       .catch(() => setBusy(false));
   }
   res.statusCode = 404;

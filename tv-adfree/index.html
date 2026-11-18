@@ -41,13 +41,11 @@ function check() {
       show("Loading YouTube…");
       return setTimeout(check, 1000);
     }
-    if (!s.devMode) {
-      return show("Developer Mode is off.",
-        "Open Apps, press 1 2 3 4 5 on the remote, turn Developer Mode on, set Host PC IP to <b>127.0.0.1</b>, then restart the TV.");
-    }
-    if (!s.loopback) {
-      return show("Almost there: Developer Mode Host PC IP is <b>" + s.hostIp + "</b>.",
-        "Change it to <b>127.0.0.1</b> (Apps → 1 2 3 4 5), then restart the TV. Set it back to your computer's IP only when you need to reinstall.");
+    if (!s.ready) {
+      var seen = s.infoError ? "TV didn't report its settings (" + s.infoError + ")"
+        : "TV reports Developer Mode = " + s.devMode + ", Host PC IP = " + (s.hostIp || "none");
+      return show("Can't reach the TV's developer connection.",
+        "Developer Mode must be on with Host PC IP <b>127.0.0.1</b> (Apps → Settings → 1 2 3 4 5), then restart the TV.<br><br>" + seen);
     }
     get("/launch").then(function () { app.exit(); });
   }).catch(function () {
