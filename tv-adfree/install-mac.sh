@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One-command installer for AdFree Tube (macOS).
-# Usage:  ./install-mac.sh <TV_IP>
+# Usage:  ./install-mac.sh <TV_IP> [--new-cert]
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -13,7 +13,13 @@ bold() { printf '\n\033[1m%s\033[0m\n' "$*"; }
 die()  { printf '\n\033[31m%s\033[0m\n' "$*" >&2; exit 1; }
 pause() { read -r -p "$1 Press Return to continue… " _; }
 
-TV_IP="${1:-}"
+TV_IP=""; NEW_CERT=0
+for arg in "$@"; do
+  case "$arg" in
+    --new-cert) NEW_CERT=1 ;;
+    *) TV_IP="$arg" ;;
+  esac
+done
 if [ -z "$TV_IP" ]; then
   echo "TV IP: on the TV, open Settings → General → Network → Network Status → IP Settings."
   read -r -p "Enter your TV's IP address: " TV_IP
@@ -68,8 +74,10 @@ sdb devices
 echo "OK"
 
 bold "Step 4/6: Samsung certificate"
-read -r -p "Already created a Samsung certificate profile for this TV? (y/N) " HAVE
-if [ "${HAVE:-n}" != "y" ] && [ "${HAVE:-n}" != "Y" ]; then
+# Assumes the certificate profile already exists. Run with --new-cert to create one.
+SAVED="$HOME/.adfree-cert-profile"
+PROFILE="$(cat "$SAVED" 2>/dev/null || echo adfree)"
+if [ "$NEW_CERT" = "1" ]; then
   CM="$(find "$TS/tools/certificate-manager" -maxdepth 1 -iname 'certificate-manager.app' 2>/dev/null | head -1)"
   [ -n "$CM" ] || die "Certificate Manager wasn't found in $TS/tools/certificate-manager."
   cat <<EOF
@@ -81,14 +89,14 @@ Certificate Manager is opening. In it:
   5. Click Finish, then quit Certificate Manager (Cmd+Q) to continue here.
 EOF
   open -W "$CM"
+  read -r -p "Type the profile name you just created: " PROFILE
+  [ -n "$PROFILE" ] || die "A profile name is required."
 fi
-echo "Certificate profiles on this Mac:"
-tizen security-profiles list || true
-read -r -p "Type the profile name to sign with: " PROFILE
-[ -n "$PROFILE" ] || die "A profile name is required."
+echo "Using certificate profile: $PROFILE"
 
 bold "Step 5/6: Building and signing the apps"
-./package.sh "$PROFILE"
+./package.sh "$PROFILE" || die "Signing failed. If the profile name isn't \"$PROFILE\", run: ./install-mac.sh $TV_IP --new-cert"
+echo "$PROFILE" > "$SAVED"
 
 bold "Step 6/6: Installing on the TV"
 install_wgt() { # install_wgt <file> <package-id>
