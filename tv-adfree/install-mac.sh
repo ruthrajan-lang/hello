@@ -109,12 +109,10 @@ install_wgt() { # install_wgt <file> <package-id>
 install_wgt AdFreeTube.wgt AdFreeTube
 install_wgt AdFreePluto.wgt AdFreePlut
 
-bold "Installed. One last step on the TV:"
+bold "Installed."
 cat <<EOF
-  1. Open Apps → Settings and press 1 2 3 4 5.
-  2. Change Host PC IP from $MAC_IP to 127.0.0.1. (AdFree Tube needs this; AdFree Pluto works either way.)
-  3. Restart the TV (unplug it for 30 seconds).
-  4. Open "AdFree Tube" or "AdFree Pluto" from Apps.
-
-To update later, set Host PC IP back to $MAC_IP and run this script again.
+  • AdFree Pluto: ready now. Open it from Apps. No setting changes needed.
+  • AdFree Tube (YouTube) only: it needs Host PC IP set to 127.0.0.1.
+    Apps → Settings → 1 2 3 4 5 → Host PC IP 127.0.0.1, then restart the TV.
+    Set it back to $MAC_IP before running this installer again.
 EOF
