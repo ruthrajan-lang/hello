@@ -41,7 +41,7 @@ if [ ! -x "$TS/tools/ide/bin/tizen" ]; then
   "$tmp/tizen-cli.bin" --accept-license "$TS"
   rm -rf "$tmp"
 fi
-PM="$(ls "$TS"/package-manager/package-manager-cli.bin 2>/dev/null || true)"
+PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'package-manager-cli' \) -type f 2>/dev/null | head -1)"
 [ -n "$PM" ] || die "Tizen install failed: package manager not found in $TS."
 # Certificate Manager plus Samsung's certificate add-on (needed to sign apps for real TVs).
 "$PM" install --accept-license certificate-manager-product cert-add-on || \
