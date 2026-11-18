@@ -12,4 +12,6 @@ cp config.xml index.html icon.png build/
 cp service/dist/index.js build/service/dist/
 
 tizen package -t wgt -s "$PROFILE" -- build
-echo "Done: $(ls build/*.wgt)"
+# Samsung's installer fails on file names with spaces, so give it a plain name.
+for f in build/*.wgt; do [ "$f" = build/AdFreeTube.wgt ] || mv "$f" build/AdFreeTube.wgt; done
+echo "Done: build/AdFreeTube.wgt"
