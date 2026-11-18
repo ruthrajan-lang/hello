@@ -7,12 +7,20 @@ cd "$(dirname "$0")"
 PROFILE="${1:?Pass your Samsung certificate profile name (from Tizen Certificate Manager)}"
 
 (cd service && { [ -d node_modules ] || npm install --no-audit --no-fund; } && npm run build)
-rm -rf build stage && mkdir -p build
+rm -rf stage && mkdir -p build
 
 # sign <stage-dir> <output-name>: Samsung's installer fails on names with spaces, so rename.
+# Signing starts Samsung's slow Java tool, so skip it when the app's files haven't changed.
 sign() {
+  local sum
+  sum="$( (cd "$1" && find . -type f | LC_ALL=C sort | xargs shasum; echo "$PROFILE") | shasum | cut -d' ' -f1)"
+  if [ -f "build/$2" ] && [ "$(cat "build/$2.sum" 2>/dev/null)" = "$sum" ]; then
+    echo "Unchanged: build/$2"
+    return
+  fi
   tizen package -t wgt -s "$PROFILE" -- "$1"
   mv "$1"/*.wgt "build/$2"
+  echo "$sum" > "build/$2.sum"
   echo "Built build/$2"
 }
 
