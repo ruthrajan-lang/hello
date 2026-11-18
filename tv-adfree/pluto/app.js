@@ -248,7 +248,8 @@
   // player handles poorly, so play them with hls.js (the same player pluto.tv uses).
   function attach(url) {
     detach();
-    if (window.Hls && Hls.isSupported()) {
+    if (!window.Hls) { failPlayback('player file missing from the app, reinstall it'); return; }
+    if (Hls.isSupported()) {
       var recovered = false;
       hls = new Hls({ maxBufferLength: 30, backBufferLength: 30, enableWorker: true });
       hls.on(Hls.Events.MANIFEST_PARSED, function () { video.play(); });

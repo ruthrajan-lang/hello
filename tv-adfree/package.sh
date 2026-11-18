@@ -24,7 +24,7 @@ sign stage/tube AdFreeTube.wgt
 
 # Pluto app (its service has no dependencies, so no build step)
 mkdir -p stage/pluto/service
-cp pluto/config.xml pluto/index.html pluto/app.js pluto/icon.png stage/pluto/
+cp -R pluto/config.xml pluto/index.html pluto/app.js pluto/icon.png pluto/vendor stage/pluto/
 cp pluto/service/index.js stage/pluto/service/
 sign stage/pluto AdFreePluto.wgt
 
