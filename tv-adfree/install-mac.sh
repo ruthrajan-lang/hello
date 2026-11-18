@@ -42,7 +42,7 @@ if ! command -v node >/dev/null; then
 fi
 echo "OK"
 
-bold "Step 2/6: Installing Samsung's Tizen command-line tools (first run only, about 5–10 minutes)"
+bold "Step 2/6: Samsung's Tizen command-line tools"
 if [ ! -x "$TS/tools/ide/bin/tizen" ]; then
   # Samsung's .bin runs a bundled arm64e `unzip` that macOS kills on Apple Silicon,
   # so unpack it by hand with the system unzip and run its Java installer directly.
@@ -58,13 +58,20 @@ if [ ! -x "$TS/tools/ide/bin/tizen" ]; then
   (cd "$tmp/x" && "$JAVA" -jar -XstartOnFirstThread installer.jar --accept-license "$TS" -path "$tmp/x")
   rm -rf "$tmp"
 fi
-PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'package-manager-cli' \) -type f 2>/dev/null | head -1)"
-[ -n "$PM" ] || die "Tizen install failed: package manager not found in $TS."
-# Certificate Manager plus Samsung's certificate add-on (needed to sign apps for real TVs).
-"$PM" install --accept-license certificate-manager-product cert-add-on || \
-  die "Couldn't install Samsung Certificate Manager. Re-run this script; if it fails again, open $PM's GUI and install 'Samsung Certificate Extension'."
-./fix-certmgr.sh --no-open
-echo "OK"
+# Skip Samsung's (slow) package manager when the certificate tools are already installed.
+CM_APP="$(find "$TS/tools/certificate-manager" -maxdepth 1 -iname 'certificate-manager.app' 2>/dev/null | head -1)"
+if [ -n "$CM_APP" ] && [ -x "$CM_APP/Contents/MacOS/CertificateManager" ] && \
+   ls "$CM_APP"/Contents/Eclipse/plugins/org.tizen.common.cert_*.jar >/dev/null 2>&1; then
+  echo "Already installed."
+else
+  PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'package-manager-cli' \) -type f 2>/dev/null | head -1)"
+  [ -n "$PM" ] || die "Tizen install failed: package manager not found in $TS."
+  # Certificate Manager plus Samsung's certificate add-on (needed to sign apps for real TVs).
+  "$PM" install --accept-license certificate-manager-product cert-add-on || \
+    die "Couldn't install Samsung Certificate Manager. Re-run this script; if it fails again, open $PM's GUI and install 'Samsung Certificate Extension'."
+  ./fix-certmgr.sh --no-open
+  echo "OK"
+fi
 
 if [ "$SERVE" = "0" ]; then
 bold "Step 3/6: Connecting to the TV at $TV_IP"

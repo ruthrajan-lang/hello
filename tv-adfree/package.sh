@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 PROFILE="${1:?Pass your Samsung certificate profile name (from Tizen Certificate Manager)}"
 
-(cd service && npm install --no-audit --no-fund && npm run build)
+(cd service && { [ -d node_modules ] || npm install --no-audit --no-fund; } && npm run build)
 rm -rf build stage && mkdir -p build
 
 # sign <stage-dir> <output-name>: Samsung's installer fails on names with spaces, so rename.
