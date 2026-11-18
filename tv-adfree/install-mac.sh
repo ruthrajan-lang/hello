@@ -94,7 +94,7 @@ WGT="$(ls build/*.wgt | head -1)"
 bold "Step 6/6: Installing on the TV"
 if ! tizen install -n "$WGT" -s "$TV_IP:26101"; then
   echo "Install failed. Details from the TV:"
-  sdb -s "$TV_IP:26101" shell 0 vd_appinstall AdFreeTb1 /home/owner/share/tmp/sdk_tools/tmp/AdFreeTube.wgt 2>&1 | tail -15 || true
+  sdb -s "$TV_IP:26101" shell 0 vd_appinstall AdFreeTube /home/owner/share/tmp/sdk_tools/tmp/AdFreeTube.wgt 2>&1 | tail -15 || true
   die "Paste the lines above into the chat."
 fi
 

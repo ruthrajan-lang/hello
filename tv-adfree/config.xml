@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets" id="http://adfree.local/tube" version="1.0.0" viewmodes="maximized">
-    <tizen:application id="AdFreeTb1.AdFreeTube" package="AdFreeTb1" required_version="3.0"/>
+    <tizen:application id="AdFreeTube.AdFreeTube" package="AdFreeTube" required_version="3.0"/>
     <tizen:profile name="tv-samsung"/>
     <name>AdFree Tube</name>
     <content src="index.html"/>
@@ -15,7 +15,7 @@
     <tizen:privilege name="http://tizen.org/privilege/application.launch"/>
     <tizen:metadata key="http://samsung.com/tv/metadata/html5.4k.support" value="true"/>
     <tizen:metadata key="http://samsung.com/tv/metadata/use.game.mode" value="false"/>
-    <tizen:service id="AdFreeTb1.Injector" auto-restart="true" on-boot="false">
+    <tizen:service id="AdFreeTube.Injector" auto-restart="true" on-boot="false">
         <tizen:content src="service/dist/index.js"/>
         <tizen:name>Injector</tizen:name>
     </tizen:service>
