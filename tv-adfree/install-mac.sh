@@ -35,10 +35,18 @@ echo "OK"
 
 bold "Step 2/6: Installing Samsung's Tizen command-line tools (first run only, about 5–10 minutes)"
 if [ ! -x "$TS/tools/ide/bin/tizen" ]; then
+  # Samsung's .bin runs a bundled arm64e `unzip` that macOS kills on Apple Silicon,
+  # so unpack it by hand with the system unzip and run its Java installer directly.
   tmp="$(mktemp -d)"
   curl -fL --progress-bar -o "$tmp/tizen-cli.bin" "$TS_URL"
-  chmod +x "$tmp/tizen-cli.bin"
-  "$tmp/tizen-cli.bin" --accept-license "$TS"
+  skip="$(grep -a -m1 '^ORI_FILE_LEN=' "$tmp/tizen-cli.bin" | tr -dc '0-9')"
+  mkdir -p "$tmp/x"
+  tail -n +"$skip" "$tmp/tizen-cli.bin" | tar xmz -C "$tmp/x"
+  rm -rf "$HOME/.package-manager/jdk" && mkdir -p "$HOME/.package-manager"
+  /usr/bin/unzip -qq -o "$tmp/x/tizen-sdk.zip" 'jdk/*' -d "$HOME/.package-manager"
+  JAVA="$HOME/.package-manager/jdk/Contents/Home/bin/java"
+  [ -x "$JAVA" ] || die "Couldn't unpack Samsung's Java runtime."
+  (cd "$tmp/x" && "$JAVA" -jar -XstartOnFirstThread installer.jar --accept-license "$TS" -path "$tmp/x")
   rm -rf "$tmp"
 fi
 PM="$(find "$TS" -maxdepth 4 \( -name 'package-manager-cli.bin' -o -name 'package-manager-cli' \) -type f 2>/dev/null | head -1)"
