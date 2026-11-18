@@ -13,46 +13,21 @@ Built for the QN55S90DAFXZA (2024, Tizen 8). It should also work on other Samsun
 
 The script is built into the app rather than downloaded each time. YouTube changes can't silently swap in new code, and the app works even if a CDN is down.
 
-## One-time setup
+## Install (Mac)
 
-You need a computer (Windows, macOS, or Linux) on the same Wi-Fi network as the TV.
+You need your Mac and the TV on the same Wi-Fi network.
 
-### 1. Install the tools on your computer
-
-- [Node.js](https://nodejs.org) (LTS)
-- [Tizen Studio](https://developer.tizen.org/development/tizen-studio/download) with the CLI
-- In Tizen Studio's **Package Manager**, under **Extension SDK**, install **TV Extensions** and **Samsung Certificate Extension**
-
-### 2. Put the TV in Developer Mode
-
-1. Find your computer's IP address.
-2. On the TV, open **Apps**, then press **1 2 3 4 5** on the remote. On a remote without number buttons, use the on-screen number pad.
-3. Turn **Developer mode** on, enter your computer's IP address, and restart the TV. Hold the power button until the Samsung logo appears.
-4. Find the TV's IP address under **Settings → General → Network → Network Status → IP Settings**.
-
-### 3. Connect to the TV and create a certificate
+1. **Put the TV in Developer Mode.** On the TV, open **Apps**, press **1 2 3 4 5** on the remote, turn **Developer mode** on, and enter your Mac's IP address (**System Settings → Wi-Fi → Details**). Restart the TV by holding the power button until the Samsung logo appears.
+2. **Find the TV's IP address** under **Settings → General → Network → Network Status → IP Settings**.
+3. **Run the installer** in Terminal from this folder:
 
 ```bash
-sdb connect <TV_IP>
+./install-mac.sh <TV_IP>
 ```
 
-In Tizen Studio, open **Tools → Certificate Manager**. Create a **Samsung** certificate profile, choose **TV**, and sign in with a Samsung account. When it asks for device IDs, keep the connected TV's ID selected. Remember the profile name.
+The script installs Samsung's command-line tools on the first run (about 5–10 minutes). It then connects to the TV and opens Samsung's Certificate Manager so you can sign in once and create the certificate. Finally, it builds, signs and installs the app. Follow its on-screen prompts.
 
-### 4. Build and install
-
-```bash
-cd tv-adfree
-```
-
-```bash
-./package.sh <your-certificate-profile-name>
-```
-
-```bash
-tizen install -n build/AdFree*.wgt -t $(sdb devices | awk 'NR==2{print $3}')
-```
-
-### 5. Point Developer Mode at the TV itself
+### Last step: point Developer Mode at the TV itself
 
 This step is required. It lets the app attach to itself.
 
@@ -66,13 +41,13 @@ Open **AdFree Tube** from Apps. You can move it to your home row.
 
 | What you see | Fix |
 |---|---|
-| "Developer Mode is off" | Developer Mode turns off after some firmware updates. Turn it back on and set the IP to 127.0.0.1 (step 5). |
+| "Developer Mode is off" | Developer Mode turns off after some firmware updates. Turn it back on and set the Host PC IP to 127.0.0.1. |
 | "Host PC IP is …" | Set it to 127.0.0.1 and restart the TV. |
 | Stuck on "Loading YouTube…" | Fully restart the TV by holding the power button, then open the app again. |
 | YouTube opens without the "Ad blocking on" badge | The script didn't load. Restart the TV and try again. |
 | Ads show up after a YouTube update | YouTube renamed something. Edit the field names in `service/src/adblock.js`, then rebuild and reinstall. |
 
-**To reinstall or update:** change the Developer Mode IP back to your computer's IP, run steps 3–4, then set it back to 127.0.0.1.
+**To reinstall or update:** change the Developer Mode IP back to your computer's IP, run `./install-mac.sh <TV_IP>` again, then set it back to 127.0.0.1.
 
 **Firmware updates:** consider turning off **Settings → Support → Software Update → Auto Update**. Updates can turn off Developer Mode, and Tizen 9 has had reported YouTube problems on 2024 models.
 
@@ -85,3 +60,4 @@ Open **AdFree Tube** from Apps. You can move it to your home row.
 | `service/src/index.js` | Background service that debug-launches the app and inserts the script |
 | `service/src/adblock.js` | The ad blocker that runs inside YouTube |
 | `package.sh` | Builds, stages, and signs the `.wgt` |
+| `install-mac.sh` | Mac installer: tools, certificate, build, and install |
