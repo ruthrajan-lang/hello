@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xfinity Shield concept: case study</title>
+<style>
+@font-face{font-family:"XF";src:url(../xfinitybrown-regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"XF";src:url(../xsans_w_sbd.woff2) format("woff2");font-weight:500 600;font-display:swap}
+@font-face{font-family:"XF";src:url(../xsans_w_bd.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{--p:#5b2bd1;--p2:#efe9ff;--ink:#141417;--mut:#5f5f6b;--bg:#f6f6f9;--line:#e1e1ea;--ok:#0a7d5a}
+*{box-sizing:border-box}body{margin:0;font:17px/1.6 "XF",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--p)}main{max-width:860px;margin:auto;padding:0 20px 80px}
+header{background:radial-gradient(circle at 80% 0,#7a4be8,transparent 55%),linear-gradient(165deg,#24105f,#0d0a2a);color:#fff;padding:64px 20px 56px}
+header>div{max-width:860px;margin:auto}header p{max-width:60ch;opacity:.9}
+.eye{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 8px}header .eye{color:#cdbdf5}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.1;margin:0 0 14px;text-wrap:balance}
+h2{font-size:28px;line-height:1.2;margin:0 0 12px;text-wrap:balance}h3{font-size:18px;margin:0 0 4px}
+section{padding-top:56px}p{margin:0 0 12px;max-width:66ch}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{background:#fff;color:var(--ink);padding:12px 18px;border-radius:6px;font-weight:700;text-decoration:none}.btn.o{background:transparent;color:#fff;border:1.5px solid #ffffff80}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
+.card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 1px 2px #1a124012,0 6px 18px #1a12400f}
+.card p{font-size:15px;margin:0;color:var(--mut)}.card .src{font-size:12px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.05em;margin-top:10px;display:block}
+.swot{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);border-radius:10px;margin-top:16px;font-size:15px}
+.swot div{padding:16px}.swot div:nth-child(odd){border-right:1px solid var(--line)}.swot div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+.swot b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}.swot ul,.plain{margin:0;padding-left:18px}.swot li{margin:4px 0}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:15px;margin-top:16px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}tr:last-child td{border:0}
+.tw{overflow-x:auto}ol.pr{padding-left:22px;margin:16px 0 0}ol.pr li{margin:10px 0;max-width:66ch}
+iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;background:#e7e7ef;margin-top:16px}
+.note{font-size:14px;color:var(--mut)}footer{max-width:860px;margin:auto;padding:0 20px 60px;font-size:14px;color:var(--mut)}
+@media (max-width:720px){iframe{display:none}.swot{grid-template-columns:1fr}.swot div:nth-child(odd){border-right:0}.swot div:not(:last-child){border-bottom:1px solid var(--line)}}
+</style></head><body>
+<header><div>
+ <p class="eye">Unofficial design concept · Android · November 2026</p>
+ <h1>Xfinity Shield: earning the upgrade by fixing the free tier first</h1>
+ <p>Shield bundles network security, parental controls and WiFi motion sensing into the Xfinity app for free, with a $15 a month tier that adds a camera and sensor. I looked at what stops people trusting the free tier, redesigned those flows, and then designed an upgrade path that asks at the right moment.</p>
+ <div class="cta"><a class="btn" href="../">Open the prototype</a><a class="btn o" href="../swot/">Read the full SWOT</a></div>
+</div></header>
+<main>
+
+<section><p class="eye">Context</p><h2>A retention product inside a billing app</h2>
+<p>Comcast launched Xfinity Shield on August 18, 2026. The free tier, WiFi Shield, comes with internet plans that use an Advanced Gateway. Shield Select adds an indoor camera with person, pet, vehicle and package detection, a door sensor, cloud video and emergency help for $15 a month.</p>
+<p>Coverage of the launch frames it as a response to broadband customers leaving. That makes the design problem two-sided: the free tier has to be good enough to keep people, and credible enough that paying for more feels safe.</p></section>
+
+<section><p class="eye">Research</p><h2>Three inputs, one pattern</h2>
+<p>I read Play Store reviews from August to November 2026, walked through the live app on November 18 and captured 28 screens, and compared Shield with five rival apps. The pattern across all three: people are not asking for more features. They are locked out, lost, or unsure what the product promises.</p>
+<div class="grid">
+ <div class="card"><h3>Locked out</h3><p>An "update required" screen returns after updating, with no newer build in the store. Sign-in loops and error pages block bill pay.</p><span class="src">Reviews</span></div>
+ <div class="card"><h3>Parental controls moved</h3><p>After the August update, pausing a child's WiFi went from "2 clicks" to "closer to 7", and paused devices don't show as paused.</p><span class="src">Reviews</span></div>
+ <div class="card"><h3>Promise versus fine print</h3><p>The Home tab says "A forcefield for your home". Setup then asks you to confirm it "is not professionally monitored home security".</p><span class="src">Walkthrough</span></div>
+ <div class="card"><h3>Alerts you can't stop</h3><p>One reviewer gets "no activity" alerts with every setting off. Another gets a new-device alert each time the same phone reconnects.</p><span class="src">Reviews</span></div>
+ <div class="card"><h3>No route to a person</h3><p>The assistant loops on fixed prompts and, during an outage, blocks other questions and agent access.</p><span class="src">Reviews</span></div>
+ <div class="card"><h3>Fragile setup</h3><p>"Don't leave or close the app or you may need to start over", for a step that takes a few minutes.</p><span class="src">Walkthrough</span></div>
+</div>
+<div class="swot">
+ <div><b style="color:#0f7a55">Strengths</b><ul><li>The Gateway is already in the home, so the free tier needs no new hardware.</li><li>Motion sensing without cameras.</li></ul></div>
+ <div><b style="color:#b3261e">Weaknesses</b><ul><li>App stability and navigation dominate reviews.</li><li>Marketing language runs ahead of what the product does.</li></ul></div>
+ <div><b style="color:#1f5fbf">Opportunities</b><ul><li>Most ISPs have left home security.</li><li>Ring's 2026 privacy backlash leaves room for a privacy-first position.</li></ul></div>
+ <div><b style="color:#9a5b00">Threats</b><ul><li>Trust: the launch followed a $117.5 million breach settlement.</li><li>Every rival offers one app for everything.</li></ul></div>
+</div>
+<p class="note" style="margin-top:10px">Reviews skew negative and are Android-only, so I treated them as themes, not proportions. <a href="../swot/">The full SWOT</a> covers Ring, SimpliSafe, ADT+, Arlo and Wyze with sources.</p></section>
+
+<section><p class="eye">Design principles</p><h2>Six rules I held every screen to</h2>
+<ol class="pr">
+ <li><b>Never lock people out of essentials.</b> Paying a bill, checking an outage and pausing WiFi work even when an update is pending.</li>
+ <li><b>Say what it is and what it isn't, first.</b> The "not monitored" message belongs on the opening screen, not behind a checkbox.</li>
+ <li><b>Two taps for what parents do daily.</b> Pause, resume and bonus time sit on the Home tab.</li>
+ <li><b>Every alert has an off switch and a next step.</b> Act from the notification, and undo it if you tapped wrong.</li>
+ <li><b>A person is always reachable.</b> The assistant is one option, never the gate.</li>
+ <li><b>Ask for the upgrade when it's worth something.</b> And make "no" as easy as "yes".</li>
+</ol></section>
+
+<section><p class="eye">What I designed</p><h2>From problem to screen</h2>
+<div class="tw"><table>
+ <tr><th>Problem</th><th>Change</th><th>Screen</th></tr>
+ <tr><td>Update wall with no way through</td><td>Check the store before blocking; essentials always open</td><td><a href="../#update">App launch</a></td></tr>
+ <tr><td>Family Settings buried</td><td>Family card on Home, pause on every row, real pause state</td><td><a href="../#family">Family Settings</a></td></tr>
+ <tr><td>Disclaimer arrives late</td><td>"What it is, and what it isn't" on the first setup screen</td><td><a href="../#motion-intro">WiFi Motion intro</a></td></tr>
+ <tr><td>Devices identified by MAC address</td><td>Pick rooms; technical details on request</td><td><a href="../#motion-devices">Device selection</a></td></tr>
+ <tr><td>Setup breaks if you leave</td><td>Background setup, a notification, then a walk test</td><td><a href="../#motion-finish">Finishing setup</a></td></tr>
+ <tr><td>Alerts can't be stopped or trusted</td><td>Person or pet label, "That's me", "Mute 1 hour", undo</td><td><a href="../#alert">Motion alert</a></td></tr>
+ <tr><td>Assistant is the only door</td><td>Outage status and three routes to a person, with wait times</td><td><a href="../#help">Help</a></td></tr>
+ <tr><td>Trust</td><td>"What we see and what we don't", with retention and delete controls</td><td><a href="../#privacy">Your data</a></td></tr>
+ <tr><td>Upgrade offer has no context or price</td><td>Prompt after a motion event, plan comparison, trial terms up front</td><td><a href="../#upgrade">Shield Select</a></td></tr>
+</table></div>
+<p class="note" style="margin-top:10px">In the prototype, every screen carries tags naming the review theme or SWOT point it answers, and a toggle compares the current app with the redesign where I had screenshots.</p>
+<iframe src="../#home" title="Shield concept prototype" loading="lazy"></iframe>
+<p style="margin-top:14px"><a href="../">Open the prototype in its own tab</a></p></section>
+
+<section><p class="eye">Measuring it</p><h2>What I would instrument</h2>
+<p>This is a concept, so there are no results. These are the measures I would set up before shipping any of it.</p>
+<div class="tw"><table>
+ <tr><th>Flow</th><th>Measure</th><th>Why it matters</th></tr>
+ <tr><td>Upgrade</td><td>Trial starts from the motion-event prompt versus the Home tab offer; trial-to-paid rate; cancellations in the first week</td><td>Shows whether asking in context converts better without creating regret</td></tr>
+ <tr><td>WiFi Motion setup</td><td>Completion rate and time from intro to first test alert</td><td>The current flow can fail if the app closes</td></tr>
+ <tr><td>Family Settings</td><td>Taps and seconds to pause a profile; failed-pause rate</td><td>Reviews describe this as the daily task that got slower</td></tr>
+ <tr><td>Alerts</td><td>Share of alerts marked "That's me"; mute and turn-off rates; notification permission kept after 30 days</td><td>Alert fatigue ends in people switching everything off</td></tr>
+ <tr><td>Support</td><td>Repeat contacts within 7 days; time to reach a person; assistant exits without an answer</td><td>Deflection only counts if the problem was solved</td></tr>
+ <tr><td>App access</td><td>Sessions blocked by the update screen; sign-in failure rate</td><td>Nothing else matters if people can't get in</td></tr>
+</table></div></section>
+
+<section><p class="eye">How I built it</p><h2>Research to live prototype in two days</h2>
+<p>I worked as a designer-builder, with Claude Code as the build partner.</p>
+<ul class="plain">
+ <li><b>Research.</b> I captured the live app, gathered reviews and launch coverage, and used Claude to sort them into themes. I checked each theme back against the source text and dropped claims the reviews didn't support.</li>
+ <li><b>Recreate.</b> The current screens were rebuilt from my screenshots, so each change can be compared with what ships today.</li>
+ <li><b>Design in code.</b> The prototype is one HTML file with no framework. I directed it screen by screen, sending annotated screenshots for padding, alignment, icons and type.</li>
+ <li><b>Ship.</b> It deploys to Cloudflare from GitHub on every push, so each round of feedback was live in about a minute.</li>
+</ul>
+<p style="margin-top:14px"><b>What I'd do next:</b> test the pause and alert flows with five parents, confirm with engineering that setup can finish in the background, and take the privacy screen to legal, since every statement on it is a proposal.</p></section>
+</main>
+<footer>Unofficial design concept. Not affiliated with or endorsed by Comcast. Names, prices beyond the published $15 a month, wait times and trial terms are illustrative.</footer>
+</body></html>
