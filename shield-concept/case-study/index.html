@@ -26,6 +26,7 @@ th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vert
 iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;background:#e7e7ef;margin-top:16px}
 .bar{display:inline-block;height:8px;border-radius:4px;background:var(--p);vertical-align:middle;margin-right:8px}td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
 .note{font-size:14px;color:var(--mut)}footer{max-width:860px;margin:auto;padding:0 20px 60px;font-size:14px;color:var(--mut)}
+td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:first-child){text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media (max-width:720px){iframe{display:none}.swot{grid-template-columns:1fr}.swot div:nth-child(odd){border-right:0}.swot div:not(:last-child){border-bottom:1px solid var(--line)}}
 </style></head><body>
 <header><div>
@@ -60,6 +61,32 @@ iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;b
 </div>
 <p class="note" style="margin-top:10px">Written reviews skew negative in both stores, so I treated them as themes, not proportions. <a href="../swot/">The full SWOT</a> covers Ring, SimpliSafe, ADT+, Arlo and Wyze with sources.</p></section>
 
+<section><p class="eye">Benchmark</p><h2>How rivals' reviews compare</h2>
+<p>To see which problems are Shield's and which come with the category, I ran the same theme tagging on the 500 most recent App Store reviews for Ring and SimpliSafe. One pattern stands out: Xfinity's complaints are about reaching help and staying connected, the layer around the product. Ring's and SimpliSafe's are about the product itself: video, alerts and subscriptions.</p>
+<div class="tw"><table class="cmp">
+ <tr><th>Theme</th><th>Xfinity</th><th>Ring</th><th>SimpliSafe</th></tr>
+ <tr><td>Support dead ends</td><td class="hi">18%</td><td>2%</td><td class="hi">15%</td></tr>
+ <tr><td>Connectivity and outages</td><td class="hi">19%</td><td>10%</td><td>17%</td></tr>
+ <tr><td>Live view and video</td><td>8%</td><td class="hi">42%</td><td class="hi">38%</td></tr>
+ <tr><td>Alerts and notifications</td><td>2%</td><td>12%</td><td class="hi">17%</td></tr>
+ <tr><td>Price and subscription</td><td>13%</td><td>19%</td><td class="hi">21%</td></tr>
+ <tr><td>Problems after updates</td><td>13%</td><td>22%</td><td>23%</td></tr>
+ <tr><td>Crashes, loading and errors</td><td>7%</td><td>13%</td><td>17%</td></tr>
+ <tr><td>Sign-in and account access</td><td>5%</td><td>3%</td><td>10%</td></tr>
+ <tr><td>Overall App Store rating</td><td>4.3</td><td>4.7</td><td>4.8</td></tr>
+ <tr><td>Share of these reviews at one star</td><td>74%</td><td>51%</td><td>54%</td></tr>
+</table></div>
+<p class="note" style="margin-top:10px">500 reviews per app, collected November 2026. They cover about three weeks for Xfinity, two months for Ring and two and a half years for SimpliSafe, which gets fewer written reviews. Support counts use a stricter definition than the table above so the three apps compare fairly, which puts Xfinity at 18% rather than 21%. Keyword tagging is approximate, so compare themes, not exact figures.</p>
+<h3 style="margin-top:28px">What this means as Shield grows its tiers</h3>
+<div class="grid">
+ <div class="card"><h3>Fix the layer around the product first</h3><p>Support dead ends and connectivity are where Xfinity stands out from Ring. That's the case for the help and app-access fixes coming before new features.</p><span class="src">All three apps</span></div>
+ <div class="card"><h3>Design for camera problems before they arrive</h3><p>Once cameras are involved, video and alerts dominate complaints, around 40% for Ring and SimpliSafe. As Shield Select grows, fast live view and well-tuned alerts will matter most.</p><span class="src">Ring · SimpliSafe</span></div>
+ <div class="card"><h3>Keep the free tier useful on its own</h3><p>A Ring reviewer titled theirs "Useless Without the Subscription": 30 motion alerts in 20 minutes with motion settings as low as they go, and without a subscription the only fix is turning alerts off. Basics like alert tuning shouldn't sit behind a paywall.</p><span class="src">Ring</span></div>
+ <div class="card"><h3>Make leaving as easy as upgrading</h3><p>SimpliSafe reviewers object to calling to cancel and not being able to change plans. Easy downgrades are a trust signal, not lost revenue.</p><span class="src">SimpliSafe</span></div>
+ <div class="card"><h3>Keep marketing out of security alerts</h3><p>"App is now pushing marketing messages with no way to turn off. Good way to get me to rip it out and put in a Ring system." Upgrade offers belong at moments of value, never in push notifications.</p><span class="src">SimpliSafe</span></div>
+ <div class="card"><h3>Status alerts are noise</h3><p>SimpliSafe users get "lost connection" and "reconnected" messages all day. Group them, or alert only when it changes what someone should do.</p><span class="src">SimpliSafe</span></div>
+</div></section>
+
 <section><p class="eye">Design principles</p><h2>Six rules I held every screen to</h2>
 <ol class="pr">
  <li><b>Never lock people out of essentials.</b> Paying a bill, checking an outage and pausing WiFi work even when an update is pending.</li>
@@ -89,6 +116,7 @@ iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;b
 
 <section><p class="eye">Measuring it</p><h2>What I would instrument</h2>
 <p>This is a concept, so there are no results. These are the measures I would set up before shipping any of it.</p>
+<p><b>North star:</b> the share of eligible households with WiFi Shield still active after 30 days. It shows people trust the free tier enough to keep it, which is what keeps them as broadband customers and what every upgrade grows from.</p>
 <div class="tw"><table>
  <tr><th>Flow</th><th>Measure</th><th>Why it matters</th></tr>
  <tr><td>Upgrade</td><td>Trial starts from the motion-event prompt versus the Home tab offer; trial-to-paid rate; cancellations in the first week</td><td>Shows whether asking in context converts better without creating regret</td></tr>
@@ -97,12 +125,14 @@ iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;b
  <tr><td>Alerts</td><td>Share of alerts marked "That's me"; mute and turn-off rates; notification permission kept after 30 days</td><td>Alert fatigue ends in people switching everything off</td></tr>
  <tr><td>Support</td><td>Repeat contacts within 7 days; time to reach a person; assistant exits without an answer</td><td>Deflection only counts if the problem was solved</td></tr>
  <tr><td>App access</td><td>Sessions blocked by the update screen; sign-in failure rate</td><td>Nothing else matters if people can't get in</td></tr>
-</table></div></section>
+</table></div>
+<p style="margin-top:16px"><b>Guardrails</b>, which must not get worse as any of this ships:</p>
+<ul class="plain"><li>Support contacts about Shield, and repeat contacts within 7 days</li><li>People turning off alerts or WiFi Motion entirely</li><li>Cancellations and refunds in the first 30 days after upgrading, so a better-timed offer isn't just a pushier one</li><li>Uninstalls and App Store rating</li></ul></section>
 
 <section><p class="eye">How I built it</p><h2>Research to live prototype in two days</h2>
 <p>I worked as a designer-builder, with Claude Code as the build partner.</p>
 <ul class="plain">
- <li><b>Research.</b> I captured the live app, gathered reviews and launch coverage, and used Claude to sort them into themes. I checked each theme back against the source text and dropped claims the reviews didn't support.</li>
+ <li><b>Research.</b> I captured the live app, gathered reviews and launch coverage, pulled 1,500 App Store reviews across Xfinity, Ring and SimpliSafe, and used Claude to sort them into themes. I checked each theme back against the source text and dropped claims the reviews didn't support.</li>
  <li><b>Recreate.</b> The current screens were rebuilt from my screenshots, so each change can be compared with what ships today.</li>
  <li><b>Design in code.</b> The prototype is one HTML file with no framework. I directed it screen by screen, sending annotated screenshots for padding, alignment, icons and type.</li>
  <li><b>Ship.</b> It deploys to Cloudflare from GitHub on every push, so each round of feedback was live in about a minute.</li>
