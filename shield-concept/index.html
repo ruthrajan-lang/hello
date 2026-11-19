@@ -120,7 +120,7 @@ section.lock{background:radial-gradient(circle at 70% 10%,#6d3be0,transparent 55
 body.tour{background:transparent;padding:0;overflow:hidden;height:100vh}
 body.tour .bar,body.tour #notes{display:none!important}
 body.tour .wrap{max-width:none;height:100vh;display:grid;place-items:center}
-body.tour .stage{display:block;position:absolute;left:50%;top:calc(50% - 14px);transform-origin:center center}
+body.tour .stage{display:block;position:absolute;left:50%;top:calc(50% - 36px);transform-origin:center center}
 body.tour .phone{box-shadow:0 10px 30px #0002}
 .tcap{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);background:#141417e6;color:#fff;font-size:13px;font-weight:500;padding:6px 12px;border-radius:999px;white-space:nowrap;z-index:9;display:none}
 body.tour .tcap{display:block}
@@ -384,7 +384,7 @@ if(new URLSearchParams(location.search).has('tour')){
  document.body.classList.add('tour');
  const T=['update','home','family','profile','alert','motion-event','upgrade','privacy','help'].filter(k=>N[k]);
  const cap=document.createElement('div');cap.className='tcap';cap.setAttribute('aria-live','polite');document.body.appendChild(cap);
- const fit=()=>{const ph=$('.phone'),r=Math.min(innerWidth/(ph.offsetWidth+16),(innerHeight-40)/(ph.offsetHeight+16),1);$('.stage').style.transform=`translate(-50%,-50%) scale(${r})`};
+ const fit=()=>{const ph=$('.phone'),r=Math.min(innerWidth/(ph.offsetWidth+16),(innerHeight-82)/(ph.offsetHeight+16),1);$('.stage').style.transform=`translate(-50%,-50%) scale(${r})`};
  addEventListener('resize',fit);
  let i=0,timer=null;const show=()=>{stack=[];go(T[i],false);cap.textContent=`${i+1} / ${T.length} · ${N[T[i]].t}`};
  const run=()=>{timer=setInterval(()=>{i=(i+1)%T.length;show()},3200)};
