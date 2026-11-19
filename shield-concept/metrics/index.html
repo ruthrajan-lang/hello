@@ -1,0 +1,294 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shield success dashboard</title>
+<meta name="description" content="How I would measure the Xfinity Shield redesign after launch: release markers, success bars set before launch, staged rollout comparisons and guardrails. Illustrative data.">
+<style>
+@font-face{font-family:"XF";src:url(../xfinitybrown-regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"XF";src:url(../xsans_w_sbd.woff2) format("woff2");font-weight:500 600;font-display:swap}
+@font-face{font-family:"XF";src:url(../xsans_w_bd.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{--p:#5b2bd1;--p2:#efe9ff;--ink:#141417;--mut:#5f5f6b;--bg:#f6f6f9;--line:#e1e1ea;--ok:#0a7d5a;--okb:#e3f5ee;--warn:#9a5b00;--warnb:#fff3dc;--bad:#b3261e;--badb:#fde7e5;--alt:#9b9bab;--alt2:#d98a2b}
+*{box-sizing:border-box}body{margin:0;font:16px/1.55 "XF",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--p)}
+.wrap{max-width:1180px;margin:auto;padding:0 20px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 0}
+.top a{font-size:14px;text-decoration:none;font-weight:500}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:4px 0 8px;text-wrap:balance}
+h2{font-size:22px;margin:0 0 4px}h3{font-size:16px;margin:0}
+.eye{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 6px}
+.lede{max-width:72ch;color:var(--mut);margin:0 0 14px}
+.illus{display:inline-flex;gap:8px;align-items:center;background:var(--warnb);color:var(--warn);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.controls{position:sticky;top:0;z-index:5;background:#f6f6f9ee;backdrop-filter:blur(6px);padding:12px 0;margin:16px 0 8px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ctl>label,.ctl>span.l{font-size:13px;color:var(--mut);font-weight:500}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:8px;padding:2px}
+.seg button{border:0;background:none;font:inherit;font-size:14px;padding:6px 10px;border-radius:6px;color:var(--mut);cursor:pointer}
+.seg button.on{background:var(--p);color:#fff}
+select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;font:inherit;font-size:13px;padding:4px 10px;cursor:pointer;color:var(--mut)}
+.chip.on{border-color:var(--p);color:var(--p);background:var(--p2)}
+.chip.mine.on{border-color:var(--alt2);color:#8a5410;background:#fdf1e2}
+.hero{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;margin-top:8px}
+.big{font-size:52px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;margin:10px 0 6px}
+.delta{font-size:14px;font-weight:600}.up{color:var(--ok)}.dn{color:var(--bad)}
+.kv{font-size:14px;color:var(--mut);margin:0}
+.rel{margin-top:34px}
+.relhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;margin-top:6px}
+.chain span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 8px}.chain i{font-style:normal;color:var(--mut)}
+.chain .g{border-style:dashed}
+.pill{font-size:13px;font-weight:700;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.pill.ok{background:var(--okb);color:var(--ok)}.pill.watch{background:var(--warnb);color:var(--warn)}.pill.bad{background:var(--badb);color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.chart{position:relative}
+.chart .hd{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.chart .val{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chart .sub{font-size:13px;color:var(--mut);margin:2px 0 6px;min-height:20px}
+.chart svg{display:block;width:100%;overflow:visible}
+.chart .def{font-size:12.5px;color:var(--mut);margin:6px 0 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mut);margin-top:4px}
+.legend b{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.legend b.d{height:0;border-top:2px dashed}
+.tip{position:absolute;pointer-events:none;background:#141417;color:#fff;font-size:12.5px;line-height:1.4;padding:7px 9px;border-radius:8px;white-space:nowrap;z-index:3;display:none;font-variant-numeric:tabular-nums}
+.tip .sw{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+svg text{font-family:inherit;font-size:11px;fill:var(--mut)}
+.guard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.guard .panel{padding:14px}.guard .v{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}tr:last-child td{border:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tw{overflow-x:auto}
+details{margin-top:12px}summary{cursor:pointer;font-weight:600}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.how p{margin:0;font-size:14px;color:var(--mut)}
+.mk{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.mk input{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px}
+.mk button,.btn{font:inherit;font-size:14px;font-weight:600;padding:7px 12px;border-radius:8px;border:0;background:var(--p);color:#fff;cursor:pointer}
+footer{font-size:13px;color:var(--mut);margin-top:40px}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.guard{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){.grid{grid-template-columns:1fr}.controls{position:static}.big{font-size:44px}}
+</style></head><body>
+<div class="wrap">
+<div class="top"><a href="../case-study/#measuring">← Case study</a><a href="../">Prototype</a></div>
+
+<p class="eye">Xfinity Shield concept · measuring it</p>
+<h1>Shield success dashboard</h1>
+<p class="lede">How I would track the redesign once it ships: one north star, a success bar for each release agreed before it launches, households that have each release compared with those that don't yet, and guardrails that must not get worse.</p>
+<span class="illus">Illustrative data. Not real Comcast numbers, but shaped to show how each release would be judged.</span>
+
+<div class="controls" role="group" aria-label="Dashboard controls">
+ <div class="ctl"><span class="l" id="cmpL">Compare</span><div class="seg" id="cmp" role="radiogroup" aria-labelledby="cmpL">
+  <button data-v="all" class="on" role="radio" aria-checked="true">All households</button>
+  <button data-v="wave" role="radio" aria-checked="false">Has release vs not yet</button>
+  <button data-v="base" role="radio" aria-checked="false">Vs own baseline</button>
+ </div></div>
+ <div class="ctl"><label for="split">Split by</label><select id="split"><option value="none">Nothing</option><option value="plat">Platform</option><option value="kids">Household</option><option value="plan">Plan</option></select></div>
+ <div class="ctl"><span class="l">Markers</span><div class="chips" id="chips"></div></div>
+</div>
+
+<section class="hero" id="northstar">
+ <div class="panel">
+  <p class="eye">North star</p>
+  <h3>Households with WiFi Shield still active after 30 days</h3>
+  <div class="big" id="nsVal">—</div>
+  <div class="delta" id="nsDelta"></div>
+  <p class="kv" style="margin-top:12px">Last 4 weeks, against the 4 weeks before the first release. Target: <b>66% by June</b>.</p>
+  <p class="kv" style="margin-top:8px">It shows people trust the free tier enough to keep it, which keeps them as broadband customers and is what every upgrade grows from.</p>
+ </div>
+ <div class="panel chart" data-m="ns"></div>
+</section>
+
+<div id="releases"></div>
+
+<section class="rel" id="guardrails">
+ <div class="relhead"><div><p class="eye">Guardrails</p><h2>What must not get worse</h2><p class="kv">Last 4 weeks against the 4 weeks before the first release. Each has a limit agreed up front.</p></div></div>
+ <div class="guard" id="guard"></div>
+ <div class="grid" style="margin-top:14px">
+  <div class="panel chart" data-m="rating"></div>
+  <div class="panel chart" data-m="alertsoff"></div>
+ </div>
+</section>
+
+<section class="rel" id="scorecard">
+ <div class="relhead"><div><p class="eye">Scorecard</p><h2>Did each release clear its bar?</h2><p class="kv">Judged on weeks 3–6 after release, as the change in households that have it minus the change in households that don't yet.</p></div></div>
+ <div class="panel tw"><table id="score"><thead><tr><th>Release</th><th>Success bar</th><th>Result, weeks 3–6</th><th>Guardrail</th><th>Verdict</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="rel" id="method">
+ <div class="relhead"><div><p class="eye">How to read this</p><h2>Judging a release</h2></div></div>
+ <div class="how">
+  <div class="panel"><h3>Write the claim as a chain</h3><p>Engagement, then outcome, then guardrail. For example: a faster pause, then fewer support contacts about parental controls, with no rise in people turning alerts off.</p></div>
+  <div class="panel"><h3>Agree the bar first</h3><p>Each success bar is set before the release ships and drawn as a dashed line, so the result can't be argued into a win afterwards.</p></div>
+  <div class="panel"><h3>Roll out in waves</h3><p>Households are assigned to two waves at random within platform and plan. Wave 2 gets each release 7 weeks later, so it shows what would have happened anyway. The lines should run together before the marker.</p></div>
+  <div class="panel"><h3>Judge weeks 3–6</h3><p>The first weeks are novelty and learning. "Vs own baseline" compares each wave with its own 4 weeks before release and shades weeks 3–6.</p></div>
+  <div class="panel"><h3>Split before you celebrate</h3><p>An average can hide a group that got worse. Check platform, households with children, and plan before calling a release done.</p></div>
+  <div class="panel"><h3>Compare rates, not totals</h3><p>Rates per household or per session stay comparable as the number of Shield households grows.</p></div>
+ </div>
+ <details class="panel" style="margin-top:12px"><summary>Add your own marker</summary>
+  <p class="kv" style="margin-top:8px">Mark something that might move the numbers, like an outage or a marketing push. It's saved in this browser only.</p>
+  <form class="mk" id="mkForm"><input type="date" id="mkDate" min="2026-11-30" max="2027-06-21" value="2027-03-29" aria-label="Date" required><input id="mkLabel" placeholder="Label, e.g. Outage in Denver" aria-label="Label" maxlength="40" required><button type="submit">Add marker</button></form>
+  <div class="chips" id="mine" style="margin-top:10px"></div>
+ </details>
+</section>
+
+<footer>Unofficial design concept. Not affiliated with or endorsed by Comcast. All numbers are made up to show the method. Releases, dates and targets are proposals.</footer>
+</div>
+
+<script>
+(()=>{
+const N=30,START=Date.UTC(2026,10,30),WK=7*864e5,LAG=7;
+const wkDate=i=>new Date(START+i*WK);
+const fmtD=i=>wkDate(i).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
+const REL=[
+ {id:'R1',w:6,name:'App access',title:'Get people into the app',chain:['Update loop and sign-in fixed','Fewer blocked sessions','More households reach Shield'],guard:'Sign-in failures',metrics:['blocked','signin'],bar:{m:'blocked',d:-2.5,txt:'Blocked sessions down 2.5 pts'},g:{m:'signin',lim:0,txt:'Sign-in failures not up'}},
+ {id:'R2',w:10,name:'Help',title:'A route to a person',chain:['Assistant hands off to a person','Shorter time to reach someone','Fewer repeat contacts'],guard:'Repeat contacts',metrics:['reach','repeat'],bar:{m:'reach',d:-8,txt:'Time to reach a person down 8 min'},g:{m:'repeat',lim:0,txt:'Repeat contacts not up'}},
+ {id:'R3',w:15,name:'Family and alerts',title:'Pause in two taps, alerts you can trust',chain:['Pause from Home tab','Faster pause','Fewer alerts turned off'],guard:'Alerts turned off',metrics:['pause','failpause'],bar:{m:'pause',d:-8,txt:'Seconds to pause down 8'},g:{m:'alertsoff',lim:0,txt:'Alerts turned off not up'}},
+ {id:'R4',w:20,name:'Upgrade',title:'Offer Shield Select in context',chain:['Prompt after a motion event','More trial starts','Paid, without regret'],guard:'Early cancellations',metrics:['trial','paid'],bar:{m:'trial',d:4,txt:'Trial starts up 4 per 1,000'},g:{m:'cancel',lim:1,txt:'Early cancellations up under 1 pt'}},
+];
+const M={
+ ns:{t:'30-day active, weekly',u:'%',dp:1,base:61,nz:.35,good:'up',eff:{R1:1.6,R2:1,R3:3.6},target:66,tl:'Target 66%',prim:'R3',def:'Share of eligible households with WiFi Shield active 30 days after it was turned on.'},
+ blocked:{t:'Sessions blocked by the update screen',u:'%',dp:1,base:4.2,nz:.18,good:'down',eff:{R1:-3.4},target:1,tl:'Target 1%',prim:'R1',def:'App sessions that hit "update required" and never reach the Home tab.'},
+ signin:{t:'Sign-in failure rate',u:'%',dp:1,base:6.4,nz:.25,good:'down',eff:{R1:-2.4},target:4,tl:'Target 4%',prim:'R1',def:'Sign-in attempts that end in an error or loop.'},
+ reach:{t:'Time to reach a person',u:' min',dp:0,base:24,nz:1.2,good:'down',eff:{R2:-14},target:10,tl:'Target 10 min',prim:'R2',def:'Median minutes from first asking for help to talking with a person.'},
+ repeat:{t:'Repeat contacts within 7 days',u:'',dp:1,base:9,nz:.35,good:'down',eff:{R2:-2.6,R4:.2},limit:9,tl:'Limit 9.0',prim:'R2',def:'Per 100 Shield households. A guardrail: deflection only counts if the problem was solved.'},
+ pause:{t:'Seconds to pause a child’s WiFi',u:' s',dp:0,base:21,nz:.9,good:'down',eff:{R3:-13},target:8,tl:'Target 8 s',prim:'R3',def:'Median seconds from opening the app to a confirmed pause.'},
+ failpause:{t:'Failed pauses',u:'%',dp:1,base:5.5,nz:.3,good:'down',eff:{R3:-3.6},target:2,tl:'Target 2%',prim:'R3',def:'Pauses where the device keeps its connection or doesn’t show as paused.'},
+ alertsoff:{t:'Households turning all alerts off',u:'%',dp:1,base:3.1,nz:.15,good:'down',eff:{R3:-1.2,R4:.1},limit:3.1,tl:'Limit 3.1%',prim:'R3',def:'Per week. A guardrail: alert fatigue ends in people switching everything off.'},
+ trial:{t:'Shield Select trial starts',u:'',dp:1,base:4,nz:.3,good:'up',eff:{R4:7},target:9,tl:'Target 9.0',prim:'R4',def:'Per 1,000 eligible households per week.'},
+ paid:{t:'Trial to paid',u:'%',dp:0,base:31,nz:1.1,good:'up',eff:{R4:5},target:35,tl:'Target 35%',prim:'R4',def:'Share of trials that convert, by trial start week.'},
+ cancel:{t:'Cancellations in the first 30 days',u:'%',dp:1,base:12,nz:.35,good:'down',eff:{R4:.7},limit:13,tl:'Limit 13%',prim:'R4',def:'Upgrades cancelled or refunded within 30 days.'},
+ rating:{t:'App Store rating of new reviews',u:'',dp:1,base:2.4,nz:.12,good:'up',eff:{R1:.5,R2:.3,R3:.4},limit:2.4,tl:'Limit 2.4',prim:'R1',def:'Average stars of reviews posted that week.'},
+};
+const SPLITS={plat:{n:['iOS','Android'],k:[1.1,.85],b:[.97,1.04]},kids:{n:['With children','Without'],k:[1.2,.7],b:[1.02,.97]},plan:{n:['WiFi Shield (free)','Shield Select'],k:[1.05,.8],b:[1,.95]}};
+
+// seeded noise
+let s0=7;const rnd=()=>{s0|=0;s0=s0+0x6D2B79F5|0;let t=Math.imul(s0^s0>>>15,1|s0);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const ramp=k=>k<0?0:k===0?.25:k===1?.55:k===2?.85:1;
+const relW=(r,wave)=>REL.find(x=>x.id===r).w+(wave?LAG:0);
+// pre-generate per metric: [wave][group][week] for 40 weeks
+const NW=40,DATA={};
+for(const id in M){const m=M[id];DATA[id]=[0,1].map(wave=>[0,1].map(()=>{const a=[];for(let i=0;i<NW;i++)a.push((rnd()-.5)*2*m.nz);return a}))}
+const val=(id,wave,i,split,g)=>{const m=M[id];let k=1,b=1;if(split&&split!=='none'){k=SPLITS[split].k[g];b=SPLITS[split].b[g]}
+ let v=m.base*b;for(const r in m.eff)v+=m.eff[r]*k*ramp(i-relW(r,wave));return v+DATA[id][wave][split&&split!=='none'?g:0][i]};
+const series=(id,mode,split)=>{ // returns [{name,color,dash,pts:[[x,y]]}]
+ const sp=split!=='none'?SPLITS[split]:null;const out=[];
+ if(mode==='all'){if(!sp)out.push({name:'All households',c:'var(--p)',pts:[...Array(N)].map((_,i)=>[i,(val(id,0,i)+val(id,1,i))/2])});
+  else sp.n.forEach((n,g)=>out.push({name:n,c:g?'var(--alt2)':'var(--p)',pts:[...Array(N)].map((_,i)=>[i,(val(id,0,i,split,g)+val(id,1,i,split,g))/2])}))}
+ else if(mode==='wave'){const gs=sp?[0,1]:[null];gs.forEach(g=>{const lab=g===null?'':' · '+sp.n[g];
+  out.push({name:'Wave 1 (has release)'+lab,c:g?'var(--alt2)':'var(--p)',pts:[...Array(N)].map((_,i)=>[i,val(id,0,i,split,g??0)])});
+  out.push({name:'Wave 2 (not yet)'+lab,c:g?'#e9b97a':'var(--alt)',dash:g!==null,pts:[...Array(N)].map((_,i)=>[i,val(id,1,i,split,g??0)])})})}
+ else{const r=M[id].prim;const gs=sp?[0,1]:[null];gs.forEach(g=>{const pts=[];
+  for(let k=-4;k<=8;k++){const vs=[];[0,1].forEach(w=>{const rw=relW(r,w);if(rw+k<N&&rw-4>=0){let pre=0;for(let j=-4;j<0;j++)pre+=val(id,w,rw+j,split,g??0);pre/=4;vs.push((val(id,w,rw+k,split,g??0)-pre)/pre*100)}});
+   if(vs.length)pts.push([k,vs.reduce((a,b)=>a+b)/vs.length])}
+  out.push({name:g===null?'Both waves, aligned to '+r:sp.n[g],c:g?'var(--alt2)':'var(--p)',pts})})}
+ return out};
+
+const st={mode:'all',split:'none',on:new Set(REL.map(r=>r.id)),mine:[]};
+try{st.mine=JSON.parse(localStorage.getItem('shield-markers')||'[]')}catch(e){}
+const fmt=(id,v)=>{const m=M[id];return v.toFixed(m.dp)+(m.u==='%'?'%':m.u)};
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const avg=(a)=>a.reduce((x,y)=>x+y,0)/a.length;
+const allAvg=(id,from,to)=>{const v=[];for(let i=from;i<to;i++)v.push((val(id,0,i)+val(id,1,i))/2);return avg(v)};
+const BASE=[2,6],LAST=[N-4,N];
+
+function draw(box){
+ const id=box.dataset.m,m=M[id],mode=st.mode;
+ box.innerHTML='';box.id='chart-'+id;
+ const hd=document.createElement('div');hd.className='hd';
+ const h=document.createElement('h3');h.textContent=m.t+(m.u===''&&id==='repeat'?' (per 100)':m.u===''&&id==='trial'?' (per 1,000)':'');
+ const v=document.createElement('div');v.className='val';
+ const cur=allAvg(id,...LAST),pre=allAvg(id,...BASE);v.textContent=mode==='base'?'':fmt(id,cur);hd.append(h,v);box.append(hd);
+ const sub=document.createElement('div');sub.className='sub';
+ if(mode==='base')sub.textContent=`% change vs each wave’s own 4 weeks before ${m.prim}. Weeks 3–6 shaded.`;
+ else{const d=cur-pre,good=(m.good==='up')===(d>0);sub.innerHTML='';const sp=document.createElement('span');sp.className=good?'up':'dn';sp.textContent=(d>0?'+':'')+d.toFixed(m.dp||1)+(m.u==='%'?' pts':m.u);sub.append(sp,document.createTextNode(' vs before launch'+(mode==='wave'?'. Wave 2 gets each release 7 weeks later.':'')))}
+ box.append(sub);
+ const W=Math.max(260,box.clientWidth-36),H=id==='ns'?230:190,L=40,R=8,T=16,B=24;
+ const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,height:H,role:'img','aria-label':m.t});box.append(svg);
+ const S=series(id,mode,st.split);
+ const xs=mode==='base'?[-4,8]:[0,N-1];
+ let ys=S.flatMap(s=>s.pts.map(p=>p[1]));
+ let ref=null;if(mode==='base'){const r=REL.find(x=>x.id===m.prim);if(r.bar.m===id){ref={y:r.bar.d/m.base*100,l:'Bar '+(r.bar.d>0?'+':'')+(r.bar.d/m.base*100).toFixed(0)+'%'}}ys.push(0)}
+ else{const tv=m.target??m.limit;if(tv!=null)ref={y:tv,l:m.tl,lim:m.limit!=null};}
+ if(ref)ys.push(ref.y);
+ let y0=Math.min(...ys),y1=Math.max(...ys);const pad=(y1-y0)*.12||1;y0-=pad;y1+=pad;
+ const X=x=>L+(x-xs[0])/(xs[1]-xs[0])*(W-L-R),Y=y=>T+(1-(y-y0)/(y1-y0))*(H-T-B);
+ // grid
+ const tk=d3ticks(y0,y1,4);tk.forEach(t=>{el('line',{x1:L,x2:W-R,y1:Y(t),y2:Y(t),stroke:'#ececf2'},svg);const tx=el('text',{x:L-6,y:Y(t)+4,'text-anchor':'end'},svg);tx.textContent=+t.toFixed(2)+(mode==='base'?'%':'')});
+ if(mode==='base'){el('rect',{x:X(3),y:T,width:X(6)-X(3),height:H-T-B,fill:'#efe9ff'},svg);el('line',{x1:X(0),x2:X(0),y1:T,y2:H-B,stroke:'var(--ink)','stroke-dasharray':'4 3'},svg);
+  for(let k=-4;k<=8;k+=2){const t=el('text',{x:X(k),y:H-6,'text-anchor':'middle'},svg);t.textContent=k===0?m.prim:(k>0?'+':'')+k+'w'}
+  el('line',{x1:L,x2:W-R,y1:Y(0),y2:Y(0),stroke:'#c9c9d6'},svg)}
+ else{let lm=-1;for(let i=0;i<N;i++){const mo=wkDate(i).getUTCMonth();if(mo!==lm&&wkDate(i).getUTCDate()<=7){lm=mo;const t=el('text',{x:X(i),y:H-6,'text-anchor':'start'},svg);t.textContent=wkDate(i).toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})}}
+  // markers
+  REL.forEach(r=>{if(!st.on.has(r.id))return;const x=X(r.w);el('line',{x1:x,x2:x,y1:T,y2:H-B,stroke:'var(--ink)','stroke-dasharray':'4 3','stroke-opacity':.7},svg);const t=el('text',{x:x+3,y:T-4,style:'fill:var(--ink);font-weight:600'},svg);t.textContent=r.id;
+   if(mode==='wave'){const x2=X(r.w+LAG);if(r.w+LAG<N){el('line',{x1:x2,x2:x2,y1:T,y2:H-B,stroke:'var(--alt)','stroke-dasharray':'2 3'},svg)}}});
+  st.mine.forEach(mk=>{if(!st.on.has('mine:'+mk.i+mk.l))return;const x=X(mk.i);el('line',{x1:x,x2:x,y1:T,y2:H-B,stroke:'var(--alt2)','stroke-dasharray':'4 3'},svg);const t=el('text',{x:x+3,y:T-4,style:'fill:#8a5410'},svg);t.textContent=mk.l.slice(0,14)})}
+ if(ref){el('line',{x1:L,x2:W-R,y1:Y(ref.y),y2:Y(ref.y),stroke:ref.lim?'var(--bad)':'var(--ok)','stroke-dasharray':'6 4','stroke-width':1.5},svg);const t=el('text',{x:W-R,y:Y(ref.y)-5,'text-anchor':'end',style:`fill:${ref.lim?'var(--bad)':'var(--ok)'};font-weight:600`},svg);t.textContent=ref.l}
+ S.forEach(s=>{el('path',{d:'M'+s.pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join('L'),fill:'none',stroke:s.c,'stroke-width':2.2,'stroke-linejoin':'round','stroke-dasharray':s.dash?'5 3':''},svg)});
+ // legend
+ if(S.length>1||ref){const lg=document.createElement('div');lg.className='legend';S.forEach(s=>{const sp=document.createElement('span');const b=document.createElement('b');b.style.background=s.c;if(s.dash){b.className='d';b.style.background='none';b.style.borderColor=s.c}sp.append(b,s.name);lg.append(sp)});
+  if(ref){const sp=document.createElement('span');const b=document.createElement('b');b.className='d';b.style.borderColor=ref.lim?'var(--bad)':'var(--ok)';sp.append(b,ref.lim?'Guardrail limit':'Success bar');lg.append(sp)}box.append(lg)}
+ const def=document.createElement('p');def.className='def';def.textContent=m.def;box.append(def);
+ // tooltip
+ const tip=document.createElement('div');tip.className='tip';box.append(tip);
+ const hl=el('line',{y1:T,y2:H-B,stroke:'#14141755',visibility:'hidden'},svg);
+ const dots=S.map(s=>el('circle',{r:3.5,fill:s.c,stroke:'#fff','stroke-width':1.5,visibility:'hidden'},svg));
+ const move=e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width;let xv=Math.round(xs[0]+(px-L)/(W-L-R)*(xs[1]-xs[0]));xv=Math.max(xs[0],Math.min(xs[1],xv));
+  hl.setAttribute('x1',X(xv));hl.setAttribute('x2',X(xv));hl.setAttribute('visibility','visible');
+  tip.textContent='';const hd=document.createElement('div');hd.style.fontWeight='600';hd.textContent=mode==='base'?(xv===0?'Release week':(xv>0?'+':'')+xv+' weeks'):'Week of '+fmtD(xv);tip.append(hd);
+  const rr=REL.find(q=>q.w===xv&&st.on.has(q.id));if(rr&&mode!=='base'){const d=document.createElement('div');d.textContent=rr.id+': '+rr.title;d.style.opacity=.8;tip.append(d)}
+  S.forEach((s,j)=>{const p=s.pts.find(q=>q[0]===xv);if(!p){dots[j].setAttribute('visibility','hidden');return}dots[j].setAttribute('cx',X(p[0]));dots[j].setAttribute('cy',Y(p[1]));dots[j].setAttribute('visibility','visible');
+   const d=document.createElement('div');const sw=document.createElement('span');sw.className='sw';sw.style.background=s.c;d.append(sw,s.name+': '+(mode==='base'?(p[1]>0?'+':'')+p[1].toFixed(1)+'%':fmt(id,p[1])));tip.append(d)});
+  tip.style.display='block';const bw=box.clientWidth,tw=tip.offsetWidth;let lx=(X(xv)*r.width/W)+(r.left-box.getBoundingClientRect().left)+12;if(lx+tw>bw-4)lx=lx-tw-24;tip.style.left=Math.max(4,lx)+'px';tip.style.top=(svg.offsetTop+10)+'px'};
+ const leave=()=>{tip.style.display='none';hl.setAttribute('visibility','hidden');dots.forEach(d=>d.setAttribute('visibility','hidden'))};
+ svg.addEventListener('pointermove',move);svg.addEventListener('pointerleave',leave);
+}
+function d3ticks(a,b,n){const step0=(b-a)/n,mag=Math.pow(10,Math.floor(Math.log10(step0))),f=step0/mag,step=(f>=5?10:f>=2?5:f>=1.5?2:1)*mag;const out=[];for(let t=Math.ceil(a/step)*step;t<=b+1e-9;t+=step)out.push(t);return out}
+
+// releases sections
+const RS=document.getElementById('releases');
+REL.forEach(r=>{const s=document.createElement('section');s.className='rel';s.id='rel-'+r.id;
+ s.innerHTML=`<div class="relhead"><div><p class="eye">${r.id} · ${r.name} · ${fmtD(r.w)}, wave 2 ${fmtD(r.w+LAG)}</p><h2></h2><div class="chain"></div></div><span class="pill"></span></div><div class="grid">${r.metrics.map(m=>`<div class="panel chart" data-m="${m}"></div>`).join('')}</div>`;
+ s.querySelector('h2').textContent=r.title;const ch=s.querySelector('.chain');
+ r.chain.forEach((c,i)=>{if(i){const a=document.createElement('i');a.textContent='→';ch.append(a)}const sp=document.createElement('span');sp.textContent=c;ch.append(sp)});
+ const a=document.createElement('i');a.textContent='· guardrail';ch.append(a);const g=document.createElement('span');g.className='g';g.textContent=r.guard;ch.append(g);
+ RS.append(s)});
+
+// verdicts: diff-in-diff weeks 3-6 vs -4..-1
+const did=(id,r)=>{const w=REL.find(x=>x.id===r).w,d=k=>val(id,0,w+k)-val(id,1,w+k);const post=avg([3,4,5,6].map(d)),pre=avg([-4,-3,-2,-1].map(d));return post-pre};
+const verdict=r=>{const b=did(r.bar.m,r.id),met=r.bar.d<0?b<=r.bar.d:b>=r.bar.d;const g=did(r.g.m,r.id),gm=M[r.g.m],gWorse=gm.good==='down'?g:-g;const gOk=gWorse<=(r.g.lim||.15);
+ const near=r.g.lim&&gWorse>r.g.lim*.5;return{b,met,g,gOk,cls:!met?'bad':(!gOk?'bad':near?'watch':'ok'),txt:!met?'Missed the bar':!gOk?'Guardrail broken':near?'Met, watch guardrail':'Met the bar'}};
+const fmtDelta=(id,v)=>{const m=M[id];return(v>0?'+':'')+v.toFixed(m.dp||1)+(m.u==='%'?' pts':m.u)};
+const tb=document.querySelector('#score tbody');
+REL.forEach(r=>{const v=verdict(r);document.querySelector('#rel-'+r.id+' .pill').className='pill '+v.cls;document.querySelector('#rel-'+r.id+' .pill').textContent=v.txt;
+ const tr=document.createElement('tr');[`${r.id} · ${r.name}`,r.bar.txt,fmtDelta(r.bar.m,v.b),`${r.g.txt}: ${fmtDelta(r.g.m,v.g)}`].forEach((t,i)=>{const td=document.createElement('td');td.textContent=t;if(i===2||i===3)td.className='n';tr.append(td)});
+ const td=document.createElement('td');const p=document.createElement('span');p.className='pill '+v.cls;p.textContent=v.txt;td.append(p);tr.append(td);tb.append(tr)});
+
+// guardrail tiles
+const G=document.getElementById('guard');
+['repeat','alertsoff','cancel','rating'].forEach(id=>{const m=M[id],cur=allAvg(id,...LAST),pre=allAvg(id,...BASE),d=cur-pre;const worse=m.good==='down'?cur>m.limit:cur<m.limit;const near=!worse&&Math.abs(cur-m.limit)/m.limit<.1;
+ const p=document.createElement('div');p.className='panel';p.innerHTML='<p class="eye"></p><div class="v"></div><p class="kv"></p><span class="pill" style="display:inline-block;margin-top:8px"></span>';
+ p.querySelector('.eye').textContent=m.t;p.querySelector('.v').textContent=fmt(id,cur);p.querySelector('.kv').textContent=`${fmtDelta(id,d)} vs before · ${m.tl}`;const pl=p.querySelector('.pill');pl.className+=' '+(worse?'bad':near?'watch':'ok');pl.textContent=worse?'Over limit':near?'Near limit':'Within limit';G.append(p)});
+
+// north star tile
+const nsC=allAvg('ns',...LAST),nsP=allAvg('ns',...BASE);document.getElementById('nsVal').textContent=nsC.toFixed(1)+'%';
+const nd=document.getElementById('nsDelta');nd.className='delta up';nd.textContent=`+${(nsC-nsP).toFixed(1)} pts vs before launch (${nsP.toFixed(1)}%)`;
+
+// chips
+const chips=document.getElementById('chips'),mine=document.getElementById('mine');
+function renderChips(){chips.innerHTML='';mine.innerHTML='';
+ REL.forEach(r=>{const b=document.createElement('button');b.className='chip'+(st.on.has(r.id)?' on':'');b.textContent=r.id+' '+r.name;b.setAttribute('aria-pressed',st.on.has(r.id));b.onclick=()=>{st.on.has(r.id)?st.on.delete(r.id):st.on.add(r.id);renderChips();drawAll()};chips.append(b)});
+ st.mine.forEach((mk,j)=>{const key='mine:'+mk.i+mk.l;const b=document.createElement('button');b.className='chip mine'+(st.on.has(key)?' on':'');b.textContent=mk.l;b.setAttribute('aria-pressed',st.on.has(key));b.onclick=()=>{st.on.has(key)?st.on.delete(key):st.on.add(key);renderChips();drawAll()};chips.append(b);
+  const x=document.createElement('button');x.className='chip';x.textContent='Remove “'+mk.l+'”';x.onclick=()=>{st.mine.splice(j,1);save();renderChips();drawAll()};mine.append(x)})}
+const save=()=>{try{localStorage.setItem('shield-markers',JSON.stringify(st.mine))}catch(e){}};
+st.mine.forEach(mk=>st.on.add('mine:'+mk.i+mk.l));
+document.getElementById('mkForm').onsubmit=e=>{e.preventDefault();const d=Date.parse(document.getElementById('mkDate').value),l=document.getElementById('mkLabel').value.trim();if(!l||isNaN(d))return;
+ const i=Math.max(0,Math.min(N-1,Math.round((d-START)/WK)));st.mine.push({i,l});st.on.add('mine:'+i+l);save();document.getElementById('mkLabel').value='';renderChips();drawAll()};
+
+document.querySelectorAll('#cmp button').forEach(b=>b.onclick=()=>{st.mode=b.dataset.v;document.querySelectorAll('#cmp button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b)});drawAll()});
+document.getElementById('split').onchange=e=>{st.split=e.target.value;drawAll()};
+const drawAll=()=>document.querySelectorAll('.chart[data-m]').forEach(draw);
+renderChips();drawAll();let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,120)});
+})();
+</script>
+</body></html>
