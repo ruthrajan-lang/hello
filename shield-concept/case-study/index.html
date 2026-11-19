@@ -24,6 +24,7 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;ove
 th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}tr:last-child td{border:0}
 .tw{overflow-x:auto}ol.pr{padding-left:22px;margin:16px 0 0}ol.pr li{margin:10px 0;max-width:66ch}
 iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;background:#e7e7ef;margin-top:16px}
+.bar{display:inline-block;height:8px;border-radius:4px;background:var(--p);vertical-align:middle;margin-right:8px}td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
 .note{font-size:14px;color:var(--mut)}footer{max-width:860px;margin:auto;padding:0 20px 60px;font-size:14px;color:var(--mut)}
 @media (max-width:720px){iframe{display:none}.swot{grid-template-columns:1fr}.swot div:nth-child(odd){border-right:0}.swot div:not(:last-child){border-bottom:1px solid var(--line)}}
 </style></head><body>
@@ -40,22 +41,24 @@ iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;b
 <p>Coverage of the launch frames it as a response to broadband customers leaving. That makes the design problem two-sided: the free tier has to be good enough to keep people, and credible enough that paying for more feels safe.</p></section>
 
 <section><p class="eye">Research</p><h2>Three inputs, one pattern</h2>
-<p>I read Play Store reviews from August to November 2026, walked through the live app on November 18 and captured 28 screens, and compared Shield with five rival apps. The pattern across all three: people are not asking for more features. They are locked out, lost, or unsure what the product promises.</p>
+<p>I read Play Store reviews from August to November 2026 and 500 App Store reviews from October 27 to November 17, walked through the live app on November 18 and captured 28 screens, and compared Shield with five rival apps. The pattern across all three: people are not asking for more features. They are locked out, lost, or unsure what the product promises.</p>
 <div class="grid">
  <div class="card"><h3>Locked out</h3><p>An "update required" screen returns after updating, with no newer build in the store. Sign-in loops and error pages block bill pay.</p><span class="src">Reviews</span></div>
  <div class="card"><h3>Parental controls moved</h3><p>After the August update, pausing a child's WiFi went from "2 clicks" to "closer to 7", and paused devices don't show as paused.</p><span class="src">Reviews</span></div>
  <div class="card"><h3>Promise versus fine print</h3><p>The Home tab says "A forcefield for your home". Setup then asks you to confirm it "is not professionally monitored home security".</p><span class="src">Walkthrough</span></div>
- <div class="card"><h3>Alerts you can't stop</h3><p>One reviewer gets "no activity" alerts with every setting off. Another gets a new-device alert each time the same phone reconnects.</p><span class="src">Reviews</span></div>
- <div class="card"><h3>No route to a person</h3><p>The assistant loops on fixed prompts and, during an outage, blocks other questions and agent access.</p><span class="src">Reviews</span></div>
+ <div class="card"><h3>Alerts you can't stop</h3><p>One reviewer gets "no activity" alerts with every setting off. Another gets a new-device alert each time the same phone reconnects. On iOS, a November update removed the camera preview from lock-screen alerts.</p><span class="src">Reviews · both stores</span></div>
+ <div class="card"><h3>No route to a person</h3><p>The assistant loops on fixed prompts and, during an outage, blocks other questions and agent access. On iOS: "Day 2 of issues the AI bot can't fix and no human tech support to talk to."</p><span class="src">Reviews · both stores</span></div>
  <div class="card"><h3>Fragile setup</h3><p>"Don't leave or close the app or you may need to start over", for a step that takes a few minutes.</p><span class="src">Walkthrough</span></div>
 </div>
+<h3 style="margin-top:28px">What 500 recent App Store reviews mention</h3><div class="tw"><table><tr><th>Theme</th><th>Reviews</th><th>Note</th></tr><tr><td>WiFi, internet and outages</td><td class="n"><span class="bar" style="width:90px"></span>107 · 21%</td><td>Outage status should never need the assistant</td></tr><tr><td>Customer support</td><td class="n"><span class="bar" style="width:88px"></span>105 · 21%</td><td>36 of these name the assistant or bot</td></tr><tr><td>TV and streaming</td><td class="n"><span class="bar" style="width:76px"></span>91 · 18%</td><td>A streaming redesign landed in mid-November; outside Shield</td></tr><tr><td>Billing and payments</td><td class="n"><span class="bar" style="width:66px"></span>79 · 16%</td><td>Includes "sign in twice to pay the bill"</td></tr><tr><td>Crashes, loading and errors</td><td class="n"><span class="bar" style="width:28px"></span>34 · 7%</td><td></td></tr><tr><td>Sign-in and account access</td><td class="n"><span class="bar" style="width:23px"></span>28 · 6%</td><td>Repeated logins and login loops</td></tr><tr><td>Update loops</td><td class="n"><span class="bar" style="width:12px"></span>15 · 3%</td><td>Smaller on iOS than in the Android reviews</td></tr><tr><td>Cameras, home security and network alerts</td><td class="n"><span class="bar" style="width:10px"></span>13 · 3%</td><td>Hand-checked from 20 keyword matches</td></tr><tr><td>Parental controls</td><td class="n"><span class="bar" style="width:2px"></span>2 · under 1%</td><td>Hand-checked. One reads: "Bring back the old parental controls!!!!"</td></tr></table></div>
+<p class="note" style="margin-top:10px">Themes were tagged by keyword, a review can count in more than one, and about 30% matched none. 74% of this sample is one-star, and Shield itself comes up rarely because the listing covers the whole Xfinity app.</p>
 <div class="swot">
  <div><b style="color:#0f7a55">Strengths</b><ul><li>The Gateway is already in the home, so the free tier needs no new hardware.</li><li>Motion sensing without cameras.</li></ul></div>
  <div><b style="color:#b3261e">Weaknesses</b><ul><li>App stability and navigation dominate reviews.</li><li>Marketing language runs ahead of what the product does.</li></ul></div>
  <div><b style="color:#1f5fbf">Opportunities</b><ul><li>Most ISPs have left home security.</li><li>Ring's 2026 privacy backlash leaves room for a privacy-first position.</li></ul></div>
  <div><b style="color:#9a5b00">Threats</b><ul><li>Trust: the launch followed a $117.5 million breach settlement.</li><li>Every rival offers one app for everything.</li></ul></div>
 </div>
-<p class="note" style="margin-top:10px">Reviews skew negative and are Android-only, so I treated them as themes, not proportions. <a href="../swot/">The full SWOT</a> covers Ring, SimpliSafe, ADT+, Arlo and Wyze with sources.</p></section>
+<p class="note" style="margin-top:10px">Written reviews skew negative in both stores, so I treated them as themes, not proportions. <a href="../swot/">The full SWOT</a> covers Ring, SimpliSafe, ADT+, Arlo and Wyze with sources.</p></section>
 
 <section><p class="eye">Design principles</p><h2>Six rules I held every screen to</h2>
 <ol class="pr">
