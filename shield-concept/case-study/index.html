@@ -64,7 +64,7 @@ iframe.tour{width:100%;height:580px;border:0;border-radius:0;background:transpar
 <section id="summary"><p class="eye">At a glance</p><h2>Fix the free tier, then earn the upgrade</h2>
 <div class="sum"><dl>
  <div><dt>The problem</dt><dd>People aren’t asking Shield for more features. Reviews describe being locked out, lost in the app, or unsure what it promises, and about 1 in 5 recent App Store reviews describe dead ends with support.</dd></div>
- <div><dt>What I did</dt><dd>Read 1,500 App Store reviews across Xfinity, Ring and SimpliSafe plus Play Store reviews, walked through the live app, and compared five rivals. Then I redesigned 18 screens across access, setup, family controls, alerts and help, and designed an upgrade path to Shield Select.</dd></div>
+ <div><dt>What I did</dt><dd>Used Claude to analyze 1,500 App Store reviews across Xfinity, Ring and SimpliSafe, walked through the live app, and compared five rivals. I prioritized the fixes that block people first, app access and help, then family controls and alerts, and left the upgrade path to Shield Select for last. In all, I redesigned 18 screens.</dd></div>
  <div><dt>How I’d measure it</dt><dd>North star: the share of eligible households with WiFi Shield still active after 30 days. Guardrails: support contacts, people turning alerts off, and cancellations soon after upgrading.</dd></div>
 </dl>
 <iframe class="tour" src="../?tour" title="Animated tour of the redesigned screens" loading="lazy"></iframe></div></section>
@@ -166,6 +166,7 @@ iframe.tour{width:100%;height:580px;border:0;border-radius:0;background:transpar
 <p>I worked as a designer-builder, with Claude Code as the build partner.</p>
 <ul class="plain">
  <li><b>Research.</b> I captured the live app, gathered reviews and launch coverage, pulled 1,500 App Store reviews across Xfinity, Ring and SimpliSafe, and used Claude to sort them into themes. I checked each theme back against the source text and dropped claims the reviews didn't support.</li>
+ <li><b>Prioritize.</b> I ranked the problems by how often they came up and how badly they block people. Getting into the app and reaching a person came first, because nothing else matters if those fail. Family controls and alerts came next, since they're what the free tier is for. The upgrade came last: asking people to pay more only works once the free tier earns their trust.</li>
  <li><b>Recreate.</b> The current screens were rebuilt from my screenshots, so each change can be compared with what ships today.</li>
  <li><b>Design in code.</b> The prototype is one HTML file with no framework. I directed it screen by screen, sending annotated screenshots for padding, alignment, icons and type.</li>
  <li><b>Ship.</b> It deploys to Cloudflare from GitHub on every push, so each round of feedback was live in about a minute.</li>
