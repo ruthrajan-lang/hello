@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Side menu mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block" rel="stylesheet">
+<style>
+:root{--navy:#1a2444;--b50:#e9f1f8;--b100:#c8dcee;--b500:#0377b3;--b700:#025784;--ink:#181d27;--g700:#414651;--g500:#717680;--g300:#d5d7da;--g200:#e9eaeb;--canvas:#f2f4f7;--orange:#ed6d22;--o25:#fff1ea;--o700:#984312}
+*{box-sizing:border-box;margin:0}body{font:15px/1.4 "DM Sans",system-ui,sans-serif;color:var(--ink);background:#e8e8ea;padding:24px 16px 60px}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left}
+.ms{font-family:"Material Symbols Rounded";font-size:22px;line-height:1;width:1em;height:1em;overflow:hidden;white-space:nowrap;flex:none;display:inline-block;font-variation-settings:"FILL" 1}.ol .ms{font-variation-settings:"FILL" 0}
+h1{font-size:22px;text-align:center}.sub{text-align:center;color:var(--g500);margin:4px 0 24px}
+.stage{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}.col{display:grid;gap:10px;justify-items:center}.col>b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.phone{width:375px;max-width:100%;height:780px;border-radius:22px;overflow:hidden;position:relative;background:#fff;box-shadow:0 10px 36px #0003}
+.bar{height:56px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:700;position:relative;z-index:3}
+.inbox{position:absolute;inset:56px 0 0}.tabs{display:flex;border-bottom:2px solid var(--g300);font-weight:500;color:var(--g500)}.tabs span{flex:1;text-align:center;padding:12px}
+.msg{padding:12px 16px;border-bottom:1px solid var(--g200);display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--g700)}.msg small{color:var(--g500);white-space:nowrap}
+.scrim{position:absolute;inset:56px 0 0;background:#0b112466;z-index:1;transition:opacity .2s}
+.drawer{position:absolute;top:56px;bottom:0;left:0;z-index:2;overflow-y:auto;transition:transform .24s ease}
+.closed .drawer{transform:translateX(-102%)}.closed .scrim{opacity:0;pointer-events:none}
+/* current */
+.cur .drawer{width:280px;background:#fff;color:var(--b700)}
+.cur .row{display:flex;align-items:center;gap:12px;height:49px;padding:0 16px;border-bottom:1px solid var(--g200);font-size:16px;width:100%}
+.cur .row.user{height:65px;font-weight:700;padding-left:24px}.cur .row.ch{padding-left:48px;height:44px;font-size:15px;background:#fafafa}.cur .gr{flex:1}
+.cur .cnt{background:var(--orange);color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;display:grid;place-items:center}
+/* shield-style */
+.new .scrim{backdrop-filter:blur(3px)}
+.new .drawer{width:308px;background:var(--canvas);border-radius:0 26px 26px 0;box-shadow:12px 0 40px #0b11244d;padding:14px 14px 18px;display:flex;flex-direction:column;gap:6px}
+.me{border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;gap:12px;background:var(--b700);box-shadow:0 8px 20px #02578433}
+.me .av{width:48px;height:48px;border-radius:50%;background:#fff;color:var(--b700);display:grid;place-items:center;font-weight:700;font-size:17px;box-shadow:0 4px 12px #0003}
+.me b{font-size:17px;display:block}.me small{opacity:.85;font-size:13px}.me .ms{margin-left:auto;opacity:.8}
+.new h2{font-size:15px;font-weight:700;margin:14px 6px 6px}
+.grp{background:#fff;border-radius:16px;padding:6px;box-shadow:0 1px 2px #1a244412,0 6px 16px #1a24440d}
+.it{display:flex;align-items:center;gap:12px;width:100%;padding:7px 10px 7px 7px;border-radius:12px;font-weight:500}
+.it .ic{width:36px;height:36px;border-radius:50%;background:var(--b50);color:var(--b700);display:grid;place-items:center}.it .ic .ms{font-size:20px}
+.it .gr{flex:1}.it:hover{background:#f6f8fb}
+.it.on{background:var(--b50);color:var(--b700);font-weight:700}.it.on .ic{background:var(--b700);color:#fff}
+.pill{font-size:12px;font-weight:700;border-radius:10px;padding:2px 8px;background:var(--g200);color:var(--g700)}.pill.hot{background:var(--o25);color:var(--o700)}
+.out{margin-top:auto;padding:14px 8px 0;color:var(--g500);font-weight:500;display:flex;gap:8px;align-items:center}
+.notes{max-width:760px;margin:36px auto 0;background:#fff;border-radius:14px;padding:20px 24px}.notes h3{font-size:16px;margin-bottom:8px}.notes li{margin:6px 0}.notes p{color:var(--g500);font-size:13px;margin-top:12px}
+</style></head><body>
+<h1>Side menu</h1><p class="sub">Current design beside a Shield-style direction, in myKaarma's own colors. Tap the menu icon to open and close each drawer.</p>
+<div class="stage">
+ <div class="col"><b>Current</b><div class="phone cur ol"><div class="bar"><button class="ms tg" aria-label="Menu">menu</button><span>Inbox</span><span>2:06 PM</span></div><div class="inbox"></div><div class="scrim"></div><nav class="drawer" id="d1"></nav></div></div>
+ <div class="col"><b>Shield-style</b><div class="phone new"><div class="bar"><button class="ms tg" aria-label="Menu">menu</button><span>Inbox</span><span>2:06 PM</span></div><div class="inbox"></div><div class="scrim"></div><nav class="drawer" id="d2"></nav></div></div>
+</div>
+<div class="notes"><h3>What changed</h3><ol>
+ <li>Rows are grouped into four cards under headings, on a soft gray canvas.</li>
+ <li>The Inspect and Payments accordions are gone; their children sit directly in a group.</li>
+ <li>The name row is a profile card with an initials avatar and role.</li>
+ <li>Icons are filled and sit in tinted circles.</li>
+ <li>Labels are near-black. Blue is kept for the active item, shown as a tinted pill.</li>
+ <li>Every queue shows a count pill; orange marks the ones needing attention.</li>
+ <li>The drawer has rounded corners and a shadow, and the inbox behind it is blurred.</li>
+ <li>Sign out is a quiet button at the bottom.</li></ol>
+ <p>Counts, the role label and the message previews are placeholders. Colors are the prototype's existing navy, blue and orange tokens.</p></div>
+<script>
+const i=n=>`<span class="ms">${n}</span>`;
+document.querySelectorAll('.inbox').forEach(e=>e.innerHTML='<div class="tabs"><span>Internal</span><span>Customer</span></div>'+[['Parts are in for the Civic. Pics are attached.','9:42 AM'],['Customer approved the brake job, bay 4.','9:15 AM'],['Can someone check the alignment rack?','8:58 AM'],['Loaner is ready out front.','8:31 AM'],['Walkaround video sent. Starting now.','Yesterday'],['Running 10 minutes late.','Yesterday']].map(m=>`<div class="msg"><span>${m[0]}</span><small>${m[1]}</small></div>`).join(''));
+d1.innerHTML=`<div class="row user">${i('group')}Marco Gallardo</div>`+[['home','Inbox'],['mail','Unread Internal'],['description','Unread Customer'],['schedule','Waiting for Response'],['calendar_today','Appointment'],['search','Inspect',1],[0,'Video Walkaround',0,2],[0,'ServiceCart'],['local_shipping','Pickup & Delivery'],['build','Mobile Service'],['attach_money','Payments',1],[0,'Payment Requests'],['settings','Settings & Help'],['logout','Sign Out']].map(r=>`<button class="row${r[0]?'':' ch'}">${r[0]?i(r[0]):''}<span class="gr">${r[1]}</span>${r[3]?`<span class="cnt">${r[3]}</span>`:''}${r[2]?i('expand_less'):''}</button>`).join('');
+const G=[['Messages',[['inbox','Inbox',6,0,1],['mark_email_unread','Unread Internal',3,1],['chat','Unread Customer',2,1],['schedule','Waiting for Response',4]]],['Service',[['calendar_month','Appointments'],['videocam','Video Walkaround',2,1],['shopping_cart','ServiceCart'],['local_shipping','Pickup & Delivery'],['build','Mobile Service']]],['Payments',[['payments','Payment Requests']]],['Account',[['settings','Settings & Help']]]];
+d2.innerHTML=`<div class="me"><span class="av">MG</span><span><b>Marco Gallardo</b><small>Service Advisor</small></span>${i('chevron_right')}</div>`+G.map(g=>`<h2>${g[0]}</h2><div class="grp">${g[1].map(r=>`<button class="it${r[4]?' on':''}"><span class="ic">${i(r[0])}</span><span class="gr">${r[1]}</span>${r[2]?`<span class="pill${r[3]?' hot':''}">${r[2]}</span>`:''}</button>`).join('')}</div>`).join('')+`<button class="out">${i('logout')}Sign out</button>`;
+document.addEventListener('click',e=>{const t=e.target.closest('.tg,.scrim,.it');if(!t)return;const p=t.closest('.phone');
+ if(t.classList.contains('it')){p.querySelectorAll('.it').forEach(x=>x.classList.toggle('on',x===t));return}
+ p.classList.toggle('closed')});
+</script></body></html>
