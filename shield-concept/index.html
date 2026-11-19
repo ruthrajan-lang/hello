@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shield concept</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block" rel="stylesheet">
 <style>
 :root{--p:#5b2bd1;--p2:#efe9ff;--ink:#141417;--mut:#6a6a75;--bg:#f3f3f7;--line:#e3e3ea;--ok:#0a7d5a;--info:#dfe5fb;--warn:#fff3d6}
 *{box-sizing:border-box;margin:0}
@@ -52,6 +53,29 @@ p{margin:8px 0}
 .msg{max-width:84%;padding:10px 13px;border-radius:14px;background:#fff;margin:8px 0}.msg.u{margin-left:auto;background:var(--p);color:#fff}
 .tile{background:var(--p);color:#fff;border-radius:8px;padding:14px;font-weight:700;flex:1;display:flex;gap:8px;align-items:center;min-height:64px;font-size:14px}.tile.l{background:#fff;color:var(--ink);flex-direction:column;align-items:flex-start;gap:6px}
 #notes{flex:1;min-width:280px;max-width:420px;background:#fff;border-radius:12px;padding:18px}#notes h2{font-size:18px;margin-bottom:4px}#notes h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:16px 0 6px}#notes ul{padding-left:18px}#notes li{margin:5px 0}
+.ms{font-family:"Material Symbols Rounded";font-variation-settings:"FILL" 1;font-size:22px;line-height:1;width:1em;height:1em;flex:none;display:inline-block;overflow:hidden;white-space:nowrap;font-weight:400;font-style:normal;-webkit-font-smoothing:antialiased}
+#tabs .ms{font-variation-settings:"FILL" 0}#tabs .on .ms{font-variation-settings:"FILL" 1}
+.card,.tile.l{box-shadow:0 1px 2px #1a124012,0 6px 18px #1a12400f;border-radius:14px}
+.av{width:48px;height:48px;background:#f0f0f5;color:var(--ink);position:relative}
+.av.todo:after{content:"";position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #cbc3ea}
+.av.c1{background:#e7dcff;color:#5b2bd1}.av.c2{background:#d3f2ea;color:#0a6b5d}
+.ck .ms{font-size:16px}
+.hero{background:radial-gradient(circle at 18% 22%,#fff 0 1px,transparent 2px),radial-gradient(circle at 78% 14%,#fff 0 1px,transparent 2px),radial-gradient(circle at 60% 30%,#fff 0 1px,transparent 2px),radial-gradient(ellipse 62% 95% at 50% 100%,#c9a4ff73 0 58%,#ecdcffcc 59% 60%,transparent 61%),linear-gradient(#0c0730,#34178a)}
+.hero .ms{font-size:74px;text-shadow:0 0 26px #ffb84d}
+.mode{box-shadow:0 10px 28px #3b1a9a2e}
+.mh{background:radial-gradient(circle at 50% 34%,#d6c4ff 0,transparent 52%),linear-gradient(160deg,#fff,#f1eaff)}
+.ma{background:radial-gradient(circle at 50% 34%,#8d61f7 0,transparent 52%),linear-gradient(160deg,#4a1fb0,#22105c)}
+.md{background:radial-gradient(circle at 88% 0,#cfd6ff 0 9%,#5a6bd6 10%,transparent 38%),linear-gradient(160deg,#1a2478,#090e38)}
+.msw{backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px #ffffff59}
+.msw button.on{border-radius:18px;box-shadow:0 6px 16px #0003}.msw .ms{font-size:26px}
+.tile{background:linear-gradient(160deg,#6d3be0,#4a1fb0);box-shadow:0 6px 16px #4a1fb040;border-radius:12px}
+.tile.l{background:#fff}.tile.l .ms{background:var(--p2);color:var(--p);border-radius:50%;padding:8px;box-sizing:content-box;font-size:20px}
+.mhero{position:relative;overflow:hidden;background:radial-gradient(circle at 70% 0,#8d61f7,transparent 60%),linear-gradient(#3d1899,#6d3be0)}
+.mhero b{box-shadow:0 8px 18px #0003,inset 0 0 0 1px #ffffff40;position:relative}
+.mhero:before{content:"";position:absolute;left:-10%;right:-10%;top:30px;height:260px;border-radius:50%;border-top:2px solid #fff;background:#ffffff12}
+#tabs{box-shadow:0 -4px 14px #1a12400d}.btn{box-shadow:0 2px 6px #0002}.btn.s,.btn:disabled{box-shadow:none}
+.banner{box-shadow:0 2px 8px #1554d11a}
+.card.list{padding:2px 14px}[hidden]{display:none!important}
 .m-asis .o,.m-opt .a{display:none!important}
 </style></head>
 <body class="m-opt"><div class="wrap">
@@ -95,7 +119,7 @@ p{margin:8px 0}
  <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Home network protection</div><span class="pill">Protecting your network</span></div><i data-i="chev"></i></div>
  <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure on-the-go</b><div class="sm mut">Protection away from home</div></div><i data-i="chev"></i></div>
  <div class="a"><div class="h2">Set up your WiFi Shield features ›</div><p class="sm mut">2 of 3 completed</p><div class="prog"><i class="d"></i><i class="d"></i><i></i></div>
-  <button class="card row" data-go="family"><div class="av"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button></div>
+  <button class="card row" data-go="family"><div class="av todo"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button></div>
  <div class="h2">Your smart home. Your way.</div>
  <div class="card"><div class="hero" style="height:120px"><i data-i="home"></i></div><p><b>Peace of mind you can count on</b> <span class="pill g o">Shield Select · $15/mo</span></p><p class="sm mut">Add smart home protection with a camera, sensor, and 24/7 support, so your home can spot trouble before it starts.</p></div>
 </div></section>
@@ -103,8 +127,8 @@ p{margin:8px 0}
 <section id="shield" data-tab="home"><div class="hd"><button data-back><i data-i="back"></i></button><b>Set up WiFi Shield</b><span></span></div><div class="bd">
  <div class="h1">Your included features</div><p class="sm">Set up your WiFi Shield features to help protect your WiFi, manage screen time, and get motion alerts — all included with your internet plan.</p>
  <div class="h2">Let's get you set up</div><p class="mut">1 of 3 completed</p><div class="prog"><i class="d"></i><i></i><i></i></div>
- <button class="card row" data-go="motion-intro"><div class="av"><i data-i="walk"></i></div><div class="gr"><b>Turn on WiFi Motion</b> <span class="pill g o">About 3 min</span><div class="sm mut">Know when there's movement at home using the devices already on your WiFi.</div></div><i data-i="chev"></i></button>
- <button class="card row" data-go="family"><div class="av"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b> <span class="pill g o">About 2 min</span><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button>
+ <button class="card row" data-go="motion-intro"><div class="av todo"><i data-i="walk"></i></div><div class="gr"><b>Turn on WiFi Motion</b> <span class="pill g o">About 3 min</span><div class="sm mut">Know when there's movement at home using the devices already on your WiFi.</div></div><i data-i="chev"></i></button>
+ <button class="card row" data-go="family"><div class="av todo"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b> <span class="pill g o">About 2 min</span><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button>
  <p class="a" style="font-weight:700;margin-top:16px">View completed ⌄</p>
  <div class="o"><div class="h2">Completed</div><div class="card row"><i data-i="check" style="color:var(--ok)"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Protecting your network</div></div></div>
  <p class="sm mut">Skipping is fine. Everything here stays on the Home tab, and Family Settings is also on Overview.</p></div>
@@ -136,7 +160,7 @@ p{margin:8px 0}
  <div class="av" style="border-radius:12px;background:#1554d1;color:#fff;margin-top:20px"><i data-i="phone"></i></div>
  <div class="h1 a">Let's enable WiFi Motion</div><p class="a">WiFi Motion is subject to the Xfinity Residential Service Agreement and Privacy Policy below.</p>
  <div class="h1 o">One thing to confirm</div><p class="o">You saw this on the first screen: WiFi Motion keeps you aware, but nobody is watching for you.</p>
- <button class="card row" id="ack" style="background:var(--bg);align-items:flex-start;margin-top:12px"><span class="ck"><i data-i="check"></i></span><span class="gr a">I acknowledge WiFi Motion is not professionally monitored home security, and I am responsible for periodically testing that activity is being detected as desired.</span><span class="gr o">I understand WiFi Motion isn't professionally monitored, and I'll test it now and then to check it's picking up movement.</span></button>
+ <button class="card row" id="ack" style="background:var(--bg);align-items:flex-start;margin-top:12px"><span class="ck"><i data-i="tick"></i></span><span class="gr a">I acknowledge WiFi Motion is not professionally monitored home security, and I am responsible for periodically testing that activity is being detected as desired.</span><span class="gr o">I understand WiFi Motion isn't professionally monitored, and I'll test it now and then to check it's picking up movement.</span></button>
  <div class="card list" style="border:1px solid var(--line)"><div class="row"><b class="gr">Frequently asked questions</b><i data-i="chev"></i></div><div class="row"><b class="gr">Privacy Policy</b><i data-i="chev"></i></div><div class="row"><b class="gr">Xfinity Residential Service Agreement</b><i data-i="chev"></i></div></div>
 </div><div class="ft"><button class="btn" id="en" disabled data-go="motion-finish">Enable WiFi Motion</button></div></section>
 
@@ -175,9 +199,9 @@ p{margin:8px 0}
 <div id="ov"></div><div id="sheet"></div><div id="toast"></div></div><nav id="tabs"></nav></div>
 <aside id="notes"></aside></div></div>
 <script>
-const I={chev:'M9 6l6 6-6 6',back:'M15 6l-6 6 6 6',close:'M6 6l12 12M18 6L6 18',plus:'M12 5v14M5 12h14',home:'M4 11l8-7 8 7v9H4z',person:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6',layers:'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',card:'M4 6h16v12H4zM4 10h16',wifi:'M5 10a10 10 0 0114 0M8 13a6 6 0 018 0M12 17h.01',sliders:'M4 7h10M18 7h2M4 17h2M10 17h10M16 5v4M8 15v4',walk:'M13 4.5h.01M10 21l2-6-2-3 1-4 3 3 3 1M11 8l-3 2-1 3M12 15l3 2 1 4',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',pause:'M8 5v14M16 5v14',check:'M5 12l5 5 9-10',info:'M12 8h.01M12 11v6M12 21a9 9 0 100-18 9 9 0 000 18z',search:'M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-4-4',moon:'M20 14A8 8 0 0110 4a8 8 0 1010 10z',phone:'M7 3h10v18H7zM11 18h2',chat:'M4 5h16v11H9l-5 4z',clock:'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z'};
+const I={chev:'chevron_right',back:'arrow_back_ios_new',close:'close',plus:'add_circle',home:'home',person:'account_circle',layers:'layers',card:'credit_card',ovw:'space_dashboard',wifi:'wifi',sliders:'tune',walk:'sensor_occupied',shield:'shield',pause:'pause_circle',check:'check_circle',tick:'check',info:'info',search:'search',moon:'bedtime',phone:'smartphone',chat:'chat',clock:'schedule',eye:'visibility'};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const ico=r=>r.querySelectorAll('i[data-i]').forEach(e=>{e.outerHTML=`<svg viewBox="0 0 24 24" class="${e.className}" style="${e.getAttribute('style')||''}"><path d="${I[e.dataset.i]}"/></svg>`});
+const ico=r=>r.querySelectorAll('i[data-i]').forEach(e=>{const st=e.getAttribute('style')||'',m=st.match(/width:(\d+)px/);e.outerHTML=`<span class="ms ${e.className}" style="${st}${m?';font-size:'+m[1]+'px':''}" aria-hidden="true">${I[e.dataset.i]}</span>`});
 const N={
 update:{t:'App launch: update required',c:1,now:['Reviews describe a splash saying "Looks like you need to update this app" that returns even after updating, with no newer build in the Play Store.','The only fix reviewers found was clearing app data or reinstalling.'],chg:['Check the store before blocking. If there is no newer build for this device, let the person in.','"Not now" for updates that are not security-critical.','Bill pay, outage status and pause WiFi never sit behind the update wall.']},
 overview:{t:'Overview tab',now:['Opens with shortcut tiles, a membership card, a Holiday Mode promo and a phone ad.','Reviews call the app "a full scale advertisement".'],chg:['Service status and the bill come first, since reviews say people open the app for outages and payments.','Pause WiFi and Get help are one tap away.','Offers collapse to one row at the bottom.']},
@@ -206,24 +230,24 @@ const M={home:['Home Watch','Alerts off','mh','person','Home'],away:['Away Watch
 function rMode(){$('#mc').className='mode '+M[mode][2];$('#mt').textContent=M[mode][0];$('#ms').textContent=M[mode][1];$('#msw').innerHTML=Object.keys(M).map(k=>`<button data-mode="${k}" class="${k===mode?'on':''}" aria-label="${M[k][0]}"><i data-i="${M[k][3]}"></i><small class="o">${M[k][4]}</small></button>`).join('');ico($('#msw'))}
 // family
 const P=[{n:'Maya',d:[['iPad',1],['Switch',1],['Chromebook',1]],bed:'8:30 PM',until:null},{n:'Leo',d:[['Fire tablet',0],['Roku TV',0]],bed:'8:00 PM',until:'6:00 PM'}];let pi=0;
-function rFam(){const h=P.map((p,i)=>`<div class="card row"><button class="row gr" data-pf="${i}"><div class="av">${p.n[0]}</div><div class="gr"><b>${p.n}</b><div class="sm ${p.until?'':'mut'}">${p.until?'<span class="pill w">Paused</span> until '+p.until:p.d.length+' devices · bedtime '+p.bed}</div></div></button><button class="btn mini ${p.until?'s':''}" data-pz="${i}">${p.until?'Resume':'Pause'}</button></div>`).join('');$('#famHome').innerHTML=h;$('#famList').innerHTML=h;$('#pauseAll').textContent=P.every(p=>p.until)?"Resume all kids' devices":"Pause all kids' devices";if(cur==='profile')rPf()}
+function rFam(){const h=P.map((p,i)=>`<div class="card row"><button class="row gr" data-pf="${i}"><div class="av c${i+1}">${p.n[0]}</div><div class="gr"><b>${p.n}</b><div class="sm ${p.until?'':'mut'}">${p.until?'<span class="pill w">Paused</span> until '+p.until:p.d.length+' devices · bedtime '+p.bed}</div></div></button><button class="btn mini ${p.until?'s':''}" data-pz="${i}">${p.until?'Resume':'Pause'}</button></div>`).join('');$('#famHome').innerHTML=h;$('#famList').innerHTML=h;$('#pauseAll').textContent=P.every(p=>p.until)?"Resume all kids' devices":"Pause all kids' devices";if(cur==='profile')rPf()}
 function setP(i,u){(i==='all'?P:[P[i]]).forEach(p=>{p.until=u;p.d.forEach(d=>d[1]=u?0:1)});rFam();toast(u?`${i==='all'?'All kids\' devices':P[i].n+"'s devices"} paused until ${u}`:'Back online')}
 function pz(i){const who=i==='all'?'all kids':P[i].n;if(i!=='all'&&P[i].until)return setP(i,null);if(i==='all'&&P.every(p=>p.until))return setP(i,null);
  sheet(`<div class="h2" style="margin-top:0">Pause ${who} for how long?</div><div class="list">${[['30 minutes',at(30)],['1 hour',at(60)],['Until bedtime ends','7:00 AM'],['Until I turn it back on','you resume']].map(o=>`<button class="row" data-pu="${o[1]}" data-pi="${i}"><span class="gr">${o[0]}</span><span class="sm mut">${o[1]}</span></button>`).join('')}</div>`)}
-function rPf(){const p=P[pi];$('#pfN').textContent=p.n;$('#pfB').innerHTML=`<div class="card"><div class="row"><div class="av">${p.n[0]}</div><div class="gr"><b>${p.until?'Paused until '+p.until:'Online'}</b><div class="sm mut">${p.d.filter(d=>d[1]).length} of ${p.d.length} devices can use WiFi</div></div></div><button class="btn ${p.until?'s':''}" data-pz="${pi}" style="margin-top:12px">${p.until?'Resume now':'Pause '+p.n}</button></div>
+function rPf(){const p=P[pi];$('#pfN').textContent=p.n;$('#pfB').innerHTML=`<div class="card"><div class="row"><div class="av c${pi+1}">${p.n[0]}</div><div class="gr"><b>${p.until?'Paused until '+p.until:'Online'}</b><div class="sm mut">${p.d.filter(d=>d[1]).length} of ${p.d.length} devices can use WiFi</div></div></div><button class="btn ${p.until?'s':''}" data-pz="${pi}" style="margin-top:12px">${p.until?'Resume now':'Pause '+p.n}</button></div>
 <div class="h2">Give bonus time</div><div class="chips">${[15,30,60].map(m=>`<button class="chip" data-bonus="${m}">+${m} min</button>`).join('')}</div>
 <div class="h2">Bedtime</div><div class="card list"><div class="row"><span class="gr">WiFi off at ${p.bed}<div class="sm mut">Back on at 7:00 AM</div></span><button class="tog on"></button></div><button class="row" data-toast="Bedtime skipped for tonight only"><span class="gr">Skip tonight</span><i data-i="chev"></i></button><button class="row" data-toast="Edit bedtime"><span class="gr">Change times</span><i data-i="chev"></i></button></div>
 <div class="h2">Devices</div><div class="card list">${p.d.map((d,j)=>`<div class="row"><span class="gr">${d[0]}<div class="sm mut">${d[1]?'Online':'Paused'}</div></span><button class="tog ${d[1]?'on':''}" data-dev="${j}" aria-label="WiFi for ${d[0]}"></button></div>`).join('')}</div>`;ico($('#pfB'))}
 // devices
 const D=[['GoogleHome','Google – Google Home','Living room'],['Levoit-humidifier','Levoit – Levoit Humidifier','Bedroom'],['RestBaby-814F9E','Hatch – Baby','Nursery']],R=['Living room','Bedroom','Nursery','Hallway','Kitchen'],on=[1,1,1];let tech=0;
-function rDev(){$('#devs').innerHTML=`<div class="card list" style="border:1px solid var(--line)">${D.map((d,i)=>`<div class="row"><button class="ck o ${on[i]?'on':''}" data-dk="${i}" aria-label="Use ${d[0]}"><i data-i="check"></i></button><i data-i="wifi" class="a"></i><div class="gr"><b>${d[0]}</b><div class="sm mut">${d[1]}${tech?' · 00:0F:62:…':''}</div><span class="pill g a">Connected to Gateway</span><select class="o sm" data-room="${i}" style="margin-top:4px;padding:4px;border:1px solid var(--line);border-radius:6px">${R.map(r=>`<option${r===d[2]?' selected':''}>${r}</option>`).join('')}</select></div><i data-i="chev" class="a"></i></div>`).join('')}</div>`;ico($('#devs'));const n=on.filter(Boolean).length;$('#cov').textContent=n?`${n} area${n>1?'s':''} covered: ${D.filter((d,i)=>on[i]).map(d=>d[2]).join(', ')}`:'Pick at least one device';$('#devGo').textContent=`Continue with ${n} device${n===1?'':'s'}`;$('#devGo').disabled=!n}
+function rDev(){$('#devs').innerHTML=`<div class="card list" style="border:1px solid var(--line)">${D.map((d,i)=>`<div class="row"><button class="ck o ${on[i]?'on':''}" data-dk="${i}" aria-label="Use ${d[0]}"><i data-i="tick"></i></button><i data-i="wifi" class="a"></i><div class="gr"><b>${d[0]}</b><div class="sm mut">${d[1]}${tech?' · 00:0F:62:…':''}</div><span class="pill g a">Connected to Gateway</span><select class="o sm" data-room="${i}" style="margin-top:4px;padding:4px;border:1px solid var(--line);border-radius:6px">${R.map(r=>`<option${r===d[2]?' selected':''}>${r}</option>`).join('')}</select></div><i data-i="chev" class="a"></i></div>`).join('')}</div>`;ico($('#devs'));const n=on.filter(Boolean).length;$('#cov').textContent=n?`${n} area${n>1?'s':''} covered: ${D.filter((d,i)=>on[i]).map(d=>d[2]).join(', ')}`:'Pick at least one device';$('#devGo').textContent=`Continue with ${n} device${n===1?'':'s'}`;$('#devGo').disabled=!n}
 // chat
 function say(t,u){const m=document.createElement('div');m.className='msg'+(u?' u':'');m.textContent=t;$('#log').append(m);$('#log').scrollTop=1e5}
 function bot(t,q=['My internet is down','Question about my bill','Something else']){say(t);$('#qr').innerHTML=q.map(x=>`<button class="chip">${x}</button>`).join('')}
 const C={'My internet is down':['There\'s an outage in your area. Estimated fix is 6:45 PM, so there\'s nothing you need to restart.',['Text me updates','Request a credit','I have a different question']],'Text me updates':['Done. I\'ll text you when it\'s fixed.'],'Request a credit':['Requested. You\'ll see the credit on your next bill.'],'Question about my bill':['Your balance is $85.00, due Dec 3. What would you like to know?',['Why did it go up?','Talk to a person']],'Why did it go up?':['A promotion ended on Nov 1. I can\'t change pricing, but an agent can. Want me to connect you?',['Talk to a person','No thanks']],'Something else':['Tell me more, or I can connect you to a person right away.',['Talk to a person','My internet is down']],'I have a different question':['Sure, go ahead. The outage doesn\'t stop us helping with other things.',['Question about my bill','Talk to a person']]};
-function agent(){say('Connecting you to an agent. About 4 minutes. I\'ve passed along this chat so you won\'t need to repeat it.');$('#qr').innerHTML='';$('#toAgent').hidden=true}
+let ag=0;function agent(){if(ag)return;ag=1;say('Connecting you to an agent. About 4 minutes. I\'ve passed along this chat so you won\'t need to repeat it.');$('#qr').innerHTML='<span class="pill w">Waiting for an agent · about 4 min</span>';$('#toAgent').hidden=true}
 // wiring
-$('#tabs').innerHTML=[['overview','card','Overview'],['services','layers','Services'],['wifi','wifi','WiFi'],['home','home','Home'],['account','person','Account']].map(t=>`<button data-t="${t[0]}"><i data-i="${t[1]}"></i>${t[2]}</button>`).join('');
+$('#tabs').innerHTML=[['overview','ovw','Overview'],['services','layers','Services'],['wifi','wifi','WiFi'],['home','home','Home'],['account','person','Account']].map(t=>`<button data-t="${t[0]}"><i data-i="${t[1]}"></i>${t[2]}</button>`).join('');
 $('#tl').innerHTML='<i></i>'.repeat(23)+'<i class="h"></i>';$('#sel').innerHTML=Object.keys(N).map(k=>`<option value="${k}">${N[k].t}</option>`).join('');
 rMode();rFam();rDev();ico(document);let loops=0;
 document.addEventListener('click',e=>{const b=e.target.closest('button,#ov');if(!b)return;const d=b.dataset;
