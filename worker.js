@@ -4,6 +4,8 @@ const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, header
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // The divorce planner is no longer published; its API stays closed. Saved state in KV is untouched.
+    if (url.pathname.startsWith('/divorce-planner/')) return new Response('Not found', { status: 404 });
     if (url.pathname !== '/divorce-planner/api/state') return env.ASSETS.fetch(request);
     if (request.method === 'GET') {
       const v = await env.STATE.get(KEY);
