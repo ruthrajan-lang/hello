@@ -27,21 +27,53 @@ iframe{width:100%;height:900px;border:1px solid var(--line);border-radius:14px;b
 .bar{display:inline-block;height:8px;border-radius:4px;background:var(--p);vertical-align:middle;margin-right:8px}td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
 .note{font-size:14px;color:var(--mut)}footer{max-width:860px;margin:auto;padding:0 20px 60px;font-size:14px;color:var(--mut)}
 td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:first-child){text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-@media (max-width:720px){iframe{display:none}.swot{grid-template-columns:1fr}.swot div:nth-child(odd){border-right:0}.swot div:not(:last-child){border-bottom:1px solid var(--line)}}
+.layout{max-width:1140px;margin:auto;padding:0 20px}.layout>main{max-width:860px;margin:auto;padding:0 0 80px}
+.toc{display:none}
+@media (min-width:1100px){.layout{display:grid;grid-template-columns:190px minmax(0,860px);gap:48px;justify-content:center}.layout>main{margin:0}
+ .toc{display:block;position:sticky;top:0;align-self:start;padding-top:56px;max-height:100vh;overflow:auto}}
+.toc p{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 18px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:16px}.toc a{display:flex;gap:12px;color:var(--mut);text-decoration:none;font-size:15px;line-height:1.3}
+.toc a span{font-size:13px;font-variant-numeric:tabular-nums;opacity:.7;min-width:18px;padding-top:1px}.toc a:hover,.toc a.on{color:var(--ink)}.toc a.on span{color:var(--p);opacity:1}
+.toc hr{border:0;border-top:1px solid var(--line);margin:24px 0 16px}.toc .top{font-size:14px}
+.sum{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:32px;align-items:start;margin-top:8px}
+.sum dl{margin:0;display:grid;gap:16px}.sum dt{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--p)}.sum dd{margin:2px 0 0;max-width:56ch}
+iframe.tour{width:100%;height:580px;border:0;border-radius:0;background:transparent;margin:0}
+.mob{display:none}
+@media (max-width:820px){.sum{grid-template-columns:1fr}iframe.tour{height:540px}}
+@media (max-width:720px){iframe.full{display:none}.mob{display:block}.swot{grid-template-columns:1fr}.swot div:nth-child(odd){border-right:0}.swot div:not(:last-child){border-bottom:1px solid var(--line)}}
 </style></head><body>
-<header><div>
+<header id="top"><div>
  <p class="eye">Unofficial design concept · Android · November 2026</p>
  <h1>Xfinity Shield: earning the upgrade by fixing the free tier first</h1>
  <p>Shield bundles network security, parental controls and WiFi motion sensing into the Xfinity app for free, with a $15 a month tier that adds a camera and sensor. I looked at what stops people trusting the free tier, redesigned those flows, and then designed an upgrade path that asks at the right moment.</p>
  <div class="cta"><a class="btn" href="../">Open the prototype</a><a class="btn o" href="../swot/">Read the full SWOT</a></div>
 </div></header>
+<div class="layout">
+<nav class="toc" aria-label="In this case study"><p>In this case study</p><ol>
+ <li><a href="#summary"><span>01</span>At a glance</a></li>
+ <li><a href="#context"><span>02</span>Context</a></li>
+ <li><a href="#research"><span>03</span>Research</a></li>
+ <li><a href="#benchmark"><span>04</span>Benchmark</a></li>
+ <li><a href="#principles"><span>05</span>Design principles</a></li>
+ <li><a href="#designs"><span>06</span>The designs</a></li>
+ <li><a href="#measuring"><span>07</span>Measuring it</a></li>
+ <li><a href="#building"><span>08</span>How I built it</a></li>
+</ol><hr><a class="top" href="#top">↑ Back to the top</a></nav>
 <main>
 
-<section><p class="eye">Context</p><h2>A retention product inside a billing app</h2>
+<section id="summary"><p class="eye">At a glance</p><h2>Fix the free tier, then earn the upgrade</h2>
+<div class="sum"><dl>
+ <div><dt>The problem</dt><dd>People aren’t asking Shield for more features. Reviews describe being locked out, lost in the app, or unsure what it promises, and about 1 in 5 recent App Store reviews describe dead ends with support.</dd></div>
+ <div><dt>What I did</dt><dd>Read 1,500 App Store reviews across Xfinity, Ring and SimpliSafe plus Play Store reviews, walked through the live app, and compared five rivals. Then I redesigned 18 screens across access, setup, family controls, alerts and help, and designed an upgrade path to Shield Select.</dd></div>
+ <div><dt>How I’d measure it</dt><dd>North star: the share of eligible households with WiFi Shield still active after 30 days. Guardrails: support contacts, people turning alerts off, and cancellations soon after upgrading.</dd></div>
+</dl>
+<iframe class="tour" src="../?tour" title="Animated tour of the redesigned screens" loading="lazy"></iframe></div></section>
+
+<section id="context"><p class="eye">Context</p><h2>A retention product inside a billing app</h2>
 <p>Comcast launched Xfinity Shield on August 18, 2026. The free tier, WiFi Shield, comes with internet plans that use an Advanced Gateway. Shield Select adds an indoor camera with person, pet, vehicle and package detection, a door sensor, cloud video and emergency help for $15 a month.</p>
 <p>Coverage of the launch frames it as a response to broadband customers leaving. That makes the design problem two-sided: the free tier has to be good enough to keep people, and credible enough that paying for more feels safe.</p></section>
 
-<section><p class="eye">Research</p><h2>Three inputs, one pattern</h2>
+<section id="research"><p class="eye">Research</p><h2>Three inputs, one pattern</h2>
 <p>I read Play Store reviews from August to November 2026 and 500 App Store reviews from October 27 to November 17, walked through the live app on November 18 and captured 28 screens, and compared Shield with five rival apps. The pattern across all three: people are not asking for more features. They are locked out, lost, or unsure what the product promises.</p>
 <div class="grid">
  <div class="card"><h3>Locked out</h3><p>An "update required" screen returns after updating, with no newer build in the store. Sign-in loops and error pages block bill pay.</p><span class="src">Reviews</span></div>
@@ -61,7 +93,7 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
 </div>
 <p class="note" style="margin-top:10px">Written reviews skew negative in both stores, so I treated them as themes, not proportions. <a href="../swot/">The full SWOT</a> covers Ring, SimpliSafe, ADT+, Arlo and Wyze with sources.</p></section>
 
-<section><p class="eye">Benchmark</p><h2>How rivals' reviews compare</h2>
+<section id="benchmark"><p class="eye">Benchmark</p><h2>How rivals' reviews compare</h2>
 <p>To see which problems are Shield's and which come with the category, I ran the same theme tagging on the 500 most recent App Store reviews for Ring and SimpliSafe. One pattern stands out: Xfinity's complaints are about reaching help and staying connected, the layer around the product. Ring's and SimpliSafe's are about the product itself: video, alerts and subscriptions.</p>
 <div class="tw"><table class="cmp">
  <tr><th>Theme</th><th>Xfinity</th><th>Ring</th><th>SimpliSafe</th></tr>
@@ -87,7 +119,7 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
  <div class="card"><h3>Status alerts are noise</h3><p>SimpliSafe users get "lost connection" and "reconnected" messages all day. Group them, or alert only when it changes what someone should do.</p><span class="src">SimpliSafe</span></div>
 </div></section>
 
-<section><p class="eye">Design principles</p><h2>Six rules I held every screen to</h2>
+<section id="principles"><p class="eye">Design principles</p><h2>Six rules I held every screen to</h2>
 <ol class="pr">
  <li><b>Never lock people out of essentials.</b> Paying a bill, checking an outage and pausing WiFi work even when an update is pending.</li>
  <li><b>Say what it is and what it isn't, first.</b> The "not monitored" message belongs on the opening screen, not behind a checkbox.</li>
@@ -97,7 +129,7 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
  <li><b>Ask for the upgrade when it's worth something.</b> And make "no" as easy as "yes".</li>
 </ol></section>
 
-<section><p class="eye">What I designed</p><h2>From problem to screen</h2>
+<section id="designs"><p class="eye">What I designed</p><h2>From problem to screen</h2>
 <div class="tw"><table>
  <tr><th>Problem</th><th>Change</th><th>Screen</th></tr>
  <tr><td>Update wall with no way through</td><td>Check the store before blocking; essentials always open</td><td><a href="../#update">App launch</a></td></tr>
@@ -111,10 +143,11 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
  <tr><td>Upgrade offer has no context or price</td><td>Prompt after a motion event, plan comparison, trial terms up front</td><td><a href="../#upgrade">Shield Select</a></td></tr>
 </table></div>
 <p class="note" style="margin-top:10px">In the prototype, every screen carries tags naming the review theme or SWOT point it answers, and a toggle compares the current app with the redesign where I had screenshots.</p>
-<iframe src="../#home" title="Shield concept prototype" loading="lazy"></iframe>
+<iframe class="full" src="../?s=home" title="Shield concept prototype" loading="lazy"></iframe>
+<div class="mob card" style="margin-top:16px"><h3>The full prototype needs a wider screen</h3><p>It shows each screen next to notes on what changed and why. On a phone, watch the tour at the top of this page, or open the prototype and use the arrows to step through screens.</p><div class="cta" style="margin-top:12px"><a class="btn" style="background:var(--p);color:#fff" href="../">Open the prototype</a></div></div>
 <p style="margin-top:14px"><a href="../">Open the prototype in its own tab</a></p></section>
 
-<section><p class="eye">Measuring it</p><h2>How I’d know it’s working</h2>
+<section id="measuring"><p class="eye">Measuring it</p><h2>How I’d know it’s working</h2>
 <p>This is a concept, so there are no results. These are the measures I would set up before shipping any of it.</p>
 <p><b>North star:</b> the share of eligible households with WiFi Shield still active after 30 days. It shows people trust the free tier enough to keep it, which is what keeps them as broadband customers and what every upgrade grows from.</p>
 <div class="tw"><table>
@@ -129,7 +162,7 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
 <p style="margin-top:16px"><b>Guardrails</b>, which must not get worse as any of this ships:</p>
 <ul class="plain"><li>Support contacts about Shield, and repeat contacts within 7 days</li><li>People turning off alerts or WiFi Motion entirely</li><li>Cancellations and refunds in the first 30 days after upgrading, so a better-timed offer isn't just a pushier one</li><li>Uninstalls and App Store rating</li></ul></section>
 
-<section><p class="eye">How I built it</p><h2>Research to live prototype in two days</h2>
+<section id="building"><p class="eye">How I built it</p><h2>Research to live prototype in two days</h2>
 <p>I worked as a designer-builder, with Claude Code as the build partner.</p>
 <ul class="plain">
  <li><b>Research.</b> I captured the live app, gathered reviews and launch coverage, pulled 1,500 App Store reviews across Xfinity, Ring and SimpliSafe, and used Claude to sort them into themes. I checked each theme back against the source text and dropped claims the reviews didn't support.</li>
@@ -139,5 +172,12 @@ td.hi{font-weight:700;color:var(--p)}.cmp th:not(:first-child),.cmp td:not(:firs
 </ul>
 <p style="margin-top:14px"><b>What I'd do next:</b> test the pause and alert flows with five parents, confirm with engineering that setup can finish in the background, and take the privacy screen to legal, since every statement on it is a proposal.</p></section>
 </main>
+</div>
 <footer>Unofficial design concept. Not affiliated with or endorsed by Comcast. Names, prices beyond the published $15 a month, wait times and trial terms are illustrative.</footer>
+<script>
+// Highlight the section being read in the sidebar: the last section whose top has passed 35% of the window.
+const links=[...document.querySelectorAll('.toc ol a')],secs=links.map(a=>document.getElementById(a.hash.slice(1)));
+let raf=0;const mark=()=>{raf=0;const y=innerHeight*.35;let i=0;secs.forEach((s,k)=>{if(s&&s.getBoundingClientRect().top<=y)i=k});links.forEach((a,k)=>a.classList.toggle('on',k===i))};
+addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(mark)},{passive:true});addEventListener('resize',mark);mark();
+</script>
 </body></html>

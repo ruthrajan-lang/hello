@@ -117,6 +117,14 @@ section.lock{background:radial-gradient(circle at 70% 10%,#6d3be0,transparent 55
 @media (prefers-reduced-motion:reduce){.notif,.notif.done .ms{animation:none}}
 .card.list{padding:2px 14px}[hidden]{display:none!important}
 .m-asis .o,.m-opt .a{display:none!important}
+/* Tour mode (?tour): just the phone, scaled to fit, auto-advancing. Used as the animated preview in the case study. */
+body.tour{background:transparent;padding:0;overflow:hidden;height:100vh}
+body.tour .bar,body.tour #notes{display:none!important}
+body.tour .wrap{max-width:none;height:100vh;display:grid;place-items:center}
+body.tour .stage{display:block;position:absolute;left:50%;top:calc(50% - 14px);transform-origin:center center}
+body.tour .phone{box-shadow:0 10px 30px #0002}
+.tcap{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);background:#141417e6;color:#fff;font-size:13px;font-weight:500;padding:6px 12px;border-radius:999px;white-space:nowrap;z-index:9;display:none}
+body.tour .tcap{display:block}
 </style></head>
 <body class="m-opt"><div class="wrap">
 <div class="bar"><div class="step"><button id="prev" aria-label="Previous screen" title="Previous screen (←)"><span class="ms" aria-hidden="true">chevron_left</span></button><select id="sel" aria-label="Screen"></select><button id="next" aria-label="Next screen" title="Next screen (→)"><span class="ms" aria-hidden="true">chevron_right</span></button><span class="pos" id="pos" aria-live="polite"></span></div><a href="case-study/">Case study<span class="ms" aria-hidden="true">arrow_forward</span></a><a href="swot/">SWOT<span class="ms" aria-hidden="true">arrow_forward</span></a><div class="seg" id="mode"><button data-m="asis">As-is</button><button data-m="opt" class="on">Optimized</button></div></div>
@@ -371,5 +379,18 @@ function updStep(){const k=Object.keys(N),i=k.indexOf($('#sel').value);$('#prev'
 function step(d){const k=Object.keys(N),i=k.indexOf($('#sel').value),j=Math.min(k.length-1,Math.max(0,i+d));if(j!==i){stack=[];go(k[j],false)}}
 $('#prev').addEventListener('click',()=>step(-1));$('#next').addEventListener('click',()=>step(1));
 document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable)return;if(e.key==='ArrowLeft'){step(-1);e.preventDefault()}if(e.key==='ArrowRight'){step(1);e.preventDefault()}});
-ico(document);const h0=location.hash.slice(1);go(N[h0]?h0:'update',false);
+ico(document);const h0=location.hash.slice(1)||new URLSearchParams(location.search).get('s')||'';go(N[h0]?h0:'update',false);
+// Tour mode: autoplays the key optimized screens. Stops if the viewer taps; no autoplay with reduced motion.
+if(new URLSearchParams(location.search).has('tour')){
+ document.body.classList.add('tour');
+ const T=['update','home','family','profile','alert','motion-event','upgrade','privacy','help'].filter(k=>N[k]);
+ const cap=document.createElement('div');cap.className='tcap';cap.setAttribute('aria-live','polite');document.body.appendChild(cap);
+ const fit=()=>{const ph=$('.phone'),r=Math.min(innerWidth/(ph.offsetWidth+16),(innerHeight-40)/(ph.offsetHeight+16),1);$('.stage').style.transform=`translate(-50%,-50%) scale(${r})`};
+ addEventListener('resize',fit);
+ let i=0,timer=null;const show=()=>{stack=[];go(T[i],false);cap.textContent=`${i+1} / ${T.length} · ${N[T[i]].t}`};
+ const run=()=>{timer=setInterval(()=>{i=(i+1)%T.length;show()},3200)};
+ show();fit();setTimeout(fit,300);
+ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)run();else cap.textContent+=' · open the prototype to explore';
+ addEventListener('pointerdown',()=>{if(timer){clearInterval(timer);timer=null;cap.textContent='Paused · exploring on your own'}},{capture:true});
+}
 </script></body></html>
