@@ -78,6 +78,15 @@ p{margin:8px 0}
 .mhero:before{content:"";position:absolute;left:-10%;right:-10%;top:30px;height:260px;border-radius:50%;border-top:2px solid #fff;background:#ffffff12}
 #tabs{box-shadow:0 -4px 14px #1a12400d}.btn{box-shadow:0 2px 6px #0002}.btn.s,.btn:disabled{box-shadow:none}
 .banner{box-shadow:0 2px 8px #1554d11a}
+.sv{width:22px;height:22px;flex:none;fill:currentColor;stroke:none}
+.sv .in{fill:#fff;stroke:none}.sv .ln{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.sv .wl{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round}
+#tabs .sv{fill:none}#tabs .on .sv{fill:currentColor}
+.hero .sv{width:74px;height:74px;filter:drop-shadow(0 0 14px #ffb84d)}
+.msw .sv{width:30px;height:30px}.msw button{opacity:1;color:#8c66d9}.msw button.on{color:#4b1fb8}.msw button:not(.on) .in{opacity:.65}
+.ma .msw button:not(.on),.md .msw button:not(.on){color:#ffffff59}.ma .msw button:not(.on) small,.md .msw button:not(.on) small{color:#ffffffd9}.md .msw button.on{color:#1a2478}
+.mh .msw{background:linear-gradient(90deg,#efe8fc,#cfbff1)}
+.tile.l .sv{background:var(--p2);color:var(--p);border-radius:50%;padding:7px;width:36px;height:36px}
+.bar select{appearance:none;-webkit-appearance:none;padding:10px 42px 10px 12px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141417' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center/16px}
 .card.list{padding:2px 14px}[hidden]{display:none!important}
 .m-asis .o,.m-opt .a{display:none!important}
 </style></head>
@@ -110,7 +119,7 @@ p{margin:8px 0}
 </div></section>
 
 <section id="home" data-tab="home"><div class="hd"><span></span><b>Home</b><button data-go="shield"><i data-i="plus"></i></button></div><div class="bd">
- <div class="mode mh" id="mc"><div class="row"><i data-i="walk"></i><span class="gr"></span><button data-go="alerts" class="o" aria-label="Alert settings"><i data-i="sliders"></i></button><i data-i="sliders" class="a"></i></div>
+ <div class="mode mh" id="mc"><div class="row"><i data-i="collapse"></i><span class="gr"></span><button data-go="alerts" class="o" aria-label="Alert settings"><i data-i="sliders"></i></button><i data-i="sliders" class="a"></i></div>
   <div class="msw" id="msw"></div><div class="h1" id="mt" style="margin:0"></div><div id="ms"></div><button class="o sm" data-go="alerts" style="text-decoration:underline;margin-top:4px">Choose what alerts you get</button></div>
  <button class="banner" data-go="shield"><span class="gr">Finish setting up WiFi Shield ›</span><span class="dot">1</span></button>
  <div class="o"><div class="h2 row" style="justify-content:space-between">Family<button class="sm" style="color:var(--p);font-weight:700" data-go="family">Manage</button></div><div id="famHome"></div></div>
@@ -119,8 +128,8 @@ p{margin:8px 0}
   <p class="sm mut">2 motion events from 3 – 4 PM</p><div class="tl" id="tl"></div><div class="row sm mut" style="justify-content:space-between"><span>4p</span><span>10p</span><span>4a</span><span>10a</span><span>Now</span></div>
   <p class="o sm mut" style="margin-top:10px">WiFi Motion tells you about movement. It isn't monitored and won't call for help.</p></div>
  <div class="h2">Digital security</div>
- <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Home network protection</div><span class="pill">Protecting your network</span></div><i data-i="chev"></i></div>
- <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure on-the-go</b><div class="sm mut">Protection away from home</div></div><i data-i="chev"></i></div>
+ <div class="card row"><i data-i="shwifi" style="width:34px;height:34px"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Home network protection</div><span class="pill">Protecting your network</span></div><i data-i="chev"></i></div>
+ <div class="card row"><i data-i="shphone" style="width:34px;height:34px"></i><div class="gr"><b>CyberSecure on-the-go</b><div class="sm mut">Protection away from home</div></div><i data-i="chev"></i></div>
  <div class="a"><div class="h2">Set up your WiFi Shield features ›</div><p class="sm mut">2 of 3 completed</p><div class="prog"><i class="d"></i><i class="d"></i><i></i></div>
   <button class="card row" data-go="family"><div class="av todo"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button></div>
  <div class="h2">Your smart home. Your way.</div>
@@ -202,9 +211,9 @@ p{margin:8px 0}
 <div id="ov"></div><div id="sheet"></div><div id="toast"></div></div><nav id="tabs"></nav></div>
 <aside id="notes"></aside></div></div>
 <script>
-const I={chev:'chevron_right',back:'arrow_back_ios_new',close:'close',plus:'add_circle',home:'home',person:'account_circle',layers:'layers',card:'credit_card',ovw:'space_dashboard',wifi:'wifi',sliders:'tune',walk:'sensor_occupied',shield:'shield',pause:'pause_circle',check:'check_circle',tick:'check',info:'info',search:'search',moon:'bedtime',phone:'smartphone',chat:'chat',clock:'schedule',eye:'visibility'};
+const I={chev:'chevron_right',back:'arrow_back_ios_new',close:'close',plus:'add_circle',person:'account_circle',layers:'layers',card:'credit_card',wifi:'wifi',sliders:'tune',shield:'shield',pause:'pause_circle',check:'check_circle',tick:'check',info:'info',search:'search',moon:'bedtime',phone:'smartphone',chat:'chat',clock:'schedule',eye:'visibility',collapse:'close_fullscreen',home:'<path d="M12 3 3.2 10.2V19a2 2 0 0 0 2 2h13.6a2 2 0 0 0 2-2v-8.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',maway:'<path d="M12 3 3.2 10.2V19a2 2 0 0 0 2 2h13.6a2 2 0 0 0 2-2v-8.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',mhome:'<path d="M12 3 3.2 10.2V19a2 2 0 0 0 2 2h13.6a2 2 0 0 0 2-2v-8.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle class="in" cx="12" cy="11.6" r="2.3"/><path class="in" d="M7.6 18.4c.4-2.3 2.1-3.6 4.4-3.6s4 1.3 4.4 3.6z"/>',mdark:'<path d="M12 3 3.2 10.2V19a2 2 0 0 0 2 2h13.6a2 2 0 0 0 2-2v-8.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path class="in" d="M14.4 9.4a4.4 4.4 0 1 0 3 6.9 3.7 3.7 0 0 1-3-6.9z"/>',shwifi:'<path d="M12 2.6 4.6 5.6v5.9c0 4.7 3.1 8.3 7.4 9.9 4.3-1.6 7.4-5.2 7.4-9.9V5.6z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path class="wl" d="M8.3 10.4a5.3 5.3 0 0 1 7.4 0M10 12.5a2.9 2.9 0 0 1 4 0"/><circle class="in" cx="12" cy="14.7" r="1"/>',shphone:'<path d="M12 2.6 4.6 5.6v5.9c0 4.7 3.1 8.3 7.4 9.9 4.3-1.6 7.4-5.2 7.4-9.9V5.6z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect class="in" x="9.5" y="7.4" width="5" height="9" rx="1.3"/><circle cx="12" cy="14.4" r=".8"/>',walk:'<circle cx="8.5" cy="5.2" r="2.3"/><path d="M4.8 10.6a2.4 2.4 0 0 1 2.4-2.4h2.6a2.4 2.4 0 0 1 2.4 2.4v5h-1.4v6.2H9.2v-6H7.8v6H6.2v-6.2H4.8z"/><path class="ln" d="M14.6 2.6a5.6 5.6 0 0 0 5.6 5.6M17.4 2.6a2.8 2.8 0 0 0 2.8 2.8"/>',ovw:'<rect class="ln" x="4" y="8" width="16" height="12" rx="3.5"/><path class="ln" d="M7.5 4.5h9"/>',wtab:'<path class="ln" d="M17 11V5a2.5 2.5 0 0 0-2.5-2.5h-6A2.5 2.5 0 0 0 6 5v14a2.5 2.5 0 0 0 2.5 2.5H11M9.5 5.5h4"/><path class="ln" d="M13.5 17.3a5 5 0 0 1 7 0M15.6 19.6a2 2 0 0 1 2.8 0"/>'};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const ico=r=>r.querySelectorAll('i[data-i]').forEach(e=>{const st=e.getAttribute('style')||'',m=st.match(/width:(\d+)px/);e.outerHTML=`<span class="ms ${e.className}" style="${st}${m?';font-size:'+m[1]+'px':''}" aria-hidden="true">${I[e.dataset.i]}</span>`});
+const ico=r=>r.querySelectorAll('i[data-i]').forEach(e=>{const st=e.getAttribute('style')||'',v=I[e.dataset.i],m=st.match(/width:(\d+)px/);e.outerHTML=v[0]==='<'?`<svg viewBox="0 0 24 24" class="sv ${e.className}" style="${st}" aria-hidden="true">${v}</svg>`:`<span class="ms ${e.className}" style="${st}${m?';font-size:'+m[1]+'px':''}" aria-hidden="true">${v}</span>`});
 const N={
 update:{t:'App launch: update required',c:1,now:['Reviews describe a splash saying "Looks like you need to update this app" that returns even after updating, with no newer build in the Play Store.','The only fix reviewers found was clearing app data or reinstalling.'],chg:['Check the store before blocking. If there is no newer build for this device, let the person in.','"Not now" for updates that are not security-critical.','Bill pay, outage status and pause WiFi never sit behind the update wall.']},
 overview:{t:'Overview tab',now:['Opens with shortcut tiles, a membership card, a Holiday Mode promo and a phone ad.','Reviews call the app "a full scale advertisement".'],chg:['Service status and the bill come first, since reviews say people open the app for outages and payments.','Pause WiFi and Get help are one tap away.','Offers collapse to one row at the bottom.']},
@@ -229,7 +238,7 @@ function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';cl
 function sheet(h){$('#sheet').innerHTML=h;ico($('#sheet'));$('#scr').classList.add('sh')}const shut=()=>$('#scr').classList.remove('sh');
 const at=m=>new Date(Date.now()+m*6e4).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
 // modes
-const M={home:['Home Watch','Alerts off','mh','person','Home'],away:['Away Watch','Alerts on for peace of mind','ma','home','Away'],dark:['Dark Watch','Alerts on so you can rest easy','md','moon','Night']};let mode='home';
+const M={home:['Home Watch','Alerts off','mh','mhome','Home'],away:['Away Watch','Alerts on for peace of mind','ma','maway','Away'],dark:['Dark Watch','Alerts on so you can rest easy','md','mdark','Night']};let mode='home';
 function rMode(){$('#mc').className='mode '+M[mode][2];$('#mt').textContent=M[mode][0];$('#ms').textContent=M[mode][1];$('#msw').innerHTML=Object.keys(M).map(k=>`<button data-mode="${k}" class="${k===mode?'on':''}" aria-label="${M[k][0]}"><i data-i="${M[k][3]}"></i><small class="o">${M[k][4]}</small></button>`).join('');ico($('#msw'))}
 // family
 const P=[{n:'Maya',d:[['iPad',1],['Switch',1],['Chromebook',1]],bed:'8:30 PM',until:null},{n:'Leo',d:[['Fire tablet',0],['Roku TV',0]],bed:'8:00 PM',until:'6:00 PM'}];let pi=0;
@@ -250,7 +259,7 @@ function bot(t,q=['My internet is down','Question about my bill','Something else
 const C={'My internet is down':['There\'s an outage in your area. Estimated fix is 6:45 PM, so there\'s nothing you need to restart.',['Text me updates','Request a credit','I have a different question']],'Text me updates':['Done. I\'ll text you when it\'s fixed.'],'Request a credit':['Requested. You\'ll see the credit on your next bill.'],'Question about my bill':['Your balance is $85.00, due Dec 3. What would you like to know?',['Why did it go up?','Talk to a person']],'Why did it go up?':['A promotion ended on Nov 1. I can\'t change pricing, but an agent can. Want me to connect you?',['Talk to a person','No thanks']],'Something else':['Tell me more, or I can connect you to a person right away.',['Talk to a person','My internet is down']],'I have a different question':['Sure, go ahead. The outage doesn\'t stop us helping with other things.',['Question about my bill','Talk to a person']]};
 let ag=0;function agent(){if(ag)return;ag=1;say('Connecting you to an agent. About 4 minutes. I\'ve passed along this chat so you won\'t need to repeat it.');$('#qr').innerHTML='<span class="pill w">Waiting for an agent · about 4 min</span>';$('#toAgent').hidden=true}
 // wiring
-$('#tabs').innerHTML=[['overview','ovw','Overview'],['services','layers','Services'],['wifi','wifi','WiFi'],['home','home','Home'],['account','person','Account']].map(t=>`<button data-t="${t[0]}"><i data-i="${t[1]}"></i>${t[2]}</button>`).join('');
+$('#tabs').innerHTML=[['overview','ovw','Overview'],['services','layers','Services'],['wifi','wtab','WiFi'],['home','home','Home'],['account','person','Account']].map(t=>`<button data-t="${t[0]}"><i data-i="${t[1]}"></i>${t[2]}</button>`).join('');
 $('#tl').innerHTML='<i></i>'.repeat(23)+'<i class="h"></i>';$('#sel').innerHTML=Object.keys(N).map(k=>`<option value="${k}">${N[k].t}</option>`).join('');
 rMode();rFam();rDev();ico(document);let loops=0;
 document.addEventListener('click',e=>{const b=e.target.closest('button,#ov');if(!b)return;const d=b.dataset;
