@@ -63,6 +63,7 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600}
 .mk{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .mk input{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px}
 .mk button,.btn{font:inherit;font-size:14px;font-weight:600;padding:7px 12px;border-radius:8px;border:0;background:var(--p);color:#fff;cursor:pointer}
+body.embed{background:transparent}.embed .wrap{padding:0;max-width:none}.embed .panel{border:0;border-radius:14px}
 footer{font-size:13px;color:var(--mut);margin-top:40px}
 :focus-visible{outline:2px solid var(--p);outline-offset:2px}
 @media (max-width:900px){.hero{grid-template-columns:1fr}.guard{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -221,7 +222,7 @@ function draw(box){
  else{let lm=-1;for(let i=0;i<N;i++){const mo=wkDate(i).getUTCMonth();if(mo!==lm&&wkDate(i).getUTCDate()<=7){lm=mo;const t=el('text',{x:X(i),y:H-6,'text-anchor':'start'},svg);t.textContent=wkDate(i).toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})}}
   // markers
   REL.forEach(r=>{if(!st.on.has(r.id))return;const x=X(r.w);el('line',{x1:x,x2:x,y1:T,y2:H-B,stroke:'var(--ink)','stroke-dasharray':'4 3','stroke-opacity':.7},svg);const t=el('text',{x:x+3,y:T-4,style:'fill:var(--ink);font-weight:600'},svg);t.textContent=r.id;
-   if(mode==='wave'){const x2=X(r.w+LAG);if(r.w+LAG<N){el('line',{x1:x2,x2:x2,y1:T,y2:H-B,stroke:'var(--alt)','stroke-dasharray':'2 3'},svg)}}});
+   if(mode==='wave'){const x2=X(r.w+LAG);if(r.w+LAG<N){el('line',{x1:x2,x2:x2,y1:T,y2:H-B,stroke:'var(--alt)','stroke-dasharray':'2 3'},svg);if(st.on.size<3){const t2=el('text',{x:x2+3,y:T-4},svg);t2.textContent=r.id+' wave 2'}}}});
   st.mine.forEach(mk=>{if(!st.on.has('mine:'+mk.i+mk.l))return;const x=X(mk.i);el('line',{x1:x,x2:x,y1:T,y2:H-B,stroke:'var(--alt2)','stroke-dasharray':'4 3'},svg);const t=el('text',{x:x+3,y:T-4,style:'fill:#8a5410'},svg);t.textContent=mk.l.slice(0,14)})}
  if(ref){el('line',{x1:L,x2:W-R,y1:Y(ref.y),y2:Y(ref.y),stroke:ref.lim?'var(--bad)':'var(--ok)','stroke-dasharray':'6 4','stroke-width':1.5},svg);const t=el('text',{x:W-R,y:Y(ref.y)-5,'text-anchor':'end',style:`fill:${ref.lim?'var(--bad)':'var(--ok)'};font-weight:600`},svg);t.textContent=ref.l}
  S.forEach(s=>{el('path',{d:'M'+s.pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join('L'),fill:'none',stroke:s.c,'stroke-width':2.2,'stroke-linejoin':'round','stroke-dasharray':s.dash?'5 3':''},svg)});
@@ -288,6 +289,9 @@ document.getElementById('mkForm').onsubmit=e=>{e.preventDefault();const d=Date.p
 document.querySelectorAll('#cmp button').forEach(b=>b.onclick=()=>{st.mode=b.dataset.v;document.querySelectorAll('#cmp button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b)});drawAll()});
 document.getElementById('split').onchange=e=>{st.split=e.target.value;drawAll()};
 const drawAll=()=>document.querySelectorAll('.chart[data-m]').forEach(draw);
+const q=new URLSearchParams(location.search),em=q.get('embed');
+if(em&&M[em]){st.mode=['all','wave','base'].includes(q.get('cmp'))?q.get('cmp'):'wave';if(q.get('on'))st.on=new Set(q.get('on').split(','));
+ const w=document.querySelector('.wrap');w.textContent='';const c=document.createElement('div');c.className='panel chart';c.dataset.m=em;w.append(c);document.body.classList.add('embed')}
 renderChips();drawAll();let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,120)});
 })();
 </script>
