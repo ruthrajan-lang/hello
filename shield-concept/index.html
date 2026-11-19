@@ -1,0 +1,256 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shield concept</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#5b2bd1;--p2:#efe9ff;--ink:#141417;--mut:#6a6a75;--bg:#f3f3f7;--line:#e3e3ea;--ok:#0a7d5a;--info:#dfe5fb;--warn:#fff3d6}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.42 "DM Sans",system-ui,sans-serif;color:var(--ink);background:#e7e7ef;padding:16px}
+button,select{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none;text-align:left}
+.wrap{max-width:860px;margin:auto}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.bar select{flex:1;min-width:200px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{padding:10px 14px;font-weight:500}.seg .on{background:var(--ink);color:#fff}
+.stage{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+.phone{width:390px;max-width:100%;height:800px;background:var(--bg);border-radius:30px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 40px #0003;border:6px solid #111}
+#scr{flex:1;position:relative;overflow:hidden}
+section{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg)}section.on{display:flex}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);font-size:16px;z-index:2}
+.hd button,.hd span{width:28px;height:28px;display:grid;place-items:center}
+.bd{flex:1;overflow:auto;padding:4px 16px 20px}.bd.w{background:#fff}.ft{padding:12px 16px 16px;background:inherit}
+section.w,section.w .hd,section.w .ft{background:#fff}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.h1{font-size:22px;font-weight:700;line-height:1.25;margin:14px 0 8px}.h2{font-size:17px;font-weight:700;margin:22px 0 10px}
+.mut{color:var(--mut)}.sm{font-size:13px}.gr{flex:1;min-width:0}.row{display:flex;align-items:center;gap:12px}
+p{margin:8px 0}
+.btn{display:block;width:100%;background:var(--ink);color:#fff;padding:15px;border-radius:4px;font-weight:700;text-align:center}
+.btn:disabled{background:#c9c9d1;cursor:default}.btn.s{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.mini{width:auto;padding:8px 14px;border-radius:20px;font-size:13px}
+.lnk{display:block;width:100%;text-align:center;font-weight:700;padding:14px}
+.card{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;display:block;width:100%}
+.card.row{display:flex}.list>*+*{border-top:1px solid var(--line)}.list>*{padding:13px 2px;width:100%}
+.av{width:40px;height:40px;border-radius:50%;background:var(--p2);color:var(--p);display:grid;place-items:center;font-weight:700;flex:none}
+.pill{display:inline-block;background:#d9f5e6;color:#085a41;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+.pill.g{background:#ececf2;color:#444}.pill.w{background:var(--warn);color:#6b4a00}
+.banner{display:flex;align-items:center;gap:10px;width:100%;background:var(--info);border-radius:6px;padding:13px 14px;font-weight:700;font-size:14px;margin:12px 0}
+.dot{background:#1554d1;color:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:11px}
+.note{background:var(--info);border-radius:6px;padding:12px;display:flex;gap:10px;color:#1b3a8f;margin:12px 0}.note.y{background:var(--warn);color:#5a3d00}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.chip{border:1.5px solid #b9b9c4;border-radius:20px;padding:7px 14px;background:#fff;font-weight:500;font-size:14px}.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.prog{display:flex;gap:4px;margin:8px 0 14px}.prog i{flex:1;height:3px;background:#cfcfd8;border-radius:2px}.prog i.d{background:var(--ok)}
+.mode{border-radius:22px;padding:16px;margin-top:4px}.mh{background:linear-gradient(160deg,#fff,#e6dcff)}.ma{background:linear-gradient(160deg,#4a1fb0,#2a1170);color:#fff}.md{background:linear-gradient(160deg,#16206b,#0b1140);color:#fff}
+.msw{display:flex;justify-content:center;gap:6px;margin:14px auto 18px;background:#ffffff40;border-radius:40px;padding:8px;width:max-content}
+.msw button{width:64px;padding:8px 0;border-radius:30px;display:grid;justify-items:center;gap:2px;opacity:.7}.msw button.on{background:#fff;color:var(--p);opacity:1;box-shadow:0 2px 8px #0002}.msw small{font-size:11px;font-weight:700}
+.tl{display:flex;gap:2px;margin:8px 0 4px}.tl i{flex:1;height:9px;background:#e1e3ee;border-radius:2px}.tl i.h{background:#1554d1}
+.tog{width:46px;height:28px;border-radius:14px;background:#c4c4ce;position:relative;flex:none}.tog:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.15s}.tog.on{background:var(--ok)}.tog.on:after{left:21px}
+.hero{height:190px;border-radius:12px;background:radial-gradient(ellipse 62% 95% at 50% 100%,#b991ff66 0 60%,transparent 61%),linear-gradient(#120a35,#31157a);display:grid;place-items:end center;color:#ffd98a;padding-bottom:18px}.hero svg{width:74px;height:74px;fill:#ffd98a33}
+.mhero{margin:0 -16px;height:200px;background:linear-gradient(#4a1fb0,#6d3be0);display:flex;align-items:flex-end;justify-content:center;gap:10px;padding:18px;color:#fff}.mhero b{width:58px;height:58px;border-radius:12px;background:#ffffff33;display:grid;place-items:center}
+.ck{width:22px;height:22px;border:2px solid #777;border-radius:4px;flex:none;display:grid;place-items:center;color:#fff}.ck.on{background:var(--p);border-color:var(--p)}.ck svg{width:16px;height:16px;stroke-width:3}
+.spin{width:46px;height:46px;border:3px solid var(--p2);border-top-color:var(--p);border-radius:50%;animation:r 1s linear infinite;margin:18px 0}@keyframes r{to{transform:rotate(360deg)}}
+#tabs{display:flex;background:#fff;border-top:1px solid var(--line)}#tabs button{flex:1;display:grid;justify-items:center;gap:2px;padding:9px 0 12px;font-size:11px}#tabs .on{color:var(--p);font-weight:700}#tabs.off{display:none}
+#ov{position:absolute;inset:0;background:#0006;display:none;z-index:5}#sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;padding:18px 16px 22px;z-index:6;display:none}.sh #ov,.sh #sheet{display:block}
+#toast{position:absolute;left:16px;right:16px;bottom:14px;background:var(--ink);color:#fff;padding:12px 14px;border-radius:8px;z-index:7;display:none;font-size:14px}
+.msg{max-width:84%;padding:10px 13px;border-radius:14px;background:#fff;margin:8px 0}.msg.u{margin-left:auto;background:var(--p);color:#fff}
+.tile{background:var(--p);color:#fff;border-radius:8px;padding:14px;font-weight:700;flex:1;display:flex;gap:8px;align-items:center;min-height:64px;font-size:14px}.tile.l{background:#fff;color:var(--ink);flex-direction:column;align-items:flex-start;gap:6px}
+#notes{flex:1;min-width:280px;max-width:420px;background:#fff;border-radius:12px;padding:18px}#notes h2{font-size:18px;margin-bottom:4px}#notes h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:16px 0 6px}#notes ul{padding-left:18px}#notes li{margin:5px 0}
+.m-asis .o,.m-opt .a{display:none!important}
+</style></head>
+<body class="m-opt"><div class="wrap">
+<div class="bar"><select id="sel" aria-label="Screen"></select><div class="seg" id="mode"><button data-m="asis">As-is</button><button data-m="opt" class="on">Optimized</button></div></div>
+<div class="stage"><div class="phone"><div id="scr">
+
+<section id="update" class="w"><div class="bd w" style="display:grid;align-content:center;gap:6px">
+ <div class="a" id="upA">
+  <div id="upA0"><i data-i="info" style="width:40px;height:40px;color:var(--p)"></i><div class="h1">Looks like you need to update this app</div><p class="mut">Update to keep using the app.</p><p class="sm mut" id="loopN"></p><button class="btn" id="upGo" style="margin-top:14px">Update</button></div>
+  <div id="upA1" hidden><p class="sm mut">Play Store</p><div class="card row" style="border:1px solid var(--line)"><div class="av">x</div><div class="gr"><b>Xfinity</b><div class="sm mut">Installed · no update available</div></div><button class="btn mini" id="upOpen">Open</button></div></div>
+ </div>
+ <div class="o">
+  <div id="upO0"><i data-i="info" style="width:40px;height:40px;color:var(--p)"></i><div class="h1">A newer version is available</div><p class="mut">Updating takes about a minute. You can keep using the app in the meantime.</p><button class="btn" id="upChk" style="margin-top:14px">Check for update</button><button class="lnk" data-go="overview">Not now</button></div>
+  <div id="upO1" hidden><i data-i="check" style="width:40px;height:40px;color:var(--ok)"></i><div class="h1">You have the newest version for this phone</div><p class="mut">The Play Store doesn't have a newer build for your device yet, so we won't block you. We'll remind you when it arrives.</p><button class="btn" data-go="overview" style="margin-top:14px">Continue to app</button></div>
+  <div class="h2">Always available</div>
+  <div class="card list" style="border:1px solid var(--line)"><button class="row" data-toast="Bill pay opens without the update"><i data-i="card"></i><span class="gr">Pay my bill</span><i data-i="chev"></i></button><button class="row" data-go="help"><i data-i="wifi"></i><span class="gr">Check for an outage</span><i data-i="chev"></i></button><button class="row" data-go="family"><i data-i="pause"></i><span class="gr">Pause WiFi</span><i data-i="chev"></i></button></div>
+ </div></div></section>
+
+<section id="overview" data-tab="overview"><div class="hd"><b style="font-size:22px;letter-spacing:-.5px">xfinity</b><span></span><button data-go="help"><i data-i="search"></i></button></div><div class="bd">
+ <div class="h1" style="font-size:19px">Welcome back, Sam.<span class="a"><br>Thank you for being a Gold member.</span></div>
+ <div class="a"><div class="row" style="gap:8px"><div class="tile"><i data-i="wifi"></i>Share WiFi</div><div class="tile"><i data-i="shield"></i>Two-step verification</div></div>
+  <div class="card row" style="margin-top:12px"><div class="av" style="border-radius:6px;background:linear-gradient(90deg,#2a1170,#f5a623)"></div><div class="gr"><b>Gold</b><div class="sm mut">Member since 2026</div></div><i data-i="chev"></i></div>
+  <div class="h2">Pause for the holidays</div><div class="card row"><div class="av">II</div><div class="gr"><b>Holiday Mode</b><div class="sm mut">Pause your devices and connect with what really matters.</div></div><i data-i="chev"></i></div>
+  <div class="h2">Shop Xfinity Mobile</div><div class="card" style="height:110px;display:grid;place-items:center" >Phone offer</div></div>
+ <div class="o"><div class="card row"><i data-i="check" style="color:var(--ok)"></i><div class="gr"><b>Internet is online</b><div class="sm mut">14 devices connected · no outages near you</div></div><button class="btn mini s" data-go="help">Details</button></div>
+  <div class="card row"><i data-i="card"></i><div class="gr"><b>$85.00 due Dec 3</b><div class="sm mut">Autopay is off</div></div><button class="btn mini" data-toast="Opens native bill pay">Pay</button></div>
+  <div class="h2">Quick actions</div><div class="row" style="gap:8px;align-items:stretch"><button class="tile l" data-go="family"><i data-i="pause"></i>Pause WiFi</button><button class="tile l" data-go="home"><i data-i="walk"></i>Motion</button><button class="tile l" data-toast="Share WiFi"><i data-i="wifi"></i>Share WiFi</button><button class="tile l" data-go="help"><i data-i="chat"></i>Get help</button></div>
+  <div class="h2">Offers</div><div class="card row"><div class="gr"><b>Gold member perks</b><div class="sm mut">2 offers for you</div></div><i data-i="chev"></i></div></div>
+</div></section>
+
+<section id="home" data-tab="home"><div class="hd"><span></span><b>Home</b><button data-go="shield"><i data-i="plus"></i></button></div><div class="bd">
+ <div class="mode mh" id="mc"><div class="row"><i data-i="walk"></i><span class="gr"></span><button data-go="alerts" class="o" aria-label="Alert settings"><i data-i="sliders"></i></button><i data-i="sliders" class="a"></i></div>
+  <div class="msw" id="msw"></div><div class="h1" id="mt" style="margin:0"></div><div id="ms"></div><button class="o sm" data-go="alerts" style="text-decoration:underline;margin-top:4px">Choose what alerts you get</button></div>
+ <button class="banner" data-go="shield"><span class="gr">Finish setting up WiFi Shield ›</span><span class="dot">1</span></button>
+ <div class="o"><div class="h2 row" style="justify-content:space-between">Family<button class="sm" style="color:var(--p);font-weight:700" data-go="family">Manage</button></div><div id="famHome"></div></div>
+ <div class="h2">WiFi Motion</div>
+ <div class="card"><div class="row"><i data-i="walk"></i><div class="gr"><b>Last motion at 3:42 PM</b><div class="sm mut"><span class="a">by HS103-1</span><span class="o">Hallway · smart plug (HS103-1)</span></div></div><i data-i="chev"></i></div>
+  <p class="sm mut">2 motion events from 3 – 4 PM</p><div class="tl" id="tl"></div><div class="row sm mut" style="justify-content:space-between"><span>4p</span><span>10p</span><span>4a</span><span>10a</span><span>Now</span></div>
+  <p class="o sm mut" style="margin-top:10px">WiFi Motion tells you about movement. It isn't monitored and won't call for help.</p></div>
+ <div class="h2">Digital security</div>
+ <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Home network protection</div><span class="pill">Protecting your network</span></div><i data-i="chev"></i></div>
+ <div class="card row"><i data-i="shield"></i><div class="gr"><b>CyberSecure on-the-go</b><div class="sm mut">Protection away from home</div></div><i data-i="chev"></i></div>
+ <div class="a"><div class="h2">Set up your WiFi Shield features ›</div><p class="sm mut">2 of 3 completed</p><div class="prog"><i class="d"></i><i class="d"></i><i></i></div>
+  <button class="card row" data-go="family"><div class="av"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button></div>
+ <div class="h2">Your smart home. Your way.</div>
+ <div class="card"><div class="hero" style="height:120px"><i data-i="home"></i></div><p><b>Peace of mind you can count on</b> <span class="pill g o">Shield Select · $15/mo</span></p><p class="sm mut">Add smart home protection with a camera, sensor, and 24/7 support, so your home can spot trouble before it starts.</p></div>
+</div></section>
+
+<section id="shield" data-tab="home"><div class="hd"><button data-back><i data-i="back"></i></button><b>Set up WiFi Shield</b><span></span></div><div class="bd">
+ <div class="h1">Your included features</div><p class="sm">Set up your WiFi Shield features to help protect your WiFi, manage screen time, and get motion alerts — all included with your internet plan.</p>
+ <div class="h2">Let's get you set up</div><p class="mut">1 of 3 completed</p><div class="prog"><i class="d"></i><i></i><i></i></div>
+ <button class="card row" data-go="motion-intro"><div class="av"><i data-i="walk"></i></div><div class="gr"><b>Turn on WiFi Motion</b> <span class="pill g o">About 3 min</span><div class="sm mut">Know when there's movement at home using the devices already on your WiFi.</div></div><i data-i="chev"></i></button>
+ <button class="card row" data-go="family"><div class="av"><i data-i="person"></i></div><div class="gr"><b>Set up Family Settings</b> <span class="pill g o">About 2 min</span><div class="sm mut">Help your family explore online safely with screen time tools tailored for each person.</div></div><i data-i="chev"></i></button>
+ <p class="a" style="font-weight:700;margin-top:16px">View completed ⌄</p>
+ <div class="o"><div class="h2">Completed</div><div class="card row"><i data-i="check" style="color:var(--ok)"></i><div class="gr"><b>CyberSecure</b><div class="sm mut">Protecting your network</div></div></div>
+ <p class="sm mut">Skipping is fine. Everything here stays on the Home tab, and Family Settings is also on Overview.</p></div>
+</div></section>
+
+<section id="motion-intro" class="w"><div class="hd"><span></span><b>Introducing WiFi Motion</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd w">
+ <div class="mhero"><b><i data-i="card"></i></b><b><i data-i="clock"></i></b><b><i data-i="phone"></i></b><b><i data-i="wifi"></i></b></div>
+ <div class="h1">Away or asleep, stay aware of what's happening at home</div><p>Your WiFi can detect movement in your home without installing anything new.</p>
+ <div class="o card" style="border:1px solid var(--line);margin-top:12px"><b>What it is, and what it isn't</b><div class="list sm"><div class="row"><i data-i="check" style="color:var(--ok)"></i>Sends you an alert when it senses movement</div><div class="row"><i data-i="close" style="color:#b3261e"></i>Isn't monitored and won't call for help</div><div class="row"><i data-i="eye"></i><span class="gr">No cameras. <u>See what motion data is kept</u></span></div></div></div>
+ <div class="h2">From pets to kids, you decide what's worth a heads up</div><p>Check that the kids got home from school or that the dog walker stopped by on time. You can adjust motion sensitivity.</p>
+ <div class="h2">Notifications that work for you</div><p>Use Home Watch for fewer notifications while you're moving around, Away Watch for real-time alerts when you're out, and Dark Watch overnight.</p>
+ <div class="h2">Turn it on and off anytime</div><p>WiFi Motion is an included feature that you can turn off and on at any time.</p>
+</div><div class="ft"><button class="btn a" data-go="motion-tips">Get started in minutes</button><button class="btn o" data-go="motion-devices">Get started · about 3 min</button></div></section>
+
+<section id="motion-tips" class="w"><div class="hd"><button data-back><i data-i="back"></i></button><b>Important tips</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd w">
+ <div class="hero" style="background:#f1f1f6;color:#888"><i data-i="phone"></i></div>
+ <div class="h1">Tips to make WiFi Motion work best for your home</div><p>Detection areas are between your Xfinity Gateway and other suitable WiFi devices in your home.</p><p>Select devices in areas where you want to detect movement, like entryways and common rooms. They should be distanced from the WiFi Gateway, stationary, and always on.</p>
+ <div class="o note"><i data-i="info"></i><span>In the optimized flow these tips sit inside device selection, so this screen is skipped.</span></div>
+</div><div class="ft"><button class="btn" data-go="motion-devices">Select devices to use</button><button class="lnk">Tips for multi-story detection ›</button></div></section>
+
+<section id="motion-devices" class="w"><div class="hd"><button data-back><i data-i="back"></i></button><b>Device selection</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd w">
+ <div class="a"><div class="h1">The following devices are suitable for WiFi Motion</div><p>Select a device to add a location to its name. You can differentiate devices by checking the MAC addresses or serial numbers on the labels. Change devices or names anytime.</p><div class="h2">Suitable WiFi devices</div><p class="mut row" style="justify-content:space-between">Show MAC addresses <i data-i="eye"></i></p></div>
+ <div class="o"><div class="h1">Pick the rooms to watch</div><p>Motion is sensed between your Gateway and each device you pick. Devices that stay plugged in, away from the Gateway, work best.</p><p class="sm mut" id="cov"></p></div>
+ <div id="devs"></div>
+ <button class="o sm" id="tech" style="text-decoration:underline;margin-top:6px">Show technical details</button>
+</div><div class="ft"><button class="btn a" data-go="motion-activate">Use recommended devices</button><button class="lnk a">Manually select devices ›</button><button class="btn o" id="devGo" data-go="motion-activate"></button></div></section>
+
+<section id="motion-activate" class="w"><div class="hd"><button data-back><i data-i="back"></i></button><b>Activation</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd w">
+ <div class="av" style="border-radius:12px;background:#1554d1;color:#fff;margin-top:20px"><i data-i="phone"></i></div>
+ <div class="h1 a">Let's enable WiFi Motion</div><p class="a">WiFi Motion is subject to the Xfinity Residential Service Agreement and Privacy Policy below.</p>
+ <div class="h1 o">One thing to confirm</div><p class="o">You saw this on the first screen: WiFi Motion keeps you aware, but nobody is watching for you.</p>
+ <button class="card row" id="ack" style="background:var(--bg);align-items:flex-start;margin-top:12px"><span class="ck"><i data-i="check"></i></span><span class="gr a">I acknowledge WiFi Motion is not professionally monitored home security, and I am responsible for periodically testing that activity is being detected as desired.</span><span class="gr o">I understand WiFi Motion isn't professionally monitored, and I'll test it now and then to check it's picking up movement.</span></button>
+ <div class="card list" style="border:1px solid var(--line)"><div class="row"><b class="gr">Frequently asked questions</b><i data-i="chev"></i></div><div class="row"><b class="gr">Privacy Policy</b><i data-i="chev"></i></div><div class="row"><b class="gr">Xfinity Residential Service Agreement</b><i data-i="chev"></i></div></div>
+</div><div class="ft"><button class="btn" id="en" disabled data-go="motion-finish">Enable WiFi Motion</button></div></section>
+
+<section id="motion-finish" class="w"><div class="hd"><span></span><b>Finishing setup</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd w" style="text-align:left">
+ <div id="fin0"><div class="spin"></div><div class="h1">Preparing WiFi Motion…</div><p>This may take a few minutes.</p>
+  <div class="note a"><i data-i="info"></i>Don't leave or close the app or you may need to start over.</div>
+  <div class="note o"><i data-i="info"></i>You can leave this screen or close the app. We'll send a notification when it's ready.</div></div>
+ <div id="fin1" hidden><i data-i="check" style="width:46px;height:46px;color:var(--ok);margin:18px 0"></i><div class="h1">WiFi Motion is on</div><p>3 areas are covered. Try it: walk through the hallway and watch for an alert.</p><button class="btn s" data-toast="Walk test: motion sensed in Hallway" style="margin-top:12px">Run a walk test</button></div>
+</div><div class="ft"><button class="btn o" data-go="home">Back to Home</button></div></section>
+
+<section id="family"><div class="hd"><button data-back><i data-i="back"></i></button><b>Family Settings</b><button data-go="home"><i data-i="close"></i></button></div><div class="bd">
+ <button class="btn" id="pauseAll" style="margin:8px 0 16px">Pause all kids' devices</button><div id="famList"></div>
+ <button class="card row" data-toast="Add a person"><div class="av"><i data-i="plus"></i></div><b class="gr">Add a person</b></button>
+ <p class="sm mut">Status here matches what the Gateway is doing right now. If a pause didn't take, you'll see "Couldn't pause" with a retry.</p>
+</div></section>
+
+<section id="profile"><div class="hd"><button data-back><i data-i="back"></i></button><b id="pfN"></b><span></span></div><div class="bd" id="pfB"></div></section>
+
+<section id="alerts"><div class="hd"><button data-back><i data-i="back"></i></button><b>Alerts</b><span></span></div><div class="bd">
+ <div class="note y"><i data-i="pause"></i><span class="gr"><b>Need quiet?</b> Mute every alert</span><button class="btn mini" data-sheet="mute">Mute</button></div>
+ <div class="h2">Motion</div><div class="card list"><div class="row"><span class="gr">At home (Home Watch)</span><button class="tog"></button></div><div class="row"><span class="gr">Away (Away Watch)</span><button class="tog on"></button></div><div class="row"><span class="gr">Overnight (Dark Watch)</span><button class="tog on"></button></div><div class="row"><span class="gr">"No activity for 30 minutes"<div class="sm mut">Off means off, in every mode</div></span><button class="tog"></button></div></div>
+ <div class="h2">Network</div><div class="card list"><div class="row"><span class="gr">A new device joins<div class="sm mut">Only devices this home hasn't seen before</div></span><button class="tog on"></button></div><div class="row"><span class="gr">A site is blocked<div class="sm mut">With a button to always allow it</div></span><button class="tog on"></button></div></div>
+ <div class="h2">Offers and promotions</div><div class="card list"><div class="row"><span class="gr">Deals, moving help, rewards</span><button class="tog"></button></div></div>
+</div></section>
+
+<section id="help" data-tab="account"><div class="hd"><span></span><b>Help</b><span></span></div><div class="bd">
+ <div class="card"><span class="pill w">Outage near you</span><div class="h2" style="margin:8px 0 2px">Internet is down in your area</div><p class="sm mut">Crews are working on it. Estimated fix 6:45 PM. No need to restart anything.</p><div class="row" style="margin-top:10px"><button class="btn mini" data-toast="We'll text you when it's fixed">Text me updates</button><button class="btn mini s" data-toast="Credit requested for this outage">Request a credit</button></div></div>
+ <div class="h2">Talk to a person</div><div class="card list"><button class="row" data-toast="We'll call you in about 12 minutes"><i data-i="phone"></i><span class="gr"><b>Call me back</b><div class="sm mut">About 12 min</div></span><i data-i="chev"></i></button><button class="row" data-go="chat" data-agent="1"><i data-i="chat"></i><span class="gr"><b>Chat with an agent</b><div class="sm mut">About 4 min</div></span><i data-i="chev"></i></button><button class="row" data-toast="Pick a technician time"><i data-i="clock"></i><span class="gr"><b>Book a technician</b><div class="sm mut">Next opening tomorrow</div></span><i data-i="chev"></i></button></div>
+ <div class="h2">Fix it yourself</div><div class="card list"><button class="row" data-toast="Restarting your Gateway"><span class="gr">Restart my Gateway</span><i data-i="chev"></i></button><button class="row" data-toast="Running speed test"><span class="gr">Run a speed test</span><i data-i="chev"></i></button><button class="row" data-go="chat"><span class="gr">Ask Xfinity Assistant</span><i data-i="chev"></i></button></div>
+</div></section>
+
+<section id="chat"><div class="hd"><button data-back><i data-i="back"></i></button><b>Xfinity Assistant</b><span></span></div>
+ <button class="banner" id="toAgent" style="margin:0 16px;width:auto"><i data-i="person"></i><span class="gr">Talk to a person</span><span class="sm">~4 min</span></button>
+ <div class="bd" id="log"></div><div class="ft"><div class="chips" id="qr"></div></div></section>
+
+<div id="ov"></div><div id="sheet"></div><div id="toast"></div></div><nav id="tabs"></nav></div>
+<aside id="notes"></aside></div></div>
+<script>
+const I={chev:'M9 6l6 6-6 6',back:'M15 6l-6 6 6 6',close:'M6 6l12 12M18 6L6 18',plus:'M12 5v14M5 12h14',home:'M4 11l8-7 8 7v9H4z',person:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6',layers:'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',card:'M4 6h16v12H4zM4 10h16',wifi:'M5 10a10 10 0 0114 0M8 13a6 6 0 018 0M12 17h.01',sliders:'M4 7h10M18 7h2M4 17h2M10 17h10M16 5v4M8 15v4',walk:'M13 4.5h.01M10 21l2-6-2-3 1-4 3 3 3 1M11 8l-3 2-1 3M12 15l3 2 1 4',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',pause:'M8 5v14M16 5v14',check:'M5 12l5 5 9-10',info:'M12 8h.01M12 11v6M12 21a9 9 0 100-18 9 9 0 000 18z',search:'M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-4-4',moon:'M20 14A8 8 0 0110 4a8 8 0 1010 10z',phone:'M7 3h10v18H7zM11 18h2',chat:'M4 5h16v11H9l-5 4z',clock:'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z'};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const ico=r=>r.querySelectorAll('i[data-i]').forEach(e=>{e.outerHTML=`<svg viewBox="0 0 24 24" class="${e.className}" style="${e.getAttribute('style')||''}"><path d="${I[e.dataset.i]}"/></svg>`});
+const N={
+update:{t:'App launch: update required',c:1,now:['Reviews describe a splash saying "Looks like you need to update this app" that returns even after updating, with no newer build in the Play Store.','The only fix reviewers found was clearing app data or reinstalling.'],chg:['Check the store before blocking. If there is no newer build for this device, let the person in.','"Not now" for updates that are not security-critical.','Bill pay, outage status and pause WiFi never sit behind the update wall.']},
+overview:{t:'Overview tab',now:['Opens with shortcut tiles, a membership card, a Holiday Mode promo and a phone ad.','Reviews call the app "a full scale advertisement".'],chg:['Service status and the bill come first, since reviews say people open the app for outages and payments.','Pause WiFi and Get help are one tap away.','Offers collapse to one row at the bottom.']},
+home:{t:'Home tab (Shield)',now:['Three mode icons carry no labels until selected.','Home Watch says "Alerts off" with no visible path to change which alerts fire.','Family Settings appears only as a setup checklist step.','Motion events name a device ID ("HS103-1").','In the screenshots, scrolled content showed through the header.'],chg:['Modes are labeled Home / Away / Night and link to alert settings.','A permanent Family card puts pause two taps away.','Motion events show the room name first.','One plain line states that WiFi Motion is not monitored.','Opaque header fixes the overlap.','The camera offer shows its price.']},
+shield:{t:'Set up WiFi Shield',now:['Checklist with two open steps and a collapsed "View completed".'],chg:['Time estimates on each step.','Completed items are visible.','Says where these features live after setup, so dismissing the checklist loses nothing.']},
+'motion-intro':{t:'Introducing WiFi Motion',now:['A long scroll of benefits. The "not professionally monitored" disclaimer only appears three screens later.'],chg:['A short "what it is, and what it isn\'t" box sits near the top.','A link to what motion data is kept. The copy behind it needs legal and privacy input.','Button states the time it takes.']},
+'motion-tips':{t:'Important tips',now:['A separate screen of placement tips before device selection.'],chg:['Folded into device selection; skipped in the optimized flow.']},
+'motion-devices':{t:'Device selection',now:['Asks people to tell devices apart "by checking the MAC addresses or serial numbers on the labels".','Rooms are added one device at a time on a deeper screen.'],chg:['Framed as picking rooms. Each device has a room picker inline.','A running count of covered areas.','MAC addresses sit behind "Show technical details".']},
+'motion-activate':{t:'Activation',now:['Leads with the service agreement, then a legal acknowledgment checkbox.'],chg:['Same acknowledgment in plain words, and it is no longer the first time the person hears it.','The checkbox stays; it looks like a legal requirement.']},
+'motion-finish':{t:'Finishing setup',now:['"Don\'t leave or close the app or you may need to start over" for a wait of a few minutes.'],chg:['Setup continues in the background with a notification when ready.','Ends on a walk test, so the first alert is one the person expects.','Needs engineering confirmation that provisioning can survive the app closing.']},
+family:{t:'Family Settings',c:1,now:['Reviews from late August say an update moved profiles and pause: "2 clicks now is closer to 7".','Paused devices reportedly do not show as paused.'],chg:['Pause sits on every profile row, and on the Home tab.','"Pause all kids\' devices" as one action.','The row states the real pause state and when it ends.']},
+profile:{t:'Profile detail',c:1,now:['Reviewers ask for bonus time ("unpause for a specified time") and for unpausing one device without unpausing the group.','Bedtime rules are reported as hard to change.'],chg:['Bonus time chips.','Per-device switches.','Bedtime has "Skip tonight" on the same screen.']},
+alerts:{t:'Alert settings',c:1,now:['One reviewer gets "no activity for 30 minutes" alerts with every setting off.','Another gets a "new device" alert each time the same phone reconnects.','Several complain of promotional notifications they cannot turn off.'],chg:['Every alert type has one switch, grouped by mode.','New-device alerts only fire for devices the home has not seen.','Promotions have their own switch, off by default.','One mute for everything.']},
+help:{t:'Help',c:1,now:['Reviews say the assistant is the only door, loops on fixed prompts, and blocks agent access during an outage.'],chg:['Outage status, updates and credit are at the top with no chat needed.','"Talk to a person" lists three routes with wait times.','The assistant is one option among several.']},
+chat:{t:'Xfinity Assistant',c:1,now:['Reviewers report repeated identical suggestions and no handoff.'],chg:['"Talk to a person" is pinned to every chat.','During an outage the bot answers the outage, then stays open to other questions.','Handoff passes the conversation along, so nobody repeats themselves.']}};
+let cur='update',stack=[],tm;
+function go(id,push=true){if(push&&cur!==id)stack.push(cur);cur=id;$$('section').forEach(s=>s.classList.toggle('on',s.id===id));const tab=$('#'+id).dataset.tab;$('#tabs').classList.toggle('off',!tab);$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));$('#sel').value=id;notes();clearTimeout(tm);$('#toast').style.display='none';
+ if(id==='motion-finish'){fin0.hidden=false;fin1.hidden=true;tm=setTimeout(()=>{if(document.body.classList.contains('m-opt')){fin0.hidden=true;fin1.hidden=false}else go('home')},2800)}
+ if(id==='chat'&&!$('#log').children.length)bot('Hi. What can I help with?')}
+function notes(){const n=N[cur],asis=document.body.classList.contains('m-asis');$('#notes').innerHTML=`<h2>${n.t}</h2><p class="sm mut">${n.c?'Concept. The current screen was not in the screenshots; "today" is reconstructed from Play Store reviews.':'Recreated from the Nov 18 screenshots. Use the toggle to compare.'}</p><h3>Today</h3><ul>${n.now.map(x=>`<li>${x}</li>`).join('')}</ul><h3>Optimized</h3><ul>${n.chg.map(x=>`<li>${x}</li>`).join('')}</ul><p class="sm mut" style="margin-top:18px">${asis&&n.c?'This screen has no captured as-is version. ':''}Unofficial design concept. Not affiliated with Comcast.</p>`}
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',2200)}
+function sheet(h){$('#sheet').innerHTML=h;ico($('#sheet'));$('#scr').classList.add('sh')}const shut=()=>$('#scr').classList.remove('sh');
+const at=m=>new Date(Date.now()+m*6e4).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+// modes
+const M={home:['Home Watch','Alerts off','mh','person','Home'],away:['Away Watch','Alerts on for peace of mind','ma','home','Away'],dark:['Dark Watch','Alerts on so you can rest easy','md','moon','Night']};let mode='home';
+function rMode(){$('#mc').className='mode '+M[mode][2];$('#mt').textContent=M[mode][0];$('#ms').textContent=M[mode][1];$('#msw').innerHTML=Object.keys(M).map(k=>`<button data-mode="${k}" class="${k===mode?'on':''}" aria-label="${M[k][0]}"><i data-i="${M[k][3]}"></i><small class="o">${M[k][4]}</small></button>`).join('');ico($('#msw'))}
+// family
+const P=[{n:'Maya',d:[['iPad',1],['Switch',1],['Chromebook',1]],bed:'8:30 PM',until:null},{n:'Leo',d:[['Fire tablet',0],['Roku TV',0]],bed:'8:00 PM',until:'6:00 PM'}];let pi=0;
+function rFam(){const h=P.map((p,i)=>`<div class="card row"><button class="row gr" data-pf="${i}"><div class="av">${p.n[0]}</div><div class="gr"><b>${p.n}</b><div class="sm ${p.until?'':'mut'}">${p.until?'<span class="pill w">Paused</span> until '+p.until:p.d.length+' devices · bedtime '+p.bed}</div></div></button><button class="btn mini ${p.until?'s':''}" data-pz="${i}">${p.until?'Resume':'Pause'}</button></div>`).join('');$('#famHome').innerHTML=h;$('#famList').innerHTML=h;$('#pauseAll').textContent=P.every(p=>p.until)?"Resume all kids' devices":"Pause all kids' devices";if(cur==='profile')rPf()}
+function setP(i,u){(i==='all'?P:[P[i]]).forEach(p=>{p.until=u;p.d.forEach(d=>d[1]=u?0:1)});rFam();toast(u?`${i==='all'?'All kids\' devices':P[i].n+"'s devices"} paused until ${u}`:'Back online')}
+function pz(i){const who=i==='all'?'all kids':P[i].n;if(i!=='all'&&P[i].until)return setP(i,null);if(i==='all'&&P.every(p=>p.until))return setP(i,null);
+ sheet(`<div class="h2" style="margin-top:0">Pause ${who} for how long?</div><div class="list">${[['30 minutes',at(30)],['1 hour',at(60)],['Until bedtime ends','7:00 AM'],['Until I turn it back on','you resume']].map(o=>`<button class="row" data-pu="${o[1]}" data-pi="${i}"><span class="gr">${o[0]}</span><span class="sm mut">${o[1]}</span></button>`).join('')}</div>`)}
+function rPf(){const p=P[pi];$('#pfN').textContent=p.n;$('#pfB').innerHTML=`<div class="card"><div class="row"><div class="av">${p.n[0]}</div><div class="gr"><b>${p.until?'Paused until '+p.until:'Online'}</b><div class="sm mut">${p.d.filter(d=>d[1]).length} of ${p.d.length} devices can use WiFi</div></div></div><button class="btn ${p.until?'s':''}" data-pz="${pi}" style="margin-top:12px">${p.until?'Resume now':'Pause '+p.n}</button></div>
+<div class="h2">Give bonus time</div><div class="chips">${[15,30,60].map(m=>`<button class="chip" data-bonus="${m}">+${m} min</button>`).join('')}</div>
+<div class="h2">Bedtime</div><div class="card list"><div class="row"><span class="gr">WiFi off at ${p.bed}<div class="sm mut">Back on at 7:00 AM</div></span><button class="tog on"></button></div><button class="row" data-toast="Bedtime skipped for tonight only"><span class="gr">Skip tonight</span><i data-i="chev"></i></button><button class="row" data-toast="Edit bedtime"><span class="gr">Change times</span><i data-i="chev"></i></button></div>
+<div class="h2">Devices</div><div class="card list">${p.d.map((d,j)=>`<div class="row"><span class="gr">${d[0]}<div class="sm mut">${d[1]?'Online':'Paused'}</div></span><button class="tog ${d[1]?'on':''}" data-dev="${j}" aria-label="WiFi for ${d[0]}"></button></div>`).join('')}</div>`;ico($('#pfB'))}
+// devices
+const D=[['GoogleHome','Google – Google Home','Living room'],['Levoit-humidifier','Levoit – Levoit Humidifier','Bedroom'],['RestBaby-814F9E','Hatch – Baby','Nursery']],R=['Living room','Bedroom','Nursery','Hallway','Kitchen'],on=[1,1,1];let tech=0;
+function rDev(){$('#devs').innerHTML=`<div class="card list" style="border:1px solid var(--line)">${D.map((d,i)=>`<div class="row"><button class="ck o ${on[i]?'on':''}" data-dk="${i}" aria-label="Use ${d[0]}"><i data-i="check"></i></button><i data-i="wifi" class="a"></i><div class="gr"><b>${d[0]}</b><div class="sm mut">${d[1]}${tech?' · 00:0F:62:…':''}</div><span class="pill g a">Connected to Gateway</span><select class="o sm" data-room="${i}" style="margin-top:4px;padding:4px;border:1px solid var(--line);border-radius:6px">${R.map(r=>`<option${r===d[2]?' selected':''}>${r}</option>`).join('')}</select></div><i data-i="chev" class="a"></i></div>`).join('')}</div>`;ico($('#devs'));const n=on.filter(Boolean).length;$('#cov').textContent=n?`${n} area${n>1?'s':''} covered: ${D.filter((d,i)=>on[i]).map(d=>d[2]).join(', ')}`:'Pick at least one device';$('#devGo').textContent=`Continue with ${n} device${n===1?'':'s'}`;$('#devGo').disabled=!n}
+// chat
+function say(t,u){const m=document.createElement('div');m.className='msg'+(u?' u':'');m.textContent=t;$('#log').append(m);$('#log').scrollTop=1e5}
+function bot(t,q=['My internet is down','Question about my bill','Something else']){say(t);$('#qr').innerHTML=q.map(x=>`<button class="chip">${x}</button>`).join('')}
+const C={'My internet is down':['There\'s an outage in your area. Estimated fix is 6:45 PM, so there\'s nothing you need to restart.',['Text me updates','Request a credit','I have a different question']],'Text me updates':['Done. I\'ll text you when it\'s fixed.'],'Request a credit':['Requested. You\'ll see the credit on your next bill.'],'Question about my bill':['Your balance is $85.00, due Dec 3. What would you like to know?',['Why did it go up?','Talk to a person']],'Why did it go up?':['A promotion ended on Nov 1. I can\'t change pricing, but an agent can. Want me to connect you?',['Talk to a person','No thanks']],'Something else':['Tell me more, or I can connect you to a person right away.',['Talk to a person','My internet is down']],'I have a different question':['Sure, go ahead. The outage doesn\'t stop us helping with other things.',['Question about my bill','Talk to a person']]};
+function agent(){say('Connecting you to an agent. About 4 minutes. I\'ve passed along this chat so you won\'t need to repeat it.');$('#qr').innerHTML='';$('#toAgent').hidden=true}
+// wiring
+$('#tabs').innerHTML=[['overview','card','Overview'],['services','layers','Services'],['wifi','wifi','WiFi'],['home','home','Home'],['account','person','Account']].map(t=>`<button data-t="${t[0]}"><i data-i="${t[1]}"></i>${t[2]}</button>`).join('');
+$('#tl').innerHTML='<i></i>'.repeat(23)+'<i class="h"></i>';$('#sel').innerHTML=Object.keys(N).map(k=>`<option value="${k}">${N[k].t}</option>`).join('');
+rMode();rFam();rDev();ico(document);let loops=0;
+document.addEventListener('click',e=>{const b=e.target.closest('button,#ov');if(!b)return;const d=b.dataset;
+ if(b.id==='ov')return shut();
+ if(d.m){document.body.className='m-'+d.m;$$('#mode button').forEach(x=>x.classList.toggle('on',x===b));return notes()}
+ if(d.t)return d.t==='overview'||d.t==='home'?go(d.t):d.t==='account'?go('help'):toast('Not part of this prototype');
+ if(d.mode){mode=d.mode;return rMode()}
+ if(d.pf){pi=+d.pf;go('profile');return rPf()}
+ if(d.pz)return pz(d.pz==='all'?'all':+d.pz);
+ if(d.pu){shut();return setP(d.pi==='all'?'all':+d.pi,d.pu==='you resume'?'you resume':d.pu)}
+ if(d.bonus){const p=P[pi];p.until=null;p.d.forEach(x=>x[1]=1);rFam();return toast(`${p.n} has WiFi until ${at(+d.bonus)}, then the usual rules apply`)}
+ if(d.dev){const x=P[pi].d[+d.dev];x[1]^=1;rPf();return toast(`${x[0]} ${x[1]?'is back online':'paused'}`)}
+ if(d.dk){on[+d.dk]^=1;return rDev()}
+ if(b.id==='tech'){tech^=1;return rDev()}
+ if(b.id==='pauseAll')return pz('all');
+ if(b.id==='ack'){const c=b.querySelector('.ck');c.classList.toggle('on');$('#en').disabled=!c.classList.contains('on');return}
+ if(b.id==='upGo'){upA0.hidden=true;upA1.hidden=false;return}
+ if(b.id==='upOpen'){upA0.hidden=false;upA1.hidden=true;$('#loopN').textContent=`Sent back here ${++loops} time${loops>1?'s':''}. There is no way forward.`;return}
+ if(b.id==='upChk'){b.textContent='Checking…';return setTimeout(()=>{upO0.hidden=true;upO1.hidden=false},700)}
+ if(b.id==='toAgent')return agent();
+ if(b.classList.contains('tog'))return b.classList.toggle('on');
+ if(b.classList.contains('chip')&&b.closest('#qr')){const q=b.textContent;say(q,1);if(q==='Talk to a person')return agent();const r=C[q]||['Okay.'];return bot(r[0],r[1]||['Something else','Talk to a person'])}
+ if(d.sheet==='mute')return sheet(`<div class="h2" style="margin-top:0">Mute all alerts</div><div class="list">${['1 hour','Until tomorrow 7 AM','Until I turn them back on'].map(o=>`<button class="row" data-toast="All alerts muted: ${o.toLowerCase()}"><span class="gr">${o}</span></button>`).join('')}</div>`);
+ if(d.toast){shut();toast(d.toast)}
+ if(d.back!==undefined)return go(stack.pop()||'home',false);
+ if(d.go){go(d.go);if(d.agent)agent()}
+});
+document.addEventListener('change',e=>{if(e.target.id==='sel'){stack=[];go(e.target.value,false)}if(e.target.dataset.room){D[+e.target.dataset.room][2]=e.target.value;rDev()}});
+go('update',false);
+</script></body></html>
