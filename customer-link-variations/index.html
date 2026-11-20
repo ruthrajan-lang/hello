@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customer link — layout variations</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<style>
+:root{--ink:#1f2328;--mute:#5d6670;--line:#d9dde1;--bg:#f4f5f6;--card:#fff;--link:#0b6fa8;--warn:#b45309;--ok:#2e7d32;--bad:#c62828}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.4 Lato,system-ui,sans-serif;color:var(--ink);background:#e9ebee}
+h1{font-size:1.25rem;margin:0}
+.top{padding:20px 24px 4px}.top p{margin:4px 0 0;color:var(--mute)}
+.row{display:flex;gap:28px;padding:20px 24px 40px;overflow-x:auto;align-items:flex-start}
+.v{flex:0 0 360px}
+.v h2{font-size:1rem;margin:0 0 2px}.v>p{margin:0 0 10px;font-size:.875rem;color:var(--mute);min-height:3.7em}
+.ph{position:relative;width:360px;height:760px;background:var(--bg);border:1px solid #9aa1a8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.scroll{flex:1;overflow:auto}
+.mi{font-family:'Material Icons Outlined';font-size:1.25rem;line-height:1;vertical-align:middle;font-style:normal}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.logo{width:34px;height:34px;border-radius:50%;border:2px solid #6b7480;background:conic-gradient(#1c69d4 0 25%,#fff 0 50%,#1c69d4 0 75%,#fff 0);box-shadow:inset 0 0 0 5px #fff}
+.hd b{font-weight:400;flex:1}.tr{color:var(--link);font-size:.875rem}
+.greet{padding:10px 16px;text-align:center;font-size:.875rem;background:#fff}
+.btns{display:flex;gap:12px;padding:0 16px 12px;background:#fff}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:44px;border:1px solid #b9c0c7;border-radius:8px;background:#fff;font:inherit;letter-spacing:.08em;font-size:.875rem;color:var(--ink)}
+.btn.pri{background:var(--link);border-color:var(--link);color:#fff}
+.card{margin:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.card h3{margin:0 0 10px;font-size:1rem;display:flex;justify-content:space-between;align-items:center}
+.vid{position:relative;border-radius:8px;background:radial-gradient(120% 80% at 30% 10%,#5a4fa0 0,#1565c0 35%,#0a3d91 70%,#06204f 100%);color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vid.tall{aspect-ratio:9/16;width:74%;margin:0 auto}.vid.wide{aspect-ratio:16/10}.vid.sq{aspect-ratio:1}
+.vid .play{font-size:3.25rem;opacity:.9}
+.pill{position:absolute;top:10px;left:10px;background:rgba(15,23,42,.8);border-radius:20px;padding:6px 12px;font-size:.8125rem;display:flex;gap:6px;align-items:center}
+.bar{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;display:flex;align-items:center;gap:10px;font-size:.8125rem;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.bar i:nth-of-type(2){margin-left:auto}
+.prog{position:absolute;left:10px;right:10px;bottom:4px;height:3px;background:rgba(255,255,255,.35);border-radius:2px}.prog::after{content:"";display:block;width:92%;height:100%;background:#fff;border-radius:2px}
+.li{display:flex;align-items:center;gap:10px;padding:13px 12px;border-top:1px solid var(--line);font-size:.9375rem}.li:first-child{border-top:0}
+.li .mi:last-child{margin-left:auto;color:var(--mute)}
+.fb{display:flex;align-items:center;gap:14px;padding:10px 12px;background:#f7f7f5;border:1px solid var(--line);border-radius:8px;font-weight:700;font-size:.9375rem}.fb span{flex:1}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin:12px -12px 0;padding:0 12px}
+.tab{flex:1;text-align:center;padding:10px 0;font-size:.875rem;color:var(--mute);border-bottom:3px solid transparent}.tab.on{color:var(--link);border-color:var(--link);font-weight:700}
+.sum{margin:0;padding:0;list-style:none;font-size:.875rem}.sum li{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--line)}.sum li:first-child{border:0}
+.dot{flex:0 0 10px;height:10px;border-radius:50%;margin-top:5px}.r{background:var(--bad)}.y{background:#f0a400}.g{background:var(--ok)}
+.sum small{display:block;color:var(--mute)}
+.chips{display:flex;gap:8px;overflow:auto}.chip{flex:none;display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid #b9c0c7;border-radius:18px;font-size:.8125rem;background:#fff}.chip.on{background:#e3f1f9;border-color:var(--link);color:var(--link)}
+.stick{display:flex;gap:10px;padding:10px 12px;background:#fff;border-top:1px solid var(--line)}
+.tx{font-size:.8125rem;color:var(--mute);margin:8px 0 0}.tx b{color:var(--ink)}
+.dark{background:#0b1220}.dark .hd{background:#0b1220;border-color:#243044;color:#fff}.dark .tr{color:#8ecbf0}
+.sheet{background:#fff;border-radius:16px 16px 0 0;padding:8px 14px 12px;box-shadow:0 -4px 16px rgba(0,0,0,.3)}
+.grab{width:40px;height:4px;border-radius:2px;background:#c3c9cf;margin:0 auto 10px}
+.ovl{position:absolute;right:10px;top:40%;display:flex;flex-direction:column;gap:14px}.ovl i{background:rgba(15,23,42,.6);border-radius:50%;padding:9px;font-size:1.375rem}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-size:.75rem}.grid div{padding:10px 2px;border:1px solid var(--line);border-radius:8px;background:#fff}.grid i{display:block;margin-bottom:4px;color:var(--link);font-size:1.5rem}
+.stat{display:flex;gap:8px;margin-bottom:10px}.stat div{flex:1;border-radius:8px;padding:8px;text-align:center;font-size:.75rem;background:#f4f5f6}.stat b{display:block;font-size:1.25rem}
+.help{display:flex;align-items:center;gap:10px;font-size:.875rem}.help span{flex:1}.ic{width:44px;height:44px;border:1px solid #b9c0c7;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff}
+</style>
+</head>
+<body>
+<div class="top"><h1>Customer link — inspection video: 5 layout variations</h1><p>Static mockups at 360px. Summary and transcript text is placeholder content.</p></div>
+<div class="row">
+
+<!-- 1 -->
+<section class="v"><h2>1 · Video first, contact pinned</h2><p>Video moves above the greeting; Text and Call become a sticky footer so they're always reachable.</p>
+<div class="ph"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
+<div class="scroll">
+<div class="vid wide" style="border-radius:0"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">closed_caption</i><i class="mi">fullscreen</i></div><div class="prog"></div></div>
+<div class="greet" style="text-align:left"><b>Hi John,</b> here's the Multi Point Inspection video for your 2015 BMW 328i xDrive.</div>
+<div class="card" style="padding:0"><div class="li"><i class="mi">summarize</i>Video Summary<i class="mi">expand_more</i></div><div class="li"><i class="mi">notes</i>Full Transcript<i class="mi">expand_more</i></div><div class="li"><i class="mi">closed_caption</i>Request Closed Captioning<i class="mi">chevron_right</i></div></div>
+<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+</div>
+<div class="stick"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn pri"><i class="mi">call</i>CALL</button></div></div></section>
+
+<!-- 2 -->
+<section class="v"><h2>2 · Tabs under the video</h2><p>Summary, Transcript, and Captions become tabs with content visible right away instead of collapsed rows.</p>
+<div class="ph"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
+<div class="scroll">
+<div class="greet">Hi John, reach out to us for any questions on your 2015 BMW 328i xDrive's Multi Point Inspection!</div>
+<div class="btns"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn"><i class="mi">call</i>CALL</button></div>
+<div class="card"><h3>Inspection video</h3>
+<div class="vid wide"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">fullscreen</i><i class="mi">more_vert</i></div><div class="prog"></div></div>
+<div class="tabs"><div class="tab on">Summary</div><div class="tab">Transcript</div><div class="tab">Captions</div></div>
+<ul class="sum" style="margin-top:6px"><li><span class="dot r"></span><div>Front brake pads at 3 mm<small>Replacement recommended</small></div></li><li><span class="dot y"></span><div>Rear tires at 4/32"<small>Plan to replace soon</small></div></li><li><span class="dot g"></span><div>Fluids, belts, and battery<small>All in good condition</small></div></li></ul>
+<div class="fb" style="margin-top:10px"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+</div></div></section>
+
+<!-- 3 -->
+<section class="v"><h2>3 · Summary-led</h2><p>Leads with what was found. The video becomes supporting evidence, with transcript and captions as secondary links.</p>
+<div class="ph"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
+<div class="scroll">
+<div class="greet" style="text-align:left"><b>Hi John,</b> your 2015 BMW 328i xDrive's inspection is ready.</div>
+<div class="card"><h3>What we found</h3>
+<div class="stat"><div style="background:#fdecea"><b>1</b>Needs attention</div><div style="background:#fff4d6"><b>1</b>Watch</div><div style="background:#e6f4e7"><b>18</b>Good</div></div>
+<ul class="sum"><li><span class="dot r"></span><div>Front brake pads at 3 mm<small>Replacement recommended</small></div></li><li><span class="dot y"></span><div>Rear tires at 4/32"<small>Plan to replace soon</small></div></li></ul></div>
+<div class="card"><h3>Watch the walkthrough <span class="tr">0:13</span></h3>
+<div class="vid wide"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i></div>
+<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:.875rem" class="tr"><span><i class="mi">notes</i> Full transcript</span><span><i class="mi">closed_caption</i> Request captions</span></div></div>
+<div class="card help"><span><b>Questions?</b><br>We're happy to help.</span><div class="ic"><i class="mi">sms</i></div><div class="ic"><i class="mi">call</i></div></div>
+<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+</div></div></section>
+
+<!-- 4 -->
+<section class="v"><h2>4 · Immersive player with bottom sheet</h2><p>Full-height vertical video on a dark page. Captions and feedback sit on the player; details pull up from a sheet.</p>
+<div class="ph dark"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
+<div class="vid" style="flex:1;border-radius:0"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i>
+<div class="ovl"><i class="mi">closed_caption</i><i class="mi">thumb_up</i><i class="mi">thumb_down</i><i class="mi">fullscreen</i></div>
+<div class="bar" style="bottom:6px"><i class="mi">play_arrow</i>0:12 / 0:13</div><div class="prog"></div></div>
+<div class="sheet"><div class="grab"></div>
+<div style="font-size:.875rem;margin-bottom:10px"><b>Hi John,</b> your 2015 BMW 328i xDrive's Multi Point Inspection.</div>
+<div class="chips" style="margin-bottom:12px"><span class="chip on"><i class="mi">summarize</i>Summary</span><span class="chip"><i class="mi">notes</i>Transcript</span><span class="chip"><i class="mi">closed_caption</i>Captions</span></div>
+<div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn pri"><i class="mi">call</i>CALL</button></div></div></div></section>
+
+<!-- 5 -->
+<section class="v"><h2>5 · Quick-action grid</h2><p>One compact card: square video, a four-up icon row for every action, and feedback inline. No accordions.</p>
+<div class="ph"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
+<div class="scroll">
+<div class="card"><div style="font-size:.875rem;margin-bottom:10px"><b>Hi John,</b> here's the inspection video for your 2015 BMW 328i xDrive.</div>
+<div class="vid sq"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">fullscreen</i></div><div class="prog"></div></div>
+<div class="grid" style="margin-top:10px"><div><i class="mi">summarize</i>Summary</div><div><i class="mi">notes</i>Transcript</div><div><i class="mi">closed_caption</i>Captions</div><div><i class="mi">translate</i>Translate</div></div>
+<p class="tx"><b>Summary:</b> Front brake pads are at 3 mm and should be replaced. Rear tires are wearing; everything else looks good.</p></div>
+<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+<div class="card"><h3 style="margin-bottom:8px">Have a question?</h3><div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn"><i class="mi">call</i>CALL</button></div></div>
+</div></div></section>
+
+</div>
+</body>
+</html>
