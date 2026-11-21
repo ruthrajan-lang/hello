@@ -52,6 +52,26 @@ h1{font-size:1.25rem;margin:0}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-size:.75rem}.grid div{padding:10px 2px;border:1px solid var(--line);border-radius:8px;background:#fff}.grid i{display:block;margin-bottom:4px;color:var(--link);font-size:1.5rem}
 .stat{display:flex;gap:8px;margin-bottom:10px}.stat div{flex:1;border-radius:8px;padding:8px;text-align:center;font-size:.75rem;background:#f4f5f6}.stat b{display:block;font-size:1.25rem}
 .help{display:flex;align-items:center;gap:10px;font-size:.875rem}.help span{flex:1}.ic{width:44px;height:44px;border:1px solid #b9c0c7;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff}
+/* cleaner pass */
+body{background:#f6f7f8}
+.ph{background:#fff;border-color:#d5d9dd;border-radius:24px}
+.hd{border-bottom:0;padding:16px 20px 12px}
+.greet{padding:4px 20px 16px;font-size:.9375rem}
+.btns{padding:0 20px 20px}
+.btn{letter-spacing:0;font-size:.9375rem;border-color:#d5d9dd;border-radius:22px}
+.card{margin:0;border:0;border-radius:0;padding:20px;border-top:1px solid #eef0f2}
+.card h3{margin-bottom:14px}
+.vid{border-radius:12px}
+.li{padding:16px 0;border-color:#eef0f2}.li .mi:first-child{display:none}
+.fb{background:none;border:0;padding:0;font-weight:400}.fb .mi{color:var(--mute)}
+.tabs{margin:16px -20px 0;padding:0 20px;border-color:#eef0f2}
+.sum li{border-color:#eef0f2;padding:10px 0}
+.stat div{background:#f6f7f8;padding:12px 4px}.stat div:nth-child(1) b{color:var(--bad)}.stat div:nth-child(2) b{color:var(--warn)}.stat div:nth-child(3) b{color:var(--ok)}
+.grid div{border:0;background:#f6f7f8;padding:12px 2px}
+.chip{border-color:#d5d9dd}.ic{border-color:#d5d9dd}
+.stick{border-color:#eef0f2;padding:12px 20px}
+.sheet{padding:8px 20px 16px}
+.dark .hd{background:#0b1220}
 </style>
 </head>
 <body>
@@ -64,19 +84,19 @@ h1{font-size:1.25rem;margin:0}
 <div class="scroll">
 <div class="vid wide" style="border-radius:0"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">closed_caption</i><i class="mi">fullscreen</i></div><div class="prog"></div></div>
 <div class="greet" style="text-align:left"><b>Hi John,</b> here's the Multi Point Inspection video for your 2015 BMW 328i xDrive.</div>
-<div class="card" style="padding:0"><div class="li"><i class="mi">summarize</i>Video Summary<i class="mi">expand_more</i></div><div class="li"><i class="mi">notes</i>Full Transcript<i class="mi">expand_more</i></div><div class="li"><i class="mi">closed_caption</i>Request Closed Captioning<i class="mi">chevron_right</i></div></div>
-<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+<div class="card" style="padding:4px 20px"><div class="li"><i class="mi">summarize</i>Video Summary<i class="mi">expand_more</i></div><div class="li"><i class="mi">notes</i>Full Transcript<i class="mi">expand_more</i></div><div class="li"><i class="mi">closed_caption</i>Request Closed Captioning<i class="mi">chevron_right</i></div></div>
+<div class="card"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
 </div>
-<div class="stick"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn pri"><i class="mi">call</i>CALL</button></div></div></section>
+<div class="stick"><button class="btn"><i class="mi">sms</i>Text</button><button class="btn pri"><i class="mi">call</i>Call</button></div></div></section>
 
 <!-- 2 -->
 <section class="v"><h2>2 · Tabs under the video</h2><p>Summary, Transcript, and Captions become tabs with content visible right away instead of collapsed rows.</p>
 <div class="ph"><div class="hd"><div class="logo"></div><b>BMW of Mt. Laurel</b><span class="tr">Translate <i class="mi">language</i></span></div>
 <div class="scroll">
 <div class="greet">Hi John, reach out to us for any questions on your 2015 BMW 328i xDrive's Multi Point Inspection!</div>
-<div class="btns"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn"><i class="mi">call</i>CALL</button></div>
+<div class="btns"><button class="btn"><i class="mi">sms</i>Text</button><button class="btn"><i class="mi">call</i>Call</button></div>
 <div class="card"><h3>Inspection video</h3>
-<div class="vid wide"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">fullscreen</i><i class="mi">more_vert</i></div><div class="prog"></div></div>
+<div class="vid wide"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">fullscreen</i></div><div class="prog"></div></div>
 <div class="tabs"><div class="tab on">Summary</div><div class="tab">Transcript</div><div class="tab">Captions</div></div>
 <ul class="sum" style="margin-top:6px"><li><span class="dot r"></span><div>Front brake pads at 3 mm<small>Replacement recommended</small></div></li><li><span class="dot y"></span><div>Rear tires at 4/32"<small>Plan to replace soon</small></div></li><li><span class="dot g"></span><div>Fluids, belts, and battery<small>All in good condition</small></div></li></ul>
 <div class="fb" style="margin-top:10px"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
@@ -88,13 +108,13 @@ h1{font-size:1.25rem;margin:0}
 <div class="scroll">
 <div class="greet" style="text-align:left"><b>Hi John,</b> your 2015 BMW 328i xDrive's inspection is ready.</div>
 <div class="card"><h3>What we found</h3>
-<div class="stat"><div style="background:#fdecea"><b>1</b>Needs attention</div><div style="background:#fff4d6"><b>1</b>Watch</div><div style="background:#e6f4e7"><b>18</b>Good</div></div>
+<div class="stat"><div><b>1</b>Needs attention</div><div><b>1</b>Watch</div><div><b>18</b>Good</div></div>
 <ul class="sum"><li><span class="dot r"></span><div>Front brake pads at 3 mm<small>Replacement recommended</small></div></li><li><span class="dot y"></span><div>Rear tires at 4/32"<small>Plan to replace soon</small></div></li></ul></div>
 <div class="card"><h3>Watch the walkthrough <span class="tr">0:13</span></h3>
 <div class="vid wide"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i></div>
 <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:.875rem" class="tr"><span><i class="mi">notes</i> Full transcript</span><span><i class="mi">closed_caption</i> Request captions</span></div></div>
 <div class="card help"><span><b>Questions?</b><br>We're happy to help.</span><div class="ic"><i class="mi">sms</i></div><div class="ic"><i class="mi">call</i></div></div>
-<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+<div class="card"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
 </div></div></section>
 
 <!-- 4 -->
@@ -106,7 +126,7 @@ h1{font-size:1.25rem;margin:0}
 <div class="sheet"><div class="grab"></div>
 <div style="font-size:.875rem;margin-bottom:10px"><b>Hi John,</b> your 2015 BMW 328i xDrive's Multi Point Inspection.</div>
 <div class="chips" style="margin-bottom:12px"><span class="chip on"><i class="mi">summarize</i>Summary</span><span class="chip"><i class="mi">notes</i>Transcript</span><span class="chip"><i class="mi">closed_caption</i>Captions</span></div>
-<div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn pri"><i class="mi">call</i>CALL</button></div></div></div></section>
+<div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>Text</button><button class="btn pri"><i class="mi">call</i>Call</button></div></div></div></section>
 
 <!-- 5 -->
 <section class="v"><h2>5 · Quick-action grid</h2><p>One compact card: square video, a four-up icon row for every action, and feedback inline. No accordions.</p>
@@ -116,8 +136,8 @@ h1{font-size:1.25rem;margin:0}
 <div class="vid sq"><span class="pill"><i class="mi">volume_off</i>Tap to unmute</span><i class="mi play">play_circle</i><div class="bar"><i class="mi">play_arrow</i>0:12 / 0:13<i class="mi">fullscreen</i></div><div class="prog"></div></div>
 <div class="grid" style="margin-top:10px"><div><i class="mi">summarize</i>Summary</div><div><i class="mi">notes</i>Transcript</div><div><i class="mi">closed_caption</i>Captions</div><div><i class="mi">translate</i>Translate</div></div>
 <p class="tx"><b>Summary:</b> Front brake pads are at 3 mm and should be replaced. Rear tires are wearing; everything else looks good.</p></div>
-<div class="card" style="padding:0;border:0"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
-<div class="card"><h3 style="margin-bottom:8px">Have a question?</h3><div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>TEXT</button><button class="btn"><i class="mi">call</i>CALL</button></div></div>
+<div class="card"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
+<div class="card"><h3 style="margin-bottom:8px">Have a question?</h3><div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>Text</button><button class="btn"><i class="mi">call</i>Call</button></div></div>
 </div></div></section>
 
 </div>
