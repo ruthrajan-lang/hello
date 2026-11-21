@@ -72,6 +72,23 @@ body{background:#f6f7f8}
 .stick{border-color:#eef0f2;padding:12px 20px}
 .sheet{padding:8px 20px 16px}
 .dark .hd{background:#0b1220}
+/* recommendations */
+.con{padding:18px 20px}.con b{font-size:1rem}.sub{font-size:.8125rem;color:var(--mute)}
+.rec{padding:16px 20px 20px;border-top:1px solid #eef0f2}
+.rh{display:flex;gap:8px;align-items:baseline}.rh b{flex:1}
+.bdg{font-size:.75rem;border-radius:10px;padding:1px 8px;font-weight:700}.bdg.f{background:#fdecea;color:var(--bad)}.bdg.c{background:#fff4d6;color:#8a5a00}.bdg.a{background:#e6f4e7;color:var(--ok)}
+.why{font-size:.875rem;color:var(--mute);margin:4px 0 12px}
+.pick{border:1px solid #d5d9dd;border-radius:12px;padding:12px;font-size:.875rem;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}.pick>div{flex:1}.pick.on{border-color:var(--link);background:#f2f8fc}
+.lnk{color:var(--link);font-size:.875rem;display:flex;align-items:center;gap:4px;margin:12px 0 0}
+.act{display:flex;gap:10px;margin-top:14px}
+.ok{color:var(--ok)}.wn{color:var(--warn)}.sm{font-size:.8125rem}.sm .mi{font-size:1rem}
+.thumbs{display:flex;gap:6px;margin-bottom:12px}.th{width:56px;height:42px;border-radius:8px;background:#eef0f2;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:.75rem}
+.kv{display:flex;justify-content:space-between;font-size:.875rem;padding:6px 0}.kv.t{border-top:1px solid #eef0f2;font-weight:700;margin-top:4px;padding-top:10px}
+.tag{display:inline-block;white-space:nowrap;margin-top:4px;font-size:.75rem;background:#f1f3f5;border-radius:6px;padding:2px 6px;margin-right:4px}
+.cap{font-size:.75rem;letter-spacing:.08em;color:var(--mute);text-transform:uppercase;margin:14px 0 6px}
+.dim{position:absolute;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end}.dim .sheet{width:100%}
+.radio{width:18px;height:18px;border:2px solid #9aa1a8;border-radius:50%;flex:none;margin-top:2px}.on .radio{border-color:var(--link);background:radial-gradient(var(--link) 45%,transparent 50%)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.8125rem}.g2 div{background:#f6f7f8;border-radius:8px;padding:8px 10px}.g2 b{display:block}
 </style>
 </head>
 <body>
@@ -138,6 +155,67 @@ body{background:#f6f7f8}
 <p class="tx"><b>Summary:</b> Front brake pads are at 3 mm and should be replaced. Rear tires are wearing; everything else looks good.</p></div>
 <div class="card"><div class="fb"><span>Was this video helpful?</span><i class="mi">thumb_up</i><i class="mi">thumb_down</i></div></div>
 <div class="card"><h3 style="margin-bottom:8px">Have a question?</h3><div style="display:flex;gap:10px"><button class="btn"><i class="mi">sms</i>Text</button><button class="btn"><i class="mi">call</i>Call</button></div></div>
+</div></div></section>
+
+</div>
+
+<div class="top"><h1>Recommendations — progressive disclosure</h1><p>What shows by default is only what's needed to decide: severity, what, why in one line, price, and Approve / Not now. Everything else is one tap away.</p></div>
+<div class="row">
+
+<section class="v"><h2>A · Default</h2><p>One tire is pre-selected, so the customer can approve without choosing. Other options, measurements, and pricing detail are collapsed.</p>
+<div class="ph"><div class="scroll"><div class="con"><b>Tires feel bumpy or flat</b><br><span class="sub">2 recommended services · $110.00 pre-approved</span></div>
+<div class="rec"><div class="rh"><span class="bdg f">Fail</span><b>Replace front tires</b></div>
+<p class="why">Front tread is 2/32" and 3/32", below the safe minimum.</p>
+<div class="thumbs"><div class="th"><i class="mi">play_circle</i>&nbsp;0:42</div><div class="th"><i class="mi">image</i></div><div class="th"><i class="mi">image</i></div></div>
+<div class="pick on"><div><span class="sub">Recommended for you</span><br><b>Hankook Ventus S1 EVO2</b><br><span class="ok sm"><i class="mi">check_circle</i> In stock</span></div><b>$709.06</b></div>
+<div class="lnk">See 2 other tire options <i class="mi">chevron_right</i></div>
+<div class="lnk"><i class="mi">receipt_long</i> Details and pricing <i class="mi">expand_more</i></div>
+<div class="act"><button class="btn">Not now</button><button class="btn pri">Approve $709.06</button></div></div>
+<div class="rec"><div class="rh"><span class="bdg c">Caution</span><b>Wheel alignment</b><b style="flex:none">$120.00</b></div>
+<p class="why">Pulling to the right.</p>
+<div class="lnk" style="margin-top:0"><i class="mi">receipt_long</i> Details and pricing <i class="mi">expand_more</i></div>
+<div class="act"><button class="btn">Not now</button><button class="btn pri">Approve</button></div></div>
+</div></div></section>
+
+<section class="v"><h2>B · Tire options (sheet)</h2><p>Opens only on request. Each option shows price, availability, and rebate; spec tags and the full comparison sit one level deeper.</p>
+<div class="ph"><div class="scroll"><div class="con"><b>Tires feel bumpy or flat</b><br><span class="sub">2 recommended services · $110.00 pre-approved</span></div><div class="rec"><div class="rh"><span class="bdg f">Fail</span><b>Replace front tires</b></div>
+<p class="why">Front tread is 2/32" and 3/32", below the safe minimum.</p>
+<div class="thumbs"><div class="th"><i class="mi">play_circle</i>&nbsp;0:42</div><div class="th"><i class="mi">image</i></div><div class="th"><i class="mi">image</i></div></div>
+<div class="pick on"><div><span class="sub">Recommended for you</span><br><b>Hankook Ventus S1 EVO2</b><br><span class="ok sm"><i class="mi">check_circle</i> In stock</span></div><b>$709.06</b></div>
+<div class="lnk">See 2 other tire options <i class="mi">chevron_right</i></div></div>
+<div class="dim"><div class="sheet"><div class="grab"></div><b>Choose your tires</b><div class="sub" style="margin-bottom:10px">2 tires, installed</div>
+<div class="pick"><i class="radio"></i><div><span class="bdg a">Best match</span><br><b>Bridgestone Alenza 001</b><br><span class="ok sm"><i class="mi">check_circle</i> In stock · up to $120 rebate</span><br><span class="tag">Summer</span><span class="tag">Run-flat</span><span class="tag">6-yr warranty</span></div><b>$1,020.06</b></div>
+<div class="pick on"><i class="radio"></i><div><span class="bdg a">Better match</span><br><b>Hankook Ventus S1 EVO2</b><br><span class="ok sm"><i class="mi">check_circle</i> In stock · up to $60 rebate</span><br><span class="tag">All-season</span><span class="tag">5-yr warranty</span></div><b>$709.06</b></div>
+<div class="pick"><i class="radio"></i><div><span class="bdg" style="background:#f1f3f5">Value match</span><br><b>Cooper Discoverer HT3</b><br><span class="wn sm"><i class="mi">schedule</i> Ships in 3 days</span><br><span class="tag">All-season</span></div><b>$372.56</b></div>
+<div class="lnk" style="margin:4px 0 12px">Compare side by side <i class="mi">chevron_right</i></div>
+<button class="btn pri" style="width:100%">Use this tire</button></div></div></div></section>
+
+<section class="v"><h2>C · Details and pricing open</h2><p>For customers who want proof: all four measurements, the technician's explanation, and the price breakdown.</p>
+<div class="ph"><div class="scroll"><div class="con"><b>Tires feel bumpy or flat</b><br><span class="sub">2 recommended services · $110.00 pre-approved</span></div>
+<div class="rec"><div class="rh"><span class="bdg f">Fail</span><b>Replace front tires</b><b style="flex:none">$709.06</b></div>
+<p class="why">Hankook Ventus S1 EVO2 · <span style="color:var(--link)">Change</span></p>
+<div class="lnk" style="margin-top:0"><i class="mi">receipt_long</i> Details and pricing <i class="mi">expand_less</i></div>
+<div class="cap">Tread depth</div>
+<div class="g2"><div>Front left<b>2/32" <span style="color:var(--bad)">Damaged</span></b></div><div>Front right<b>3/32" <span style="color:var(--bad)">Damaged</span></b></div><div>Rear left<b>7/32" <span class="ok">Good</span></b></div><div>Rear right<b>7/32" <span class="ok">Good</span></b></div></div>
+<div class="cap">Why it's needed</div><div style="font-size:.875rem">Both front tires are worn past the safe limit, which is causing the bumpy ride and reduces wet-weather grip.</div>
+<div class="cap">Price breakdown</div>
+<div class="kv"><span>Tires (2)</span><span>$598.00</span></div><div class="kv"><span>Mount and balance</span><span>$80.00</span></div><div class="kv"><span>Shop and disposal fees</span><span>$31.06</span></div><div class="kv t"><span>Total</span><span>$709.06</span></div><div class="sub">Tax calculated at checkout.</div>
+<div class="act"><button class="btn">Not now</button><button class="btn pri">Approve $709.06</button></div></div>
+</div></div></section>
+
+<section class="v"><h2>D · After a decision, and single-recommendation concerns</h2><p>Decided items shrink to one line with Undo. A concern with one recommendation drops the nesting and reads as a single card.</p>
+<div class="ph"><div class="scroll"><div class="con"><b>Tires feel bumpy or flat</b><br><span class="sub">2 recommended services · $110.00 pre-approved</span></div>
+<div class="rec" style="padding-bottom:16px"><div class="rh"><i class="mi ok">check_circle</i><b>Replace front tires</b><b style="flex:none">$709.06</b></div>
+<div class="sub" style="display:flex;justify-content:space-between;margin-top:4px"><span>Approved, sent to advisor</span><span style="color:var(--link)"><i class="mi" style="font-size:1rem">undo</i> Undo (10 min)</span></div></div>
+<div class="rec"><div class="rh"><span class="bdg c">Caution</span><b>Wheel alignment</b><b style="flex:none">$120.00</b></div>
+<p class="why">Pulling to the right.</p>
+<div class="lnk" style="margin-top:0"><i class="mi">receipt_long</i> Details and pricing <i class="mi">expand_more</i></div>
+<div class="act"><button class="btn">Not now</button><button class="btn pri">Approve</button></div></div>
+<div style="height:8px;background:#f6f7f8"></div>
+<div class="rec" style="border:0"><div class="rh"><span class="bdg c">Caution</span><b>Check engine light is on</b><b style="flex:none">$277.17</b></div>
+<p class="why">Reconnect vacuum line and clear codes.</p>
+<div class="lnk" style="margin-top:0"><i class="mi">receipt_long</i> Details and pricing <i class="mi">expand_more</i></div>
+<div class="act"><button class="btn">Not now</button><button class="btn pri">Approve</button></div></div>
 </div></div></section>
 
 </div>
